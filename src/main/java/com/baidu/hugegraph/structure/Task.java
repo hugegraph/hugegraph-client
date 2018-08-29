@@ -20,6 +20,7 @@
 package com.baidu.hugegraph.structure;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.baidu.hugegraph.util.E;
@@ -63,6 +64,9 @@ public class Task {
 
     @JsonProperty(P.DESCRIPTION)
     private String description;
+
+    @JsonProperty(P.CHILDREN)
+    private List<Long> children;
 
     public long id() {
         return this.id;
@@ -112,6 +116,10 @@ public class Task {
         return description;
     }
 
+    public List<Long> children() {
+        return this.children;
+    }
+
     public boolean completed() {
         return ImmutableSet.of("success", "failed", "cancelled")
                            .contains(this.status);
@@ -146,6 +154,9 @@ public class Task {
         if (this.result != null) {
             map.put(P.RESULT, this.result);
         }
+        if (this.children != null) {
+            map.put(P.CHILDREN, this.children);
+        }
 
         return map;
     }
@@ -164,5 +175,6 @@ public class Task {
         public static final String RETRIES = "task_retries";
         public static final String INPUT = "task_input";
         public static final String RESULT = "task_result";
+        public static final String CHILDREN = "task_children";
     }
 }

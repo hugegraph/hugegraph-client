@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.baidu.hugegraph.annotation.UnimplementedFeature;
+import com.baidu.hugegraph.api.graph.BatchAPI;
 import com.baidu.hugegraph.api.graph.EdgeAPI;
 import com.baidu.hugegraph.api.graph.VertexAPI;
 import com.baidu.hugegraph.client.RestClient;
@@ -35,17 +36,20 @@ import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.GraphIterator;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.util.E;
+import com.google.common.collect.ImmutableMap;
 
 public class GraphManager {
 
     private final String graph;
     private final VertexAPI vertexAPI;
     private final EdgeAPI edgeAPI;
+    private final BatchAPI batchAPI;
 
     public GraphManager(RestClient client, String graph) {
         this.graph = graph;
         this.vertexAPI = new VertexAPI(client, graph);
         this.edgeAPI = new EdgeAPI(client, graph);
+        this.batchAPI = new BatchAPI(client, graph);
     }
 
     public String graph() {
@@ -342,6 +346,38 @@ public class GraphManager {
             return this.edgeAPI.list(vertexId, direction, label, properties,
                                      0, page, sizePerPage);
         });
+    }
+
+    /**
+     * Only applie to the vertices with the custom id
+     */
+    public Map<String, List<? extends GraphElement>> addVerticesAndEdges(
+                                                     List<Vertex> vertices,
+                                                     List<Edge> edges) {
+        return this.addVerticesAndEdges(vertices, edges, false);
+    }
+
+    public Map<String, List<? extends GraphElement>> addVerticesAndEdges(
+                                                     List<Vertex> vertices,
+                                                     List<Edge> edges,
+                                                     boolean checkVertex) {
+        Map<String, List<Object>> ids = this.batchAPI.create(vertices, edges,
+                                                             checkVertex);
+
+        List<Object> vertexIds = ids.get("vertices");
+        for (int i = 0; i < vertices.size(); i++) {
+            Vertex vertex = vertices.get(i);
+            vertex.id(vertexIds.get(i));
+            this.attachManager(vertex);
+        }
+
+        List<Object> edgeIds = ids.get("edges");
+        for (int i = 0; i < edges.size(); i++) {
+            Edge edge = edges.get(i);
+            edge.id((String) edgeIds.get(i));
+            this.attachManager(edge);
+        }
+        return ImmutableMap.of("vertices", vertices, "edges", edges);
     }
 
     public void removeEdge(String edgeId) {

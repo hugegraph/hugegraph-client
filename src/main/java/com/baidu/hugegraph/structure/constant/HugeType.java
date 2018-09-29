@@ -30,6 +30,7 @@ public enum HugeType {
     // Data
     VERTEX(101, "vertices"),
     EDGE(120, "edges"),
+    BATCH(125, "batch"),
 
     // Variables
     VARIABLES(130, "variables"),

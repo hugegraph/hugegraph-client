@@ -25,6 +25,7 @@ import com.baidu.hugegraph.api.schema.EdgeLabelAPI;
 import com.baidu.hugegraph.api.schema.IndexLabelAPI;
 import com.baidu.hugegraph.api.schema.PropertyKeyAPI;
 import com.baidu.hugegraph.api.schema.VertexLabelAPI;
+import com.baidu.hugegraph.api.task.TaskAPI;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.schema.BuilderProxy;
 import com.baidu.hugegraph.structure.schema.EdgeLabel;
@@ -34,16 +35,20 @@ import com.baidu.hugegraph.structure.schema.VertexLabel;
 
 public class SchemaManager {
 
+    public static final long ASYNC_TIMEOUT = 60L;
+
     private PropertyKeyAPI propertyKeyAPI;
     private VertexLabelAPI vertexLabelAPI;
     private EdgeLabelAPI edgeLabelAPI;
     private IndexLabelAPI indexLabelAPI;
+    private TaskAPI taskAPI;
 
     public SchemaManager(RestClient client, String graph) {
         this.propertyKeyAPI = new PropertyKeyAPI(client, graph);
         this.vertexLabelAPI = new VertexLabelAPI(client, graph);
         this.edgeLabelAPI = new EdgeLabelAPI(client, graph);
         this.indexLabelAPI = new IndexLabelAPI(client, graph);
+        this.taskAPI = new TaskAPI(client, graph);
     }
 
     public PropertyKey.Builder propertyKey(String name) {
@@ -107,7 +112,17 @@ public class SchemaManager {
         return this.vertexLabelAPI.eliminate(vertexLabel);
     }
 
-    public long removeVertexLabel(String name) {
+    public void removeVertexLabel(String name) {
+        long task = this.vertexLabelAPI.delete(name);
+        this.taskAPI.waitUntilTaskCompleted(task, ASYNC_TIMEOUT);
+    }
+
+    public void removeVertexLabel(String name, long seconds) {
+        long task = this.vertexLabelAPI.delete(name);
+        this.taskAPI.waitUntilTaskCompleted(task, seconds);
+    }
+
+    public long removeVertexLabelAsync(String name) {
         return this.vertexLabelAPI.delete(name);
     }
 
@@ -131,7 +146,16 @@ public class SchemaManager {
         return this.edgeLabelAPI.eliminate(edgeLabel);
     }
 
-    public long removeEdgeLabel(String name) {
+    public void removeEdgeLabel(String name) {
+        this.removeEdgeLabel(name, ASYNC_TIMEOUT);
+    }
+
+    public void removeEdgeLabel(String name, long seconds) {
+        long task = this.edgeLabelAPI.delete(name);
+        this.taskAPI.waitUntilTaskCompleted(task, seconds);
+    }
+
+    public long removeEdgeLabelAsync(String name) {
         return this.edgeLabelAPI.delete(name);
     }
 
@@ -144,10 +168,34 @@ public class SchemaManager {
     }
 
     public IndexLabel addIndexLabel(IndexLabel indexLabel) {
-        return this.indexLabelAPI.create(indexLabel);
+        return this.addIndexLabel(indexLabel, ASYNC_TIMEOUT);
     }
 
-    public long removeIndexLabel(String name) {
+    public IndexLabel addIndexLabel(IndexLabel indexLabel, long seconds) {
+        IndexLabel.CreatedIndexLabel cil = this.indexLabelAPI
+                                               .create(indexLabel);
+        if (cil.taskId() != 0L) {
+            this.taskAPI.waitUntilTaskCompleted(cil.taskId(), seconds);
+        }
+        return cil.indexLabel();
+    }
+
+    public long addIndexLabelAsync(IndexLabel indexLabel) {
+        IndexLabel.CreatedIndexLabel cil = this.indexLabelAPI
+                                               .create(indexLabel);
+        return cil.taskId();
+    }
+
+    public void removeIndexLabel(String name) {
+        this.removeIndexLabel(name, ASYNC_TIMEOUT);
+    }
+
+    public void removeIndexLabel(String name, long secondss) {
+        long task = this.indexLabelAPI.delete(name);
+        this.taskAPI.waitUntilTaskCompleted(task, secondss);
+    }
+
+    public long removeIndexLabelAsync(String name) {
         return this.indexLabelAPI.delete(name);
     }
 

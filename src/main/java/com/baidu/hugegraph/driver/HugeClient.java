@@ -34,6 +34,8 @@ public class HugeClient {
         ClientVersion.check();
     }
 
+    private final RestClient client;
+
     private VersionManager version;
     private GraphsManager graphs;
     private SchemaManager schema;
@@ -49,14 +51,22 @@ public class HugeClient {
     }
 
     public HugeClient(String url, String graph, int timeout) {
-        RestClient client = null;
         try {
-            client = new RestClient(url, timeout);
+            this.client = new RestClient(url, timeout);
         } catch (ProcessingException e) {
             throw new ServerException("Failed to connect url '%s'", url);
         }
+        this.initManagers(this.client, graph);
+    }
 
-        this.initManagers(client, graph);
+    public HugeClient(String url, String graph, int timeout,
+                      int maxTotal, int maxPerRoute) {
+        try {
+            this.client = new RestClient(url, timeout, maxTotal, maxPerRoute);
+        } catch (ProcessingException e) {
+            throw new ServerException("Failed to connect url '%s'", url);
+        }
+        this.initManagers(this.client, graph);
     }
 
     public HugeClient(String url, String graph,
@@ -67,14 +77,16 @@ public class HugeClient {
     public HugeClient(String url, String graph,
                       String username, String password,
                       int timeout) {
-        RestClient client = null;
         try {
-            client = new RestClient(url, username, password, timeout);
+            this.client = new RestClient(url, username, password, timeout);
         } catch (ProcessingException e) {
             throw new ServerException("Failed to connect url '%s'", url);
         }
+        this.initManagers(this.client, graph);
+    }
 
-        this.initManagers(client, graph);
+    public void close() {
+        this.client.close();
     }
 
     private void initManagers(RestClient client, String graph) {

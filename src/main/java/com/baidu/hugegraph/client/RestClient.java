@@ -41,6 +41,10 @@ public class RestClient extends com.baidu.hugegraph.rest.RestClient {
         super(url, timeout * SECOND);
     }
 
+    public RestClient(String url, int timeout, int maxTotal, int maxPerRoute) {
+        super(url, timeout * SECOND, maxTotal, maxPerRoute);
+    }
+
     public RestClient(String url, String username, String password, int timeout) {
         super(url, username, password, timeout * SECOND);
     }

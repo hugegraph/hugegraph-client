@@ -37,9 +37,11 @@ import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Edge;
+import com.baidu.hugegraph.structure.graph.Edges;
 import com.baidu.hugegraph.structure.graph.Path;
 import com.baidu.hugegraph.structure.graph.Shard;
 import com.baidu.hugegraph.structure.graph.Vertex;
+import com.baidu.hugegraph.structure.graph.Vertices;
 import com.baidu.hugegraph.structure.schema.EdgeLabel;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
@@ -802,7 +804,9 @@ public class TraverserApiTest extends BaseApiTest {
         List<Shard> shards = verticesAPI.shards(1 * 1024 * 1024);
         List<Vertex> vertices = new LinkedList<>();
         for (Shard shard : shards) {
-            vertices.addAll(ImmutableList.copyOf(verticesAPI.scan(shard)));
+            Vertices result = verticesAPI.scan(shard, "");
+            Assert.assertNull(result.page());
+            vertices.addAll(ImmutableList.copyOf(result.results()));
         }
         Assert.assertEquals(6, vertices.size());
     }
@@ -819,7 +823,9 @@ public class TraverserApiTest extends BaseApiTest {
         List<Shard> shards = edgesAPI.shards(1 * 1024 * 1024);
         List<Edge> edges = new LinkedList<>();
         for (Shard shard : shards) {
-            edges.addAll(ImmutableList.copyOf(edgesAPI.scan(shard)));
+            Edges result = edgesAPI.scan(shard, "");
+            Assert.assertNull(result.page());
+            edges.addAll(ImmutableList.copyOf(result.results()));
         }
         Assert.assertEquals(6, edges.size());
     }
@@ -872,6 +878,6 @@ public class TraverserApiTest extends BaseApiTest {
         ImmutableList.of(knows1, created1).forEach(edgeLabel -> {
             elTaskIds.add(edgeLabelAPI.delete(edgeLabel.name()));
         });
-        elTaskIds.forEach(taskId -> waitUntilTaskCompleted(taskId));
+        elTaskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
     }
 }

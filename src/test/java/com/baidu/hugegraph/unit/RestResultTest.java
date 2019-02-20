@@ -13,7 +13,6 @@ import org.mockito.Mockito;
 
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.serializer.PathDeserializer;
-import com.baidu.hugegraph.serializer.VertexDeserializer;
 import com.baidu.hugegraph.structure.constant.Cardinality;
 import com.baidu.hugegraph.structure.constant.DataType;
 import com.baidu.hugegraph.structure.constant.Frequency;
@@ -43,7 +42,6 @@ public class RestResultTest {
     @BeforeClass
     public static void init() {
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(Vertex.class, new VertexDeserializer());
         module.addDeserializer(Path.class, new PathDeserializer());
         RestResult.registerModule(module);
     }
@@ -75,7 +73,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         PropertyKey propertyKey = result.readObject(PropertyKey.class);
 
@@ -109,7 +107,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         List<PropertyKey> propertyKeys = result.readList("propertykeys",
                                                          PropertyKey.class);
@@ -145,7 +143,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         VertexLabel vertexLabel = result.readObject(VertexLabel.class);
 
@@ -184,7 +182,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         List<VertexLabel> vertexLabels = result.readList("vertexlabels",
                                                          VertexLabel.class);
@@ -226,7 +224,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         EdgeLabel edgeLabel = result.readObject(EdgeLabel.class);
 
@@ -268,7 +266,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         List<EdgeLabel> edgeLabels = result.readList("edgelabels",
                                                      EdgeLabel.class);
@@ -309,7 +307,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         IndexLabel indexLabel = result.readObject(IndexLabel.class);
 
@@ -348,7 +346,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         List<IndexLabel> indexLabels = result.readList("indexlabels",
                                                        IndexLabel.class);
@@ -378,10 +376,7 @@ public class RestResultTest {
                 + "\"label\": \"person\","
                 + "\"type\": \"vertex\","
                 + "\"properties\": {"
-                + "\"name\": [{"
-                + "\"id\": \"person:marko>name\","
-                + "\"value\": \"marko\""
-                + "}]"
+                + "\"name\": \"marko\""
                 + "}"
                 + "}";
 
@@ -391,7 +386,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         Vertex vertex = result.readObject(Vertex.class);
 
@@ -409,54 +404,30 @@ public class RestResultTest {
                 + "\"label\": \"person\"," 
                 + "\"type\": \"vertex\"," 
                 + "\"properties\": {" 
-                + "\"city\": [{"
-                + "\"id\": \"person:marko>city\"," 
-                + "\"value\": \"Beijing\"" 
-                + "}],"
-                + "\"name\": [{"
-                + "\"id\": \"person:marko>name\"," 
-                + "\"value\": \"marko\"" 
-                + "}],"
-                + "\"age\": [{"
-                + "\"id\": \"person:marko>age\"," 
-                + "\"value\": 29" 
-                + "}]}"
+                + "\"city\": \"Beijing\","
+                + "\"name\": \"marko\","
+                + "\"age\": 29"
+                + "}"
                 + "},"
                 + "{"
                 + "\"id\": \"software:lop\"," 
                 + "\"label\": \"software\"," 
                 + "\"type\": \"vertex\"," 
                 + "\"properties\": {" 
-                + "\"price\": [{"
-                + "\"id\": \"software:lop>price\"," 
-                + "\"value\": 328" 
-                + "}],"
-                + "\"name\": [{"
-                + "\"id\": \"software:lop>name\"," 
-                + "\"value\": \"lop\"" 
-                + "}],"
-                + "\"lang\": [{"
-                + "\"id\": \"software:lop>lang\"," 
-                + "\"value\": \"java\"" 
-                + "}]}"
+                + "\"price\": 328,"
+                + "\"name\": \"lop\","
+                + "\"lang\": \"java\""
+                + "}"
                 + "},"
                 + "{"
                 + "\"id\": \"person:peter\"," 
                 + "\"label\": \"person\"," 
                 + "\"type\": \"vertex\"," 
                 + "\"properties\": {" 
-                + "\"city\": [{"
-                + "\"id\": \"person:peter>city\"," 
-                + "\"value\": \"Shanghai\"" 
-                + "}],"
-                + "\"name\": [{"
-                + "\"id\": \"person:peter>name\"," 
-                + "\"value\": \"peter\"" 
-                + "}],"
-                + "\"age\": [{"
-                + "\"id\": \"person:peter>age\"," 
-                + "\"value\": 29" 
-                + "}]}"
+                + "\"city\": \"Shanghai\","
+                + "\"name\": \"peter\","
+                + "\"age\": 29"
+                + "}"
                 + "}" 
                 + "]}";
 
@@ -466,7 +437,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         List<Vertex> vertices = result.readList("vertices", Vertex.class);
         Assert.assertEquals(3, vertices.size());
@@ -515,7 +486,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         Edge edge = result.readObject(Edge.class);
 
@@ -566,7 +537,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult result = new RestResult(this.mockResponse);
         Assert.assertEquals(200, result.status());
-        Assert.assertEquals(null, result.headers());
+        Assert.assertNull(result.headers());
 
         List<Edge> edges = result.readList("edges", Edge.class);
         Assert.assertEquals(2, edges.size());
@@ -609,24 +580,9 @@ public class RestResultTest {
                 + "\"label\": \"person\","
                 + "\"type\": \"vertex\","
                 + "\"properties\": {"
-                + "\"city\": ["
-                + "{"
-                + "\"id\": \"person:marko>city\","
-                + "\"value\": \"Beijing\""
-                + "}"
-                + "],"
-                + "\"name\": ["
-                + "{"
-                + "\"id\": \"person:marko>name\","
-                + "\"value\": \"marko\""
-                + "}"
-                + "],"
-                + "\"age\": ["
-                + "{"
-                + "\"id\": \"person:marko>age\","
-                + "\"value\": 29"
-                + "}"
-                + "]"
+                + "\"city\": \"Beijing\","
+                + "\"name\": \"marko\","
+                + "\"age\": 29"
                 + "}"
                 + "},"
                 + "{"
@@ -634,24 +590,9 @@ public class RestResultTest {
                 + "\"label\": \"software\","
                 + "\"type\": \"vertex\","
                 + "\"properties\": {"
-                + "\"price\": ["
-                + "{"
-                + "\"id\": \"software:lop>price\","
-                + "\"value\": 328"
-                + "}"
-                + "],"
-                + "\"name\": ["
-                + "{"
-                + "\"id\": \"software:lop>name\","
-                + "\"value\": \"lop\""
-                + "}"
-                + "],"
-                + "\"lang\": ["
-                + "{"
-                + "\"id\": \"software:lop>lang\","
-                + "\"value\": \"java\""
-                + "}"
-                + "]"
+                + "\"price\": 328,"
+                + "\"name\": \"lop\","
+                + "\"lang\": \"java\""
                 + "}"
                 + "},"
                 + "{"
@@ -659,24 +600,9 @@ public class RestResultTest {
                 + "\"label\": \"person\","
                 + "\"type\": \"vertex\","
                 + "\"properties\": {"
-                + "\"city\": ["
-                + "{"
-                + "\"id\": \"person:peter>city\","
-                + "\"value\": \"Shanghai\""
-                + "}"
-                + "],"
-                + "\"name\": ["
-                + "{"
-                + "\"id\": \"person:peter>name\","
-                + "\"value\": \"peter\""
-                + "}"
-                + "],"
-                + "\"age\": ["
-                + "{"
-                + "\"id\": \"person:peter>age\","
-                + "\"value\": 35"
-                + "}"
-                + "]"
+                + "\"city\": \"Shanghai\","
+                + "\"name\": \"peter\","
+                + "\"age\": 35"
                 + "}"
                 + "}"
                 + "],"
@@ -690,7 +616,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult restResult = new RestResult(this.mockResponse);
         Assert.assertEquals(200, restResult.status());
-        Assert.assertEquals(null, restResult.headers());
+        Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
         Assert.assertEquals(200, response.status().code());
@@ -775,7 +701,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult restResult = new RestResult(this.mockResponse);
         Assert.assertEquals(200, restResult.status());
-        Assert.assertEquals(null, restResult.headers());
+        Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
         Assert.assertEquals(200, response.status().code());
@@ -877,7 +803,7 @@ public class RestResultTest {
                 .thenReturn(json);
         RestResult restResult = new RestResult(this.mockResponse);
         Assert.assertEquals(200, restResult.status());
-        Assert.assertEquals(null, restResult.headers());
+        Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
         Assert.assertEquals(200, response.status().code());
@@ -934,7 +860,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult restResult = new RestResult(this.mockResponse);
         Assert.assertEquals(200, restResult.status());
-        Assert.assertEquals(null, restResult.headers());
+        Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
         Assert.assertEquals(200, response.status().code());
@@ -942,7 +868,7 @@ public class RestResultTest {
         Iterator<Result> results = response.result().iterator();
         Assert.assertTrue(results.hasNext());
         Object object = results.next();
-        Assert.assertEquals(null, object);
+        Assert.assertNull(object);
     }
 
     @Test
@@ -962,24 +888,9 @@ public class RestResultTest {
                 + "\"label\": \"person\","
                 + "\"type\": \"vertex\","
                 + "\"properties\": {"
-                + "\"city\": ["
-                + "{"
-                + "\"id\": \"person:marko>city\","
-                + "\"value\": \"Beijing\""
-                + "}"
-                + "],"
-                + "\"name\": ["
-                + "{"
-                + "\"id\": \"person:marko>name\","
-                + "\"value\": \"marko\""
-                + "}"
-                + "],"
-                + "\"age\": ["
-                + "{"
-                + "\"id\": \"person:marko>age\","
-                + "\"value\": 29"
-                + "}"
-                + "]"
+                + "\"city\": \"Beijing\","
+                + "\"name\": \"marko\","
+                + "\"age\": 29"
                 + "}"
                 + "}"
                 + "],"
@@ -993,7 +904,7 @@ public class RestResultTest {
                 .thenReturn(json);
         RestResult restResult = new RestResult(this.mockResponse);
         Assert.assertEquals(200, restResult.status());
-        Assert.assertEquals(null, restResult.headers());
+        Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
         Assert.assertEquals(200, response.status().code());
@@ -1001,7 +912,7 @@ public class RestResultTest {
         Iterator<Result> results = response.result().iterator();
         Assert.assertTrue(results.hasNext());
         Result result = results.next();
-        Assert.assertEquals(null, result);
+        Assert.assertNull(result);
 
         Assert.assertTrue(results.hasNext());
         result = results.next();
@@ -1052,7 +963,7 @@ public class RestResultTest {
                .thenReturn(json);
         RestResult restResult = new RestResult(this.mockResponse);
         Assert.assertEquals(200, restResult.status());
-        Assert.assertEquals(null, restResult.headers());
+        Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
         Assert.assertEquals(200, response.status().code());
@@ -1076,6 +987,6 @@ public class RestResultTest {
 
         Assert.assertTrue(results.hasNext());
         result = results.next();
-        Assert.assertEquals(null, result);
+        Assert.assertNull(result);
     }
 }

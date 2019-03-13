@@ -404,7 +404,7 @@ public class RestResultTest {
                 + "\"label\": \"person\"," 
                 + "\"type\": \"vertex\"," 
                 + "\"properties\": {" 
-                + "\"city\": \"Beijing\","
+                + "\"city\": [\"Beijing\",\"Wuhan\",\"Beijing\"],"
                 + "\"name\": \"marko\","
                 + "\"age\": 29"
                 + "}"
@@ -416,7 +416,7 @@ public class RestResultTest {
                 + "\"properties\": {" 
                 + "\"price\": 328,"
                 + "\"name\": \"lop\","
-                + "\"lang\": \"java\""
+                + "\"lang\": [\"java\",\"python\",\"c++\"]"
                 + "}"
                 + "},"
                 + "{"
@@ -424,7 +424,7 @@ public class RestResultTest {
                 + "\"label\": \"person\"," 
                 + "\"type\": \"vertex\"," 
                 + "\"properties\": {" 
-                + "\"city\": \"Shanghai\","
+                + "\"city\": [\"Shanghai\"],"
                 + "\"name\": \"peter\","
                 + "\"age\": 29"
                 + "}"
@@ -447,20 +447,28 @@ public class RestResultTest {
 
         Assert.assertEquals("person:marko", vertex1.id());
         Assert.assertEquals("person", vertex1.label());
-        Assert.assertEquals(ImmutableMap.of("name", "marko", "age", 29,
-                                            "city", "Beijing"),
+        Assert.assertEquals(ImmutableMap.of(
+                            "name", "marko",
+                            "age", 29,
+                            "city", ImmutableList.of("Beijing", "Wuhan",
+                                                     "Beijing")
+                            ),
                             vertex1.properties());
 
         Assert.assertEquals("software:lop", vertex2.id());
         Assert.assertEquals("software", vertex2.label());
-        Assert.assertEquals(ImmutableMap.of("name", "lop", "lang", "java",
-                                            "price", 328),
+        Assert.assertEquals(ImmutableMap.of(
+                            "name", "lop",
+                            "lang", ImmutableList.of("java", "python", "c++"),
+                            "price", 328),
                             vertex2.properties());
 
         Assert.assertEquals("person:peter", vertex3.id());
         Assert.assertEquals("person", vertex3.label());
-        Assert.assertEquals(ImmutableMap.of("name", "peter", "age", 29,
-                                            "city", "Shanghai"),
+        Assert.assertEquals(ImmutableMap.of(
+                            "name", "peter",
+                            "age", 29,
+                            "city", ImmutableList.of("Shanghai")),
                             vertex3.properties());
     }
 
@@ -580,7 +588,7 @@ public class RestResultTest {
                 + "\"label\": \"person\","
                 + "\"type\": \"vertex\","
                 + "\"properties\": {"
-                + "\"city\": \"Beijing\","
+                + "\"city\": [\"Beijing\",\"Wuhan\",\"Beijing\"],"
                 + "\"name\": \"marko\","
                 + "\"age\": 29"
                 + "}"
@@ -592,7 +600,7 @@ public class RestResultTest {
                 + "\"properties\": {"
                 + "\"price\": 328,"
                 + "\"name\": \"lop\","
-                + "\"lang\": \"java\""
+                + "\"lang\": [\"java\",\"python\",\"c++\"]"
                 + "}"
                 + "},"
                 + "{"
@@ -600,7 +608,7 @@ public class RestResultTest {
                 + "\"label\": \"person\","
                 + "\"type\": \"vertex\","
                 + "\"properties\": {"
-                + "\"city\": \"Shanghai\","
+                + "\"city\": [\"Shanghai\"],"
                 + "\"name\": \"peter\","
                 + "\"age\": 35"
                 + "}"
@@ -621,23 +629,23 @@ public class RestResultTest {
         Response response = restResult.readObject(Response.class);
         Assert.assertEquals(200, response.status().code());
 
-        Vertex peter = new Vertex("person");
-        peter.id("person:peter");
-        peter.property("name", "peter");
-        peter.property("city", "Shanghai");
-        peter.property("age", 35);
-
         Vertex marko = new Vertex("person");
         marko.id("person:marko");
         marko.property("name", "marko");
-        marko.property("city", "Beijing");
+        marko.property("city", ImmutableList.of("Beijing", "Wuhan", "Beijing"));
         marko.property("age", 29);
 
         Vertex lop = new Vertex("software");
         lop.id("software:lop");
         lop.property("name", "lop");
-        lop.property("lang", "java");
+        lop.property("lang", ImmutableList.of("java", "python", "c++"));
         lop.property("price", 328);
+
+        Vertex peter = new Vertex("person");
+        peter.id("person:peter");
+        peter.property("name", "peter");
+        peter.property("city", ImmutableList.of("Shanghai"));
+        peter.property("age", 35);
 
         List<Vertex> vertices = new ArrayList<>(3);
         vertices.add(peter);

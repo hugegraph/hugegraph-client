@@ -44,6 +44,7 @@ import com.baidu.hugegraph.structure.graph.Path;
 import com.baidu.hugegraph.structure.graph.Shard;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.graph.Vertices;
+import com.baidu.hugegraph.util.E;
 
 public class TraverserManager {
 
@@ -209,6 +210,13 @@ public class TraverserManager {
         return vertices;
     }
 
+    public Vertices vertices(Shard shard) {
+        Vertices vertices = this.vertices(shard, null);
+        E.checkState(vertices.page() == null,
+                     "Can't contains page when not in paging");
+        return vertices;
+    }
+
     public Vertices vertices(Shard shard, String page) {
         Vertices vertices = this.verticesAPI.scan(shard, page);
 
@@ -223,6 +231,13 @@ public class TraverserManager {
         for (Edge edge : edges) {
             edge.attachManager(this.graphManager);
         }
+        return edges;
+    }
+
+    public Edges edges(Shard shard) {
+        Edges edges = this.edges(shard, null);
+        E.checkState(edges.page() == null,
+                     "Can't contains page when not in paging");
         return edges;
     }
 

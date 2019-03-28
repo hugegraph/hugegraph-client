@@ -804,9 +804,26 @@ public class TraverserApiTest extends BaseApiTest {
         List<Shard> shards = verticesAPI.shards(1 * 1024 * 1024);
         List<Vertex> vertices = new LinkedList<>();
         for (Shard shard : shards) {
-            Vertices result = verticesAPI.scan(shard, "");
-            Assert.assertNull(result.page());
-            vertices.addAll(ImmutableList.copyOf(result.results()));
+            Vertices results = verticesAPI.scan(shard, null);
+            vertices.addAll(ImmutableList.copyOf(results.results()));
+            Assert.assertNull(results.page());
+        }
+        Assert.assertEquals(6, vertices.size());
+    }
+
+    @Test
+    public void testScanVertexInPaging() {
+        List<Shard> shards = verticesAPI.shards(1 * 1024 * 1024);
+        List<Vertex> vertices = new LinkedList<>();
+        Vertices results;
+        String page;
+        for (Shard shard : shards) {
+            page = "";
+            while (page != null) {
+                results = verticesAPI.scan(shard, page);
+                vertices.addAll(ImmutableList.copyOf(results.results()));
+                page = results.page();
+            }
         }
         Assert.assertEquals(6, vertices.size());
     }
@@ -823,9 +840,26 @@ public class TraverserApiTest extends BaseApiTest {
         List<Shard> shards = edgesAPI.shards(1 * 1024 * 1024);
         List<Edge> edges = new LinkedList<>();
         for (Shard shard : shards) {
-            Edges result = edgesAPI.scan(shard, "");
-            Assert.assertNull(result.page());
-            edges.addAll(ImmutableList.copyOf(result.results()));
+            Edges results = edgesAPI.scan(shard, null);
+            Assert.assertNull(results.page());
+            edges.addAll(ImmutableList.copyOf(results.results()));
+        }
+        Assert.assertEquals(6, edges.size());
+    }
+
+    @Test
+    public void testScanEdgeInPaging() {
+        List<Shard> shards = edgesAPI.shards(1 * 1024 * 1024);
+        List<Edge> edges = new LinkedList<>();
+        Edges results;
+        String page;
+        for (Shard shard : shards) {
+            page = "";
+            while (page != null) {
+                results = edgesAPI.scan(shard, page);
+                edges.addAll(ImmutableList.copyOf(results.results()));
+                page = results.page();
+            }
         }
         Assert.assertEquals(6, edges.size());
     }

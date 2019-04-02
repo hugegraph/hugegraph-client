@@ -46,6 +46,8 @@ import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.graph.Vertices;
 import com.baidu.hugegraph.util.E;
 
+import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_PAGE_LIMIT;
+
 public class TraverserManager {
 
     private final GraphManager graphManager;
@@ -211,14 +213,19 @@ public class TraverserManager {
     }
 
     public Vertices vertices(Shard shard) {
-        Vertices vertices = this.vertices(shard, null);
+        Vertices vertices = this.vertices(shard, null, 0L);
         E.checkState(vertices.page() == null,
                      "Can't contains page when not in paging");
         return vertices;
     }
 
     public Vertices vertices(Shard shard, String page) {
-        Vertices vertices = this.verticesAPI.scan(shard, page);
+        E.checkNotNull(page, "page");
+        return this.vertices(shard, page, DEFAULT_PAGE_LIMIT);
+    }
+
+    public Vertices vertices(Shard shard, String page, long pageLimit) {
+        Vertices vertices = this.verticesAPI.scan(shard, page, pageLimit);
 
         for (Vertex vertex : vertices.results()) {
             vertex.attachManager(this.graphManager);
@@ -235,14 +242,19 @@ public class TraverserManager {
     }
 
     public Edges edges(Shard shard) {
-        Edges edges = this.edges(shard, null);
+        Edges edges = this.edges(shard, null, 0L);
         E.checkState(edges.page() == null,
                      "Can't contains page when not in paging");
         return edges;
     }
 
     public Edges edges(Shard shard, String page) {
-        Edges edges = this.edgesAPI.scan(shard, page);
+        E.checkNotNull(page, "page");
+        return this.edges(shard, page, DEFAULT_PAGE_LIMIT);
+    }
+
+    public Edges edges(Shard shard, String page, long pageLimit) {
+        Edges edges = this.edgesAPI.scan(shard, page, pageLimit);
         for (Edge edge : edges.results()) {
             edge.attachManager(this.graphManager);
         }

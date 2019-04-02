@@ -48,6 +48,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
+import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_PAGE_LIMIT;
+
 public class TraverserApiTest extends BaseApiTest {
 
     @BeforeClass
@@ -804,7 +806,7 @@ public class TraverserApiTest extends BaseApiTest {
         List<Shard> shards = verticesAPI.shards(1 * 1024 * 1024);
         List<Vertex> vertices = new LinkedList<>();
         for (Shard shard : shards) {
-            Vertices results = verticesAPI.scan(shard, null);
+            Vertices results = verticesAPI.scan(shard, null, 0L);
             vertices.addAll(ImmutableList.copyOf(results.results()));
             Assert.assertNull(results.page());
         }
@@ -815,12 +817,10 @@ public class TraverserApiTest extends BaseApiTest {
     public void testScanVertexInPaging() {
         List<Shard> shards = verticesAPI.shards(1 * 1024 * 1024);
         List<Vertex> vertices = new LinkedList<>();
-        Vertices results;
-        String page;
         for (Shard shard : shards) {
-            page = "";
+            String page = "";
             while (page != null) {
-                results = verticesAPI.scan(shard, page);
+                Vertices results = verticesAPI.scan(shard, page, DEFAULT_PAGE_LIMIT);
                 vertices.addAll(ImmutableList.copyOf(results.results()));
                 page = results.page();
             }
@@ -840,7 +840,7 @@ public class TraverserApiTest extends BaseApiTest {
         List<Shard> shards = edgesAPI.shards(1 * 1024 * 1024);
         List<Edge> edges = new LinkedList<>();
         for (Shard shard : shards) {
-            Edges results = edgesAPI.scan(shard, null);
+            Edges results = edgesAPI.scan(shard, null, 0L);
             Assert.assertNull(results.page());
             edges.addAll(ImmutableList.copyOf(results.results()));
         }
@@ -851,12 +851,10 @@ public class TraverserApiTest extends BaseApiTest {
     public void testScanEdgeInPaging() {
         List<Shard> shards = edgesAPI.shards(1 * 1024 * 1024);
         List<Edge> edges = new LinkedList<>();
-        Edges results;
-        String page;
         for (Shard shard : shards) {
-            page = "";
+            String page = "";
             while (page != null) {
-                results = edgesAPI.scan(shard, page);
+                Edges results = edgesAPI.scan(shard, page, DEFAULT_PAGE_LIMIT);
                 edges.addAll(ImmutableList.copyOf(results.results()));
                 page = results.page();
             }

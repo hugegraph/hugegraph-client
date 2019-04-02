@@ -66,12 +66,13 @@ public class VerticesAPI extends TraversersAPI {
         return result.readList("shards", Shard.class);
     }
 
-    public Vertices scan(Shard shard, String page) {
+    public Vertices scan(Shard shard, String page, long pageLimit) {
         String path = String.join(PATH_SPLITOR, this.path(), "scan");
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("start", shard.start());
         params.put("end", shard.end());
         params.put("page", page);
+        params.put("page_limit", pageLimit);
         RestResult result = this.client.get(path, params);
         return result.readObject(Vertices.class);
     }

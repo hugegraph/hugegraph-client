@@ -67,6 +67,7 @@ public class VerticesAPI extends TraversersAPI {
     }
 
     public Vertices scan(Shard shard, String page, long pageLimit) {
+        E.checkArgument(shard != null, "Shard can't be null");
         String path = String.join(PATH_SPLITOR, this.path(), "scan");
         Map<String, Object> params = new LinkedHashMap<>();
         params.put("start", shard.start());

@@ -220,11 +220,13 @@ public class TraverserManager {
     }
 
     public Vertices vertices(Shard shard, String page) {
-        E.checkNotNull(page, "page");
+        E.checkArgument(page != null, "Page can't be null");
         return this.vertices(shard, page, DEFAULT_PAGE_LIMIT);
     }
 
     public Vertices vertices(Shard shard, String page, long pageLimit) {
+        E.checkArgument(page == null || pageLimit >= 0,
+                        "Page limit must be >= 0 when page is not null");
         Vertices vertices = this.verticesAPI.scan(shard, page, pageLimit);
 
         for (Vertex vertex : vertices.results()) {
@@ -249,11 +251,13 @@ public class TraverserManager {
     }
 
     public Edges edges(Shard shard, String page) {
-        E.checkNotNull(page, "page");
+        E.checkArgument(page != null, "Page can't be null");
         return this.edges(shard, page, DEFAULT_PAGE_LIMIT);
     }
 
     public Edges edges(Shard shard, String page, long pageLimit) {
+        E.checkArgument(page == null || pageLimit >= 0,
+                        "Page limit must be >= 0 when page is not null");
         Edges edges = this.edgesAPI.scan(shard, page, pageLimit);
         for (Edge edge : edges.results()) {
             edge.attachManager(this.graphManager);

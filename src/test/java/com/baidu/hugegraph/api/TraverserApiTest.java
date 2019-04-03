@@ -829,6 +829,17 @@ public class TraverserApiTest extends BaseApiTest {
     }
 
     @Test
+    public void testScanVertexInPagingWithNegativeLimit() {
+        List<Shard> shards = verticesAPI.shards(1 * 1024 * 1024);
+        for (Shard shard : shards) {
+            String page = "";
+            Assert.assertThrows(ServerException.class, () -> {
+                verticesAPI.scan(shard, page, -1);
+            });
+        }
+    }
+
+    @Test
     public void testScanVertexWithSplitSizeLt1MB() {
         Assert.assertThrows(ServerException.class, () -> {
             verticesAPI.shards(1 * 1024 * 1024 - 1);
@@ -860,6 +871,17 @@ public class TraverserApiTest extends BaseApiTest {
             }
         }
         Assert.assertEquals(6, edges.size());
+    }
+
+    @Test
+    public void testScanEdgeInPagingWithNegativeLimit() {
+        List<Shard> shards = edgesAPI.shards(1 * 1024 * 1024);
+        for (Shard shard : shards) {
+            String page = "";
+            Assert.assertThrows(ServerException.class, () -> {
+                edgesAPI.scan(shard, page, -1);
+            });
+        }
     }
 
     @Test

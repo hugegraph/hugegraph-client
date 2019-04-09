@@ -31,6 +31,8 @@ import com.baidu.hugegraph.version.ClientVersion;
 public class HugeClient implements Closeable {
 
     private static final int DEFAULT_TIMEOUT = 20;
+    private static final int DEFAULT_MAX_CONNS = 100;
+    private static final int DEFAULT_MAX_CONNS_PER_ROUTE = 40;
 
     static {
         ClientVersion.check();
@@ -53,18 +55,15 @@ public class HugeClient implements Closeable {
     }
 
     public HugeClient(String url, String graph, int timeout) {
-        try {
-            this.client = new RestClient(url, timeout);
-        } catch (ProcessingException e) {
-            throw new ServerException("Failed to connect url '%s'", url);
-        }
-        this.initManagers(this.client, graph);
+        this(url, graph, timeout, DEFAULT_MAX_CONNS,
+             DEFAULT_MAX_CONNS_PER_ROUTE);
     }
 
     public HugeClient(String url, String graph, int timeout,
-                      int maxTotal, int maxPerRoute) {
+                      int maxConns, int maxConnsPerRoute) {
         try {
-            this.client = new RestClient(url, timeout, maxTotal, maxPerRoute);
+            this.client = new RestClient(url, timeout, maxConns,
+                                         maxConnsPerRoute);
         } catch (ProcessingException e) {
             throw new ServerException("Failed to connect url '%s'", url);
         }
@@ -79,8 +78,16 @@ public class HugeClient implements Closeable {
     public HugeClient(String url, String graph,
                       String username, String password,
                       int timeout) {
+        this(url, graph, username, password, timeout, DEFAULT_MAX_CONNS,
+             DEFAULT_MAX_CONNS_PER_ROUTE);
+    }
+
+    public HugeClient(String url, String graph,
+                      String username, String password,
+                      int timeout, int maxConns, int maxConnsPerRoute) {
         try {
-            this.client = new RestClient(url, username, password, timeout);
+            this.client = new RestClient(url, username, password, timeout,
+                                         maxConns, maxConnsPerRoute);
         } catch (ProcessingException e) {
             throw new ServerException("Failed to connect url '%s'", url);
         }

@@ -19,6 +19,8 @@
 
 package com.baidu.hugegraph.driver;
 
+import java.io.Closeable;
+
 import javax.ws.rs.ProcessingException;
 
 import com.baidu.hugegraph.client.RestClient;
@@ -26,7 +28,7 @@ import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.util.VersionUtil;
 import com.baidu.hugegraph.version.ClientVersion;
 
-public class HugeClient {
+public class HugeClient implements Closeable {
 
     private static final int DEFAULT_TIMEOUT = 20;
 
@@ -85,6 +87,7 @@ public class HugeClient {
         this.initManagers(this.client, graph);
     }
 
+    @Override
     public void close() {
         this.client.close();
     }

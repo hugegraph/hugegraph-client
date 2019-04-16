@@ -29,11 +29,13 @@ import java.util.stream.Collectors;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.baidu.hugegraph.api.traverser.NeighborRankAPI;
+import com.baidu.hugegraph.api.traverser.PersonalRankAPI;
 import com.baidu.hugegraph.api.traverser.structure.CrosspointsRequest;
 import com.baidu.hugegraph.api.traverser.structure.CustomizedCrosspoints;
 import com.baidu.hugegraph.api.traverser.structure.CustomizedPaths;
 import com.baidu.hugegraph.api.traverser.structure.PathsRequest;
-import com.baidu.hugegraph.api.traverser.structure.RankRequest;
+import com.baidu.hugegraph.api.traverser.structure.Ranks;
 import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.exception.ServerException;
@@ -919,15 +921,16 @@ public class TraverserApiTest extends BaseApiTest {
     public void testNeighborRank() {
         initNeighborRankGraph();
 
-        RankRequest.Builder builder = new RankRequest.Builder();
+        NeighborRankAPI.RankRequest.Builder builder;
+        builder = new NeighborRankAPI.RankRequest.Builder();
         builder.source("O");
         builder.steps().direction(Direction.OUT).degree(-1).top(10);
         builder.steps().direction(Direction.OUT).degree(-1).top(10);
         builder.steps().direction(Direction.OUT).degree(-1).top(10);
         builder.alpha(0.9).capacity(-1);
-        RankRequest request = builder.build();
+        NeighborRankAPI.RankRequest request = builder.build();
 
-        List<Map<Object, Double>> ranks = neighborRankAPI.post(request);
+        List<Ranks> ranks = neighborRankAPI.post(request);
         Assert.assertEquals(4, ranks.size());
         Assert.assertEquals(ImmutableMap.of("O", 1.0D), ranks.get(0));
 
@@ -954,30 +957,50 @@ public class TraverserApiTest extends BaseApiTest {
     public void testNeighborRankWithTop() {
         initNeighborRankGraph();
 
-        RankRequest.Builder builder = new RankRequest.Builder();
+        NeighborRankAPI.RankRequest.Builder builder;
+        builder = new NeighborRankAPI.RankRequest.Builder();
         builder.source("O");
         builder.steps().direction(Direction.OUT).degree(-1).top(2);
         builder.steps().direction(Direction.OUT).degree(-1).top(3);
         builder.steps().direction(Direction.OUT).degree(-1).top(2);
         builder.alpha(0.9).capacity(-1);
-        RankRequest request = builder.build();
+        NeighborRankAPI.RankRequest request = builder.build();
 
-        List<Map<Object, Double>> ranks = neighborRankAPI.post(request);
+        List<Ranks> ranks = neighborRankAPI.post(request);
         Assert.assertEquals(4, ranks.size());
         Assert.assertEquals(ImmutableMap.of("O", 1.0D), ranks.get(0));
 
         Assert.assertEquals(ImmutableMap.of("B", 0.45075000000000004D,
                                             "A", 0.3D),
                             ranks.get(1));
-        Assert.assertEquals(ImmutableMap.builder()
-                                        .put("G", 0.17550000000000002D)
-                                        .put("H", 0.17550000000000002D)
-                                        .put("E", 0.135D)
-                                        .build(),
+        Assert.assertEquals(ImmutableMap.of("G", 0.17550000000000002D,
+                                            "H", 0.17550000000000002D,
+                                            "E", 0.135D),
                             ranks.get(2));
         Assert.assertEquals(ImmutableMap.of("M", 0.15795D,
-                            "K", 0.12150000000000001D),
+                                            "K", 0.12150000000000001D),
                             ranks.get(3));
+    }
+
+    @Test
+    public void testPersonalRank() {
+        initPersonalRankGraph();
+
+        PersonalRankAPI.RankRequest.Builder builder;
+        builder = new PersonalRankAPI.RankRequest.Builder();
+        builder.source("A").label("like").alpha(0.9).maxDepth(50).build();
+        PersonalRankAPI.RankRequest request = builder.build();
+
+        Map<Object, Double> ranks = personalRankAPI.post(request);
+        Assert.assertEquals(ImmutableMap.builder()
+                                        .put("A", 0.22378692172243492D)
+                                        .put("B", 0.2065750574989044D)
+                                        .put("c", 0.18972188606657317)
+                                        .put("a", 0.1460239032907022)
+                                        .put("C", 0.09839507219265439)
+                                        .put("d", 0.08959757100230095)
+                                        .put("b", 0.04589958822642998)
+                                        .build(), ranks);
     }
 
     @Test
@@ -1198,7 +1221,7 @@ public class TraverserApiTest extends BaseApiTest {
               .ifNotExist()
               .create();
 
-        schema.edgeLabel("directedby")
+        schema.edgeLabel("directedBy")
               .sourceLabel("movie")
               .targetLabel("m_person")
               .ifNotExist()
@@ -1237,10 +1260,55 @@ public class TraverserApiTest extends BaseApiTest {
         C.addEdge("like", I);
         C.addEdge("like", J);
 
-        E.addEdge("directedby", K);
-        F.addEdge("directedby", B);
-        F.addEdge("directedby", L);
+        E.addEdge("directedBy", K);
+        F.addEdge("directedBy", B);
+        F.addEdge("directedBy", L);
 
-        G.addEdge("directedby", M);
+        G.addEdge("directedBy", M);
+    }
+
+    private static void initPersonalRankGraph() {
+        GraphManager graph = graph();
+        SchemaManager schema = schema();
+
+        schema.propertyKey("name").asText().ifNotExist().create();
+
+        schema.vertexLabel("person")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.vertexLabel("movie")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("like")
+              .sourceLabel("person")
+              .targetLabel("movie")
+              .ifNotExist()
+              .create();
+
+        Vertex A = graph.addVertex(T.label, "person", T.id, "A", "name", "A");
+        Vertex B = graph.addVertex(T.label, "person", T.id, "B", "name", "B");
+        Vertex C = graph.addVertex(T.label, "person", T.id, "C", "name", "C");
+
+        Vertex a = graph.addVertex(T.label, "movie", T.id, "a", "name", "a");
+        Vertex b = graph.addVertex(T.label, "movie", T.id, "b", "name", "b");
+        Vertex c = graph.addVertex(T.label, "movie", T.id, "c", "name", "c");
+        Vertex d = graph.addVertex(T.label, "movie", T.id, "d", "name", "d");
+
+        A.addEdge("like", a);
+        A.addEdge("like", c);
+
+        B.addEdge("like", a);
+        B.addEdge("like", b);
+        B.addEdge("like", c);
+        B.addEdge("like", d);
+
+        C.addEdge("like", c);
+        C.addEdge("like", d);
     }
 }

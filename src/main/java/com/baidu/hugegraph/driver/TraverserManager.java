@@ -30,6 +30,7 @@ import com.baidu.hugegraph.api.traverser.KneighborAPI;
 import com.baidu.hugegraph.api.traverser.KoutAPI;
 import com.baidu.hugegraph.api.traverser.NeighborRankAPI;
 import com.baidu.hugegraph.api.traverser.PathsAPI;
+import com.baidu.hugegraph.api.traverser.PersonalRankAPI;
 import com.baidu.hugegraph.api.traverser.RaysAPI;
 import com.baidu.hugegraph.api.traverser.RingsAPI;
 import com.baidu.hugegraph.api.traverser.ShortestPathAPI;
@@ -38,7 +39,6 @@ import com.baidu.hugegraph.api.traverser.structure.CrosspointsRequest;
 import com.baidu.hugegraph.api.traverser.structure.CustomizedCrosspoints;
 import com.baidu.hugegraph.api.traverser.structure.CustomizedPaths;
 import com.baidu.hugegraph.api.traverser.structure.PathsRequest;
-import com.baidu.hugegraph.api.traverser.structure.RankRequest;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Edge;
@@ -69,6 +69,7 @@ public class TraverserManager {
     private CustomizedPathsAPI customizedPathsAPI;
     private CustomizedCrosspointsAPI customizedCrosspointsAPI;
     private NeighborRankAPI neighborRankAPI;
+    private PersonalRankAPI personalRankAPI;
     private VerticesAPI verticesAPI;
     private EdgesAPI edgesAPI;
 
@@ -86,6 +87,7 @@ public class TraverserManager {
         this.customizedCrosspointsAPI = new CustomizedCrosspointsAPI(client,
                                                                      graph);
         this.neighborRankAPI = new NeighborRankAPI(client, graph);
+        this.personalRankAPI = new PersonalRankAPI(client, graph);
         this.verticesAPI = new VerticesAPI(client, graph);
         this.edgesAPI = new EdgesAPI(client, graph);
     }
@@ -214,8 +216,14 @@ public class TraverserManager {
         return this.customizedCrosspointsAPI.post(request);
     }
 
-    public List<Map<Object, Double>> neighborrank(RankRequest request) {
+    public List<Map<Object, Double>> neighborRank(
+                                     NeighborRankAPI.RankRequest request) {
         return this.neighborRankAPI.post(request);
+    }
+
+    public Map<Object, Double> personalRank(
+                               PersonalRankAPI.RankRequest request) {
+        return this.personalRankAPI.post(request);
     }
 
     public List<Shard> vertexShards(long splitSize) {

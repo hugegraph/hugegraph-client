@@ -19,12 +19,18 @@
 
 package com.baidu.hugegraph.api.traverser;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import com.baidu.hugegraph.api.traverser.structure.RankRequest;
+import com.baidu.hugegraph.api.graph.GraphAPI;
+import com.baidu.hugegraph.api.traverser.structure.Ranks;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.constant.Direction;
+import com.baidu.hugegraph.structure.constant.Traverser;
+import com.baidu.hugegraph.util.E;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NeighborRankAPI extends TraversersAPI {
 
@@ -37,9 +43,155 @@ public class NeighborRankAPI extends TraversersAPI {
         return "neighborrank";
     }
 
-    public List<Map<Object, Double>> post(RankRequest request) {
+    public List<Ranks> post(RankRequest request) {
         RestResult result = this.client.post(this.path(), request);
-        // TODO:
-        return result.readObject(List.class);
+        return result.readList("ranks", Ranks.class);
+    }
+
+    public static class RankRequest {
+
+        @JsonProperty("source")
+        private String source;
+        @JsonProperty("steps")
+        private List<Step> steps;
+        @JsonProperty("alpha")
+        private double alpha;
+        @JsonProperty("capacity")
+        private long capacity;
+
+        private RankRequest() {
+            this.source = null;
+            this.steps = new ArrayList<>();
+            this.alpha = Traverser.DEFAULT_ALPHA;
+            this.capacity = Traverser.DEFAULT_CAPACITY;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("RankRequest{source=%s,steps=%s,alpha=%s," +
+                                 "capacity=%s}", this.source, this.steps,
+                                 this.alpha, this.capacity);
+        }
+
+        public static class Builder {
+
+            private RankRequest request;
+            private List<Step.Builder> stepBuilders;
+
+            public Builder() {
+                this.request = new RankRequest();
+                this.stepBuilders = new ArrayList<>();
+            }
+
+            public Builder source(Object source) {
+                this.request.source = GraphAPI.formatVertexId(source);
+                return this;
+            }
+
+            public Step.Builder steps() {
+                Step.Builder builder = new Step.Builder();
+                this.stepBuilders.add(builder);
+                return builder;
+            }
+
+            public Builder alpha(double alpha) {
+                TraversersAPI.checkAlpha(alpha);
+                this.request.alpha = alpha;
+                return this;
+            }
+
+            public Builder capacity(long capacity) {
+                TraversersAPI.checkCapacity(capacity);
+                this.request.capacity = capacity;
+                return this;
+            }
+
+            public RankRequest build() {
+                for (Step.Builder builder : this.stepBuilders) {
+                    this.request.steps.add(builder.build());
+                }
+                E.checkArgument(this.request.source != null,
+                                "Source vertex can't be null");
+                E.checkArgument(this.request.steps != null &&
+                                !this.request.steps.isEmpty(),
+                                "Steps can't be null or empty");
+                TraversersAPI.checkCapacity(this.request.capacity);
+                TraversersAPI.checkAlpha(this.request.alpha);
+                return this.request;
+            }
+        }
+
+        public static class Step {
+
+            @JsonProperty("direction")
+            private String direction;
+            @JsonProperty("labels")
+            private List<String> labels;
+            @JsonProperty("degree")
+            private long degree;
+            @JsonProperty("top")
+            private int top;
+
+            private Step() {
+                this.direction = null;
+                this.labels = new ArrayList<>();
+                this.degree = Traverser.DEFAULT_DEGREE;
+                this.top = (int) Traverser.DEFAULT_PATHS_LIMIT;
+            }
+
+            @Override
+            public String toString() {
+                return String.format("Step{direction=%s,labels=%s,degree=%s," +
+                                     "top=%s}", this.direction, this.labels,
+                                     this.degree, this.top);
+            }
+
+            public static class Builder {
+
+                private Step step;
+
+                private Builder() {
+                    this.step = new Step();
+                }
+
+                public Step.Builder direction(Direction direction) {
+                    this.step.direction = direction.toString();
+                    return this;
+                }
+
+                public Step.Builder labels(List<String> labels) {
+                    this.step.labels.addAll(labels);
+                    return this;
+                }
+
+                public Step.Builder labels(String... labels) {
+                    this.step.labels.addAll(Arrays.asList(labels));
+                    return this;
+                }
+
+                public Step.Builder degree(long degree) {
+                    TraversersAPI.checkDegree(degree);
+                    this.step.degree = degree;
+                    return this;
+                }
+
+                public Step.Builder top(int top) {
+                    E.checkArgument(top > 0 && top <= Traverser.DEFAULT_MAX_TOP,
+                                    "The top of each layer cannot exceed %s",
+                                    Traverser.DEFAULT_MAX_TOP);
+                    this.step.top = top;
+                    return this;
+                }
+
+                private Step build() {
+                    TraversersAPI.checkDegree(this.step.degree);
+                    E.checkArgument(this.step.top > 0 &&
+                                    this.step.top <= Traverser.DEFAULT_MAX_TOP,
+                                    "The top of each layer cannot exceed %s",
+                                    Traverser.DEFAULT_MAX_TOP);
+                    return this.step;
+                }
+            }
+        }
     }
 }

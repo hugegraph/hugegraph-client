@@ -33,6 +33,8 @@ import com.baidu.hugegraph.api.traverser.structure.CrosspointsRequest;
 import com.baidu.hugegraph.api.traverser.structure.CustomizedCrosspoints;
 import com.baidu.hugegraph.api.traverser.structure.CustomizedPaths;
 import com.baidu.hugegraph.api.traverser.structure.PathsRequest;
+import com.baidu.hugegraph.api.traverser.structure.RankRequest;
+import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
@@ -914,6 +916,71 @@ public class TraverserApiTest extends BaseApiTest {
     }
 
     @Test
+    public void testNeighborRank() {
+        initNeighborRankGraph();
+
+        RankRequest.Builder builder = new RankRequest.Builder();
+        builder.source("O");
+        builder.steps().direction(Direction.OUT).degree(-1).top(10);
+        builder.steps().direction(Direction.OUT).degree(-1).top(10);
+        builder.steps().direction(Direction.OUT).degree(-1).top(10);
+        builder.alpha(0.9).capacity(-1);
+        RankRequest request = builder.build();
+
+        List<Map<Object, Double>> ranks = neighborRankAPI.post(request);
+        Assert.assertEquals(4, ranks.size());
+        Assert.assertEquals(ImmutableMap.of("O", 1.0D), ranks.get(0));
+
+        Assert.assertEquals(ImmutableMap.of("B", 0.45075000000000004D,
+                                            "A", 0.3D,
+                                            "C", 0.3D),
+                            ranks.get(1));
+        Assert.assertEquals(ImmutableMap.builder()
+                                        .put("G", 0.17550000000000002D)
+                                        .put("H", 0.17550000000000002D)
+                                        .put("E", 0.135D)
+                                        .put("F", 0.135D)
+                                        .put("I", 0.135D)
+                                        .put("J", 0.135D)
+                                        .build(),
+                            ranks.get(2));
+        Assert.assertEquals(ImmutableMap.of("M", 0.15795D,
+                                            "K", 0.12150000000000001D,
+                                            "L", 0.12150000000000001D),
+                            ranks.get(3));
+    }
+
+    @Test
+    public void testNeighborRankWithTop() {
+        initNeighborRankGraph();
+
+        RankRequest.Builder builder = new RankRequest.Builder();
+        builder.source("O");
+        builder.steps().direction(Direction.OUT).degree(-1).top(2);
+        builder.steps().direction(Direction.OUT).degree(-1).top(3);
+        builder.steps().direction(Direction.OUT).degree(-1).top(2);
+        builder.alpha(0.9).capacity(-1);
+        RankRequest request = builder.build();
+
+        List<Map<Object, Double>> ranks = neighborRankAPI.post(request);
+        Assert.assertEquals(4, ranks.size());
+        Assert.assertEquals(ImmutableMap.of("O", 1.0D), ranks.get(0));
+
+        Assert.assertEquals(ImmutableMap.of("B", 0.45075000000000004D,
+                                            "A", 0.3D),
+                            ranks.get(1));
+        Assert.assertEquals(ImmutableMap.builder()
+                                        .put("G", 0.17550000000000002D)
+                                        .put("H", 0.17550000000000002D)
+                                        .put("E", 0.135D)
+                                        .build(),
+                            ranks.get(2));
+        Assert.assertEquals(ImmutableMap.of("M", 0.15795D,
+                            "K", 0.12150000000000001D),
+                            ranks.get(3));
+    }
+
+    @Test
     public void testVertices() {
         Object markoId = getVertexId("person", "name", "marko");
         Object vadasId = getVertexId("person", "name", "vadas");
@@ -1101,5 +1168,79 @@ public class TraverserApiTest extends BaseApiTest {
             elTaskIds.add(edgeLabelAPI.delete(edgeLabel.name()));
         });
         elTaskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
+    }
+
+    private static void initNeighborRankGraph() {
+        GraphManager graph = graph();
+        SchemaManager schema = schema();
+
+        schema.vertexLabel("m_person")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.vertexLabel("movie")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("follow")
+              .sourceLabel("m_person")
+              .targetLabel("m_person")
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("like")
+              .sourceLabel("m_person")
+              .targetLabel("movie")
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("directedby")
+              .sourceLabel("movie")
+              .targetLabel("m_person")
+              .ifNotExist()
+              .create();
+
+        Vertex O = graph.addVertex(T.label, "m_person", T.id, "O", "name", "O");
+
+        Vertex A = graph.addVertex(T.label, "m_person", T.id, "A", "name", "A");
+        Vertex B = graph.addVertex(T.label, "m_person", T.id, "B", "name", "B");
+        Vertex C = graph.addVertex(T.label, "m_person", T.id, "C", "name", "C");
+        Vertex D = graph.addVertex(T.label, "m_person", T.id, "D", "name", "D");
+
+        Vertex E = graph.addVertex(T.label, "movie", T.id, "E", "name", "E");
+        Vertex F = graph.addVertex(T.label, "movie", T.id, "F", "name", "F");
+        Vertex G = graph.addVertex(T.label, "movie", T.id, "G", "name", "G");
+        Vertex H = graph.addVertex(T.label, "movie", T.id, "H", "name", "H");
+        Vertex I = graph.addVertex(T.label, "movie", T.id, "I", "name", "I");
+        Vertex J = graph.addVertex(T.label, "movie", T.id, "J", "name", "J");
+
+        Vertex K = graph.addVertex(T.label, "m_person", T.id, "K", "name", "K");
+        Vertex L = graph.addVertex(T.label, "m_person", T.id, "L", "name", "L");
+        Vertex M = graph.addVertex(T.label, "m_person", T.id, "M", "name", "M");
+
+        O.addEdge("follow", A);
+        O.addEdge("follow", B);
+        O.addEdge("follow", C);
+        D.addEdge("follow", O);
+
+        A.addEdge("follow", B);
+        A.addEdge("like", E);
+        A.addEdge("like", F);
+
+        B.addEdge("like", G);
+        B.addEdge("like", H);
+
+        C.addEdge("like", I);
+        C.addEdge("like", J);
+
+        E.addEdge("directedby", K);
+        F.addEdge("directedby", B);
+        F.addEdge("directedby", L);
+
+        G.addEdge("directedby", M);
     }
 }

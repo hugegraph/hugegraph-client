@@ -17,18 +17,29 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.structure.constant;
+package com.baidu.hugegraph.api.traverser;
 
-public class Traverser {
+import java.util.List;
+import java.util.Map;
 
-    public static final long DEFAULT_CAPACITY = 10_000_000L;
-    public static final long DEFAULT_ELEMENTS_LIMIT = 10_000_000L;
-    public static final long DEFAULT_DEGREE = 10_000L;
-    public static final long DEFAULT_CROSSPOINT_LIMIT = 10_000L;
-    public static final long DEFAULT_PATHS_LIMIT = 10L;
-    public static final long DEFAULT_SAMPLE = 100L;
-    public static final double DEFAULT_WEIGHT = 0.0D;
-    public static final long DEFAULT_PAGE_LIMIT = 100_000L;
-    public static final double DEFAULT_ALPHA = 0.9;
-    public static final int DEFAULT_MAX_TOP = 100_000;
+import com.baidu.hugegraph.api.traverser.structure.RankRequest;
+import com.baidu.hugegraph.client.RestClient;
+import com.baidu.hugegraph.rest.RestResult;
+
+public class NeighborRankAPI extends TraversersAPI {
+
+    public NeighborRankAPI(RestClient client, String graph) {
+        super(client, graph);
+    }
+
+    @Override
+    protected String type() {
+        return "neighborrank";
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<Object, Double>> post(RankRequest request) {
+        RestResult result = this.client.post(this.path(), request);
+        return result.readObject(List.class);
+    }
 }

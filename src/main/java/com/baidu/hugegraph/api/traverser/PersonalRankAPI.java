@@ -19,11 +19,8 @@
 
 package com.baidu.hugegraph.api.traverser;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.baidu.hugegraph.api.graph.GraphAPI;
+import com.baidu.hugegraph.api.traverser.structure.Ranks;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.Traverser;
@@ -41,13 +38,12 @@ public class PersonalRankAPI extends TraversersAPI {
         return "personalrank";
     }
 
-    @SuppressWarnings("unchecked")
-    public Map<Object, Double> post(RankRequest request) {
+    public Ranks post(Request request) {
         RestResult result = this.client.post(this.path(), request);
-        return result.readObject(Map.class);
+        return result.readObject(Ranks.class);
     }
 
-    public static class RankRequest {
+    public static class Request {
 
         @JsonProperty("source")
         private String source;
@@ -57,25 +53,41 @@ public class PersonalRankAPI extends TraversersAPI {
         private double alpha;
         @JsonProperty("degree")
         public long degree = Traverser.DEFAULT_DEGREE;
+        @JsonProperty("limit")
+        private long limit = Traverser.DEFAULT_LIMIT;
         @JsonProperty("max_depth")
         private int maxDepth;
+        @JsonProperty("with_label")
+        private WithLabel withLabel = WithLabel.BOTH_LABEL;
         @JsonProperty("sorted")
         private boolean sorted = true;
 
+        public static Builder builder() {
+            return new Builder();
+        }
+
         @Override
         public String toString() {
-            return String.format("RankRequest{source=%s,label=%s," +
-                                 "alpha=%s,degree=%s,maxDepth=%s,sorted=%s}",
+            return String.format("Request{source=%s,label=%s,alpha=%s," +
+                                 "degree=%s,limit=%s,maxDepth=%s," +
+                                 "withLabel=%s,sorted=%s}",
                                  this.source, this.label, this.alpha,
-                                 this.degree, this.maxDepth, this.sorted);
+                                 this.degree, this.limit, this.maxDepth,
+                                 this.withLabel, this.sorted);
+        }
+
+        public enum WithLabel {
+            SAME_LABEL,
+            OTHER_LABEL,
+            BOTH_LABEL
         }
 
         public static class Builder {
 
-            private RankRequest request;
+            private Request request;
 
-            public Builder() {
-                this.request = new RankRequest();
+            private Builder() {
+                this.request = new Request();
             }
 
             public Builder source(Object source) {
@@ -102,6 +114,12 @@ public class PersonalRankAPI extends TraversersAPI {
                 return this;
             }
 
+            public Builder limit(long limit) {
+                TraversersAPI.checkLimit(limit);
+                this.request.limit = limit;
+                return this;
+            }
+
             public Builder maxDepth(int maxDepth) {
                 TraversersAPI.checkPositive(maxDepth,
                                             "max depth of rank request " +
@@ -110,12 +128,17 @@ public class PersonalRankAPI extends TraversersAPI {
                 return this;
             }
 
+            public Builder withLabel(WithLabel withLabel) {
+                this.request.withLabel = withLabel;
+                return this;
+            }
+
             public Builder sorted(boolean sorted) {
                 this.request.sorted = sorted;
                 return this;
             }
 
-            public RankRequest build() {
+            public Request build() {
                 E.checkArgument(this.request.source != null,
                                 "Source vertex can't be null");
                 E.checkArgument(this.request.label != null,
@@ -123,6 +146,7 @@ public class PersonalRankAPI extends TraversersAPI {
                                 "for personal rank can't be null");
                 TraversersAPI.checkAlpha(this.request.alpha);
                 TraversersAPI.checkDegree(this.request.degree);
+                TraversersAPI.checkLimit(this.request.limit);
                 TraversersAPI.checkPositive(this.request.maxDepth,
                                             "max depth of rank request " +
                                             "for personal rank");

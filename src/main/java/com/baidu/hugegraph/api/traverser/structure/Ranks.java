@@ -19,8 +19,7 @@
 
 package com.baidu.hugegraph.api.traverser.structure;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
-public class Ranks extends HashMap<Object, Double> {
-
+public class Ranks extends LinkedHashMap<Object, Double> {
 }

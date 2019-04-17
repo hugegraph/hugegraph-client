@@ -43,12 +43,12 @@ public class NeighborRankAPI extends TraversersAPI {
         return "neighborrank";
     }
 
-    public List<Ranks> post(RankRequest request) {
+    public List<Ranks> post(Request request) {
         RestResult result = this.client.post(this.path(), request);
         return result.readList("ranks", Ranks.class);
     }
 
-    public static class RankRequest {
+    public static class Request {
 
         @JsonProperty("source")
         private String source;
@@ -59,27 +59,31 @@ public class NeighborRankAPI extends TraversersAPI {
         @JsonProperty("capacity")
         private long capacity;
 
-        private RankRequest() {
+        private Request() {
             this.source = null;
             this.steps = new ArrayList<>();
             this.alpha = Traverser.DEFAULT_ALPHA;
             this.capacity = Traverser.DEFAULT_CAPACITY;
         }
 
+        public static Builder builder() {
+            return new Builder();
+        }
+
         @Override
         public String toString() {
-            return String.format("RankRequest{source=%s,steps=%s,alpha=%s," +
+            return String.format("Request{source=%s,steps=%s,alpha=%s," +
                                  "capacity=%s}", this.source, this.steps,
                                  this.alpha, this.capacity);
         }
 
         public static class Builder {
 
-            private RankRequest request;
+            private Request request;
             private List<Step.Builder> stepBuilders;
 
-            public Builder() {
-                this.request = new RankRequest();
+            private Builder() {
+                this.request = new Request();
                 this.stepBuilders = new ArrayList<>();
             }
 
@@ -106,7 +110,7 @@ public class NeighborRankAPI extends TraversersAPI {
                 return this;
             }
 
-            public RankRequest build() {
+            public Request build() {
                 for (Step.Builder builder : this.stepBuilders) {
                     this.request.steps.add(builder.build());
                 }

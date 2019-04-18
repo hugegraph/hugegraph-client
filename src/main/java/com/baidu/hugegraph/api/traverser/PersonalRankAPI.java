@@ -56,7 +56,7 @@ public class PersonalRankAPI extends TraversersAPI {
         @JsonProperty("limit")
         private long limit = Traverser.DEFAULT_LIMIT;
         @JsonProperty("max_depth")
-        private int maxDepth = Traverser.DEFAULT_MAX_DEPTH;
+        private int maxDepth = 5;
         @JsonProperty("with_label")
         private WithLabel withLabel = WithLabel.BOTH_LABEL;
         @JsonProperty("sorted")
@@ -121,9 +121,11 @@ public class PersonalRankAPI extends TraversersAPI {
             }
 
             public Builder maxDepth(int maxDepth) {
-                TraversersAPI.checkPositive(maxDepth,
-                                            "max depth of rank request " +
-                                            "for personal rank");
+                E.checkArgument(maxDepth > 0 &&
+                                maxDepth <= Traverser.DEFAULT_MAX_DEPTH,
+                                "The max depth must be in range (0, %s], " +
+                                "but got: %s",
+                                Traverser.DEFAULT_MAX_DEPTH, maxDepth);
                 this.request.maxDepth = maxDepth;
                 return this;
             }
@@ -147,9 +149,13 @@ public class PersonalRankAPI extends TraversersAPI {
                 TraversersAPI.checkAlpha(this.request.alpha);
                 TraversersAPI.checkDegree(this.request.degree);
                 TraversersAPI.checkLimit(this.request.limit);
-                TraversersAPI.checkPositive(this.request.maxDepth,
-                                            "max depth of rank request " +
-                                            "for personal rank");
+                E.checkArgument(this.request.maxDepth > 0 &&
+                                this.request.maxDepth <=
+                                Traverser.DEFAULT_MAX_DEPTH,
+                                "The max depth must be in range (0, %s], " +
+                                "but got: %s",
+                                Traverser.DEFAULT_MAX_DEPTH,
+                                this.request.maxDepth);
                 return this.request;
             }
         }

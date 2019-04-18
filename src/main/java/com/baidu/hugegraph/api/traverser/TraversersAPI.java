@@ -56,7 +56,7 @@ public class TraversersAPI extends API {
 
     public static void checkAlpha(double alpha) {
         E.checkArgument(alpha > 0 && alpha <= 1.0,
-                        "The alpha of rank request must belong (0, 1], " +
+                        "The alpha of rank request must be in range (0, 1], " +
                         "but got '%s'", alpha);
     }
 }

@@ -156,14 +156,14 @@ public class PersonalRankApiTest extends BaseApiTest {
     public void testPersonalRankWithMaxDepth() {
         PersonalRankAPI.Request.Builder builder;
         builder = PersonalRankAPI.Request.builder();
-        builder.source("A").label("like").alpha(0.9).maxDepth(100);
+        builder.source("A").label("like").alpha(0.9).maxDepth(20);
         PersonalRankAPI.Request request = builder.build();
 
         Map<Object, Double> ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("B", 0.2053607173863809D,
-                                            "C", 0.09778790213639266D,
-                                            "d", 0.09020474105856267D,
-                                            "b", 0.04620317325456084D),
+        Assert.assertEquals(ImmutableMap.of("B", 0.23414889646372697D,
+                                            "C", 0.11218194186115384D,
+                                            "d", 0.07581065434649958D,
+                                            "b", 0.03900612828909826D),
                             ranks);
     }
 
@@ -245,6 +245,11 @@ public class PersonalRankApiTest extends BaseApiTest {
             PersonalRankAPI.Request.Builder builder;
             builder = PersonalRankAPI.Request.builder();
             builder.maxDepth(0);
+        });
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.maxDepth(51);
         });
     }
 

@@ -21,8 +21,8 @@ package com.baidu.hugegraph.api;
 
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.baidu.hugegraph.exception.ServerException;
@@ -35,14 +35,71 @@ import com.google.common.collect.ImmutableList;
 
 public class ShortestPathApiTest extends BaseApiTest {
 
-    @Before
-    public void setup() {
-        initShortestPathGraph();
+    @BeforeClass
+    public static void initShortestPathGraph() {
+        schema().vertexLabel("node")
+                .useCustomizeNumberId()
+                .ifNotExist()
+                .create();
+
+        schema().edgeLabel("link")
+                .sourceLabel("node").targetLabel("node")
+                .ifNotExist()
+                .create();
+
+        Vertex v1 = graph().addVertex(T.label, "node", T.id, 1);
+        Vertex v2 = graph().addVertex(T.label, "node", T.id, 2);
+        Vertex v3 = graph().addVertex(T.label, "node", T.id, 3);
+        Vertex v4 = graph().addVertex(T.label, "node", T.id, 4);
+        Vertex v5 = graph().addVertex(T.label, "node", T.id, 5);
+        Vertex v6 = graph().addVertex(T.label, "node", T.id, 6);
+        Vertex v7 = graph().addVertex(T.label, "node", T.id, 7);
+        Vertex v8 = graph().addVertex(T.label, "node", T.id, 8);
+        Vertex v9 = graph().addVertex(T.label, "node", T.id, 9);
+        Vertex v10 = graph().addVertex(T.label, "node", T.id, 10);
+        Vertex v11 = graph().addVertex(T.label, "node", T.id, 11);
+        Vertex v12 = graph().addVertex(T.label, "node", T.id, 12);
+        Vertex v13 = graph().addVertex(T.label, "node", T.id, 13);
+        Vertex v14 = graph().addVertex(T.label, "node", T.id, 14);
+        Vertex v15 = graph().addVertex(T.label, "node", T.id, 15);
+        Vertex v16 = graph().addVertex(T.label, "node", T.id, 16);
+        Vertex v17 = graph().addVertex(T.label, "node", T.id, 17);
+        Vertex v18 = graph().addVertex(T.label, "node", T.id, 18);
+
+        // Path length 5
+        v1.addEdge("link", v2);
+        v2.addEdge("link", v3);
+        v3.addEdge("link", v4);
+        v4.addEdge("link", v5);
+        v5.addEdge("link", v6);
+
+        // Path length 4
+        v1.addEdge("link", v7);
+        v7.addEdge("link", v8);
+        v8.addEdge("link", v9);
+        v9.addEdge("link", v6);
+
+        // Path length 3
+        v1.addEdge("link", v10);
+        v10.addEdge("link", v11);
+        v11.addEdge("link", v6);
+
+        // Add other 3 neighbor for v7
+        v7.addEdge("link", v12);
+        v7.addEdge("link", v13);
+        v7.addEdge("link", v14);
+
+        // Add other 4 neighbor for v10
+        v10.addEdge("link", v15);
+        v10.addEdge("link", v16);
+        v10.addEdge("link", v17);
+        v10.addEdge("link", v18);
     }
 
-    @After
-    public void teardown() {
-        clearShortestPathGraph();
+    @AfterClass
+    public static void clearShortestPathGraph() {
+        waitUntilTaskCompleted(edgeLabelAPI.delete("link"));
+        waitUntilTaskCompleted(vertexLabelAPI.delete("node"));
     }
 
     @Test
@@ -153,111 +210,46 @@ public class ShortestPathApiTest extends BaseApiTest {
         // The max depth shouldn't be 0 or negative
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, -1, 1L, 0L, 2L);
+                                null, -1, 1L, 0L, 2L);
         });
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, 0, 1L, 0L, 2L);
+                                null, 0, 1L, 0L, 2L);
         });
 
         // The degree shouldn't be 0 or negative but NO_LIMIT(-1)
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, 5, 0L, 0L, 2L);
+                                null, 5, 0L, 0L, 2L);
         });
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, 5, -3L, 0L, 2L);
+                                null, 5, -3L, 0L, 2L);
         });
 
         // The skipped degree shouldn't be negative
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, 5, 1L, -1L, 2L);
+                                null, 5, 1L, -1L, 2L);
         });
 
         // The skipped degree shouldn't be >= capacity
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, 5, 1L, 2L, 2L);
+                                null, 5, 1L, 2L, 2L);
         });
 
         // The skipped degree shouldn't be < degree
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, 5, 3L, 2L, 10L);
+                                null, 5, 3L, 2L, 10L);
         });
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             shortestPathAPI.get("a", "b", Direction.BOTH,
-                    null, 5, -1L, 2L, 10L);
+                                null, 5, -1L, 2L, 10L);
         });
-    }
-
-    private static void initShortestPathGraph() {
-        schema().vertexLabel("node")
-                .useCustomizeNumberId()
-                .ifNotExist()
-                .create();
-
-        schema().edgeLabel("link")
-                .sourceLabel("node").targetLabel("node")
-                .ifNotExist()
-                .create();
-
-        Vertex v1 = graph().addVertex(T.label, "node", T.id, 1);
-        Vertex v2 = graph().addVertex(T.label, "node", T.id, 2);
-        Vertex v3 = graph().addVertex(T.label, "node", T.id, 3);
-        Vertex v4 = graph().addVertex(T.label, "node", T.id, 4);
-        Vertex v5 = graph().addVertex(T.label, "node", T.id, 5);
-        Vertex v6 = graph().addVertex(T.label, "node", T.id, 6);
-        Vertex v7 = graph().addVertex(T.label, "node", T.id, 7);
-        Vertex v8 = graph().addVertex(T.label, "node", T.id, 8);
-        Vertex v9 = graph().addVertex(T.label, "node", T.id, 9);
-        Vertex v10 = graph().addVertex(T.label, "node", T.id, 10);
-        Vertex v11 = graph().addVertex(T.label, "node", T.id, 11);
-        Vertex v12 = graph().addVertex(T.label, "node", T.id, 12);
-        Vertex v13 = graph().addVertex(T.label, "node", T.id, 13);
-        Vertex v14 = graph().addVertex(T.label, "node", T.id, 14);
-        Vertex v15 = graph().addVertex(T.label, "node", T.id, 15);
-        Vertex v16 = graph().addVertex(T.label, "node", T.id, 16);
-        Vertex v17 = graph().addVertex(T.label, "node", T.id, 17);
-        Vertex v18 = graph().addVertex(T.label, "node", T.id, 18);
-
-        // Path length 5
-        v1.addEdge("link", v2);
-        v2.addEdge("link", v3);
-        v3.addEdge("link", v4);
-        v4.addEdge("link", v5);
-        v5.addEdge("link", v6);
-
-        // Path length 4
-        v1.addEdge("link", v7);
-        v7.addEdge("link", v8);
-        v8.addEdge("link", v9);
-        v9.addEdge("link", v6);
-
-        // Path length 3
-        v1.addEdge("link", v10);
-        v10.addEdge("link", v11);
-        v11.addEdge("link", v6);
-
-        // Add other 3 neighbor for v7
-        v7.addEdge("link", v12);
-        v7.addEdge("link", v13);
-        v7.addEdge("link", v14);
-
-        // Add other 4 neighbor for v10
-        v10.addEdge("link", v15);
-        v10.addEdge("link", v16);
-        v10.addEdge("link", v17);
-        v10.addEdge("link", v18);
-    }
-
-    private static void clearShortestPathGraph() {
-        waitUntilTaskCompleted(edgeLabelAPI.delete("link"));
-        waitUntilTaskCompleted(vertexLabelAPI.delete("node"));
     }
 }

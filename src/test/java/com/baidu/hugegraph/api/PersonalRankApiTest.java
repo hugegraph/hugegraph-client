@@ -23,8 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,18 +38,60 @@ import com.google.common.collect.ImmutableMap;
 public class PersonalRankApiTest extends BaseApiTest {
 
     @BeforeClass
-    public static void prepareSchemaAndGraph() {
-        BaseApiTest.initPropertyKey();
+    public static void initPersonalRankGraph() {
+        GraphManager graph = graph();
+        SchemaManager schema = schema();
+
+        schema.propertyKey("name").asText().ifNotExist().create();
+
+        schema.vertexLabel("person")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.vertexLabel("movie")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("like")
+              .sourceLabel("person")
+              .targetLabel("movie")
+              .ifNotExist()
+              .create();
+
+        Vertex A = graph.addVertex(T.label, "person", T.id, "A", "name", "A");
+        Vertex B = graph.addVertex(T.label, "person", T.id, "B", "name", "B");
+        Vertex C = graph.addVertex(T.label, "person", T.id, "C", "name", "C");
+
+        Vertex a = graph.addVertex(T.label, "movie", T.id, "a", "name", "a");
+        Vertex b = graph.addVertex(T.label, "movie", T.id, "b", "name", "b");
+        Vertex c = graph.addVertex(T.label, "movie", T.id, "c", "name", "c");
+        Vertex d = graph.addVertex(T.label, "movie", T.id, "d", "name", "d");
+
+        A.addEdge("like", a);
+        A.addEdge("like", c);
+
+        B.addEdge("like", a);
+        B.addEdge("like", b);
+        B.addEdge("like", c);
+        B.addEdge("like", d);
+
+        C.addEdge("like", c);
+        C.addEdge("like", d);
     }
 
-    @Before
-    public void setup() {
-        initPersonalRankGraph();
-    }
-
-    @After
-    public void teardown() {
-        clearPersonalRankGraph();
+    @AfterClass
+    public static void clearPersonalRankGraph() {
+        List<Long> taskIds = new ArrayList<>();
+        taskIds.add(edgeLabelAPI.delete("like"));
+        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
+        taskIds.clear();
+        taskIds.add(vertexLabelAPI.delete("movie"));
+        taskIds.add(vertexLabelAPI.delete("person"));
+        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
     }
 
     @Test
@@ -61,11 +102,13 @@ public class PersonalRankApiTest extends BaseApiTest {
         PersonalRankAPI.Request request = builder.build();
 
         Map<Object, Double> ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("B", 0.2065750574989044D,
-                                            "C", 0.09839507219265439D,
-                                            "d", 0.08959757100230095D,
-                                            "b", 0.04589958822642998D),
-                            ranks);
+        Map<Object, Double> expectedRanks = ImmutableMap.of(
+                "B", 0.2065750574989044D,
+                "C", 0.09839507219265439D,
+                "d", 0.08959757100230095D,
+                "b", 0.04589958822642998D
+        );
+        Assert.assertEquals(expectedRanks, ranks);
     }
 
     @Test
@@ -77,9 +120,11 @@ public class PersonalRankApiTest extends BaseApiTest {
         PersonalRankAPI.Request request = builder.build();
 
         Map<Object, Double> ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("B", 0.2065750574989044D,
-                                            "C", 0.09839507219265439D),
-                            ranks);
+        Map<Object, Double> expectedRanks = ImmutableMap.of(
+                "B", 0.2065750574989044D,
+                "C", 0.09839507219265439D
+        );
+        Assert.assertEquals(expectedRanks, ranks);
 
         builder = PersonalRankAPI.Request.builder();
         builder.source("A").label("like").alpha(0.9).maxDepth(50)
@@ -87,9 +132,11 @@ public class PersonalRankApiTest extends BaseApiTest {
         request = builder.build();
 
         ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("d", 0.08959757100230095D,
-                                            "b", 0.04589958822642998D),
-                            ranks);
+        expectedRanks = ImmutableMap.of(
+                "d", 0.08959757100230095D,
+                "b", 0.04589958822642998D
+        );
+        Assert.assertEquals(expectedRanks, ranks);
     }
 
     @Test
@@ -100,11 +147,13 @@ public class PersonalRankApiTest extends BaseApiTest {
         PersonalRankAPI.Request request = builder.build();
 
         Map<Object, Double> ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("B", 0.5D,
-                                            "C", 0.24999999999999956D,
-                                            "b", 0.0D,
-                                            "d", 0.0D),
-                            ranks);
+        Map<Object, Double> expectedRanks = ImmutableMap.of(
+                "B", 0.5D,
+                "C", 0.24999999999999956D,
+                "b", 0.0D,
+                "d", 0.0D
+        );
+        Assert.assertEquals(expectedRanks, ranks);
     }
 
     @Test
@@ -146,10 +195,12 @@ public class PersonalRankApiTest extends BaseApiTest {
         PersonalRankAPI.Request request = builder.build();
 
         Map<Object, Double> ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("B", 0.2065750574989044D,
-                                            "C", 0.09839507219265439D,
-                                            "d", 0.08959757100230095D),
-                            ranks);
+        Map<Object, Double> expectedRanks = ImmutableMap.of(
+                "B", 0.2065750574989044D,
+                "C", 0.09839507219265439D,
+                "d", 0.08959757100230095D
+        );
+        Assert.assertEquals(expectedRanks, ranks);
     }
 
     @Test
@@ -160,11 +211,13 @@ public class PersonalRankApiTest extends BaseApiTest {
         PersonalRankAPI.Request request = builder.build();
 
         Map<Object, Double> ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("B", 0.23414889646372697D,
-                                            "C", 0.11218194186115384D,
-                                            "d", 0.07581065434649958D,
-                                            "b", 0.03900612828909826D),
-                            ranks);
+        Map<Object, Double> expectedRanks = ImmutableMap.of(
+                "B", 0.23414889646372697D,
+                "C", 0.11218194186115384D,
+                "d", 0.07581065434649958D,
+                "b", 0.03900612828909826D
+        );
+        Assert.assertEquals(expectedRanks, ranks);
     }
 
     @Test
@@ -175,11 +228,13 @@ public class PersonalRankApiTest extends BaseApiTest {
         PersonalRankAPI.Request request = builder.build();
 
         Map<Object, Double> ranks = personalRankAPI.post(request);
-        Assert.assertEquals(ImmutableMap.of("b", 0.04589958822642998D,
-                                            "B", 0.2065750574989044D,
-                                            "C", 0.09839507219265439D,
-                                            "d", 0.08959757100230095D),
-                            ranks);
+        Map<Object, Double> expectedRanks = ImmutableMap.of(
+                "b", 0.04589958822642998D,
+                "B", 0.2065750574989044D,
+                "C", 0.09839507219265439D,
+                "d", 0.08959757100230095D
+        );
+        Assert.assertEquals(expectedRanks, ranks);
     }
 
     @Test
@@ -251,60 +306,5 @@ public class PersonalRankApiTest extends BaseApiTest {
             builder = PersonalRankAPI.Request.builder();
             builder.maxDepth(51);
         });
-    }
-
-    private static void initPersonalRankGraph() {
-        GraphManager graph = graph();
-        SchemaManager schema = schema();
-
-        schema.propertyKey("name").asText().ifNotExist().create();
-
-        schema.vertexLabel("person")
-              .properties("name")
-              .useCustomizeStringId()
-              .ifNotExist()
-              .create();
-
-        schema.vertexLabel("movie")
-              .properties("name")
-              .useCustomizeStringId()
-              .ifNotExist()
-              .create();
-
-        schema.edgeLabel("like")
-              .sourceLabel("person")
-              .targetLabel("movie")
-              .ifNotExist()
-              .create();
-
-        Vertex A = graph.addVertex(T.label, "person", T.id, "A", "name", "A");
-        Vertex B = graph.addVertex(T.label, "person", T.id, "B", "name", "B");
-        Vertex C = graph.addVertex(T.label, "person", T.id, "C", "name", "C");
-
-        Vertex a = graph.addVertex(T.label, "movie", T.id, "a", "name", "a");
-        Vertex b = graph.addVertex(T.label, "movie", T.id, "b", "name", "b");
-        Vertex c = graph.addVertex(T.label, "movie", T.id, "c", "name", "c");
-        Vertex d = graph.addVertex(T.label, "movie", T.id, "d", "name", "d");
-
-        A.addEdge("like", a);
-        A.addEdge("like", c);
-
-        B.addEdge("like", a);
-        B.addEdge("like", b);
-        B.addEdge("like", c);
-        B.addEdge("like", d);
-
-        C.addEdge("like", c);
-        C.addEdge("like", d);
-    }
-
-    private void clearPersonalRankGraph() {
-        List<Long> taskIds = new ArrayList<>();
-        taskIds.add(edgeLabelAPI.delete("like"));
-        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
-        taskIds.clear();
-        taskIds.add(vertexLabelAPI.delete("movie"));
-        taskIds.add(vertexLabelAPI.delete("person"));
-        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
     }
 }

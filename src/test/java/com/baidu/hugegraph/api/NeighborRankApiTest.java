@@ -21,15 +21,12 @@ package com.baidu.hugegraph.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.baidu.hugegraph.api.traverser.NeighborRankAPI;
-import com.baidu.hugegraph.api.traverser.PersonalRankAPI;
 import com.baidu.hugegraph.api.traverser.structure.Ranks;
 import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.SchemaManager;
@@ -43,18 +40,93 @@ import com.google.common.collect.ImmutableMap;
 public class NeighborRankApiTest extends BaseApiTest {
 
     @BeforeClass
-    public static void prepareSchemaAndGraph() {
-        BaseApiTest.initPropertyKey();
+    public static void initNeighborRankGraph() {
+        GraphManager graph = graph();
+        SchemaManager schema = schema();
+
+        schema.propertyKey("name").asText().ifNotExist().create();
+
+        schema.vertexLabel("person")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.vertexLabel("movie")
+              .properties("name")
+              .useCustomizeStringId()
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("follow")
+              .sourceLabel("person")
+              .targetLabel("person")
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("like")
+              .sourceLabel("person")
+              .targetLabel("movie")
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("directedBy")
+              .sourceLabel("movie")
+              .targetLabel("person")
+              .ifNotExist()
+              .create();
+
+        Vertex O = graph.addVertex(T.label, "person", T.id, "O", "name", "O");
+
+        Vertex A = graph.addVertex(T.label, "person", T.id, "A", "name", "A");
+        Vertex B = graph.addVertex(T.label, "person", T.id, "B", "name", "B");
+        Vertex C = graph.addVertex(T.label, "person", T.id, "C", "name", "C");
+        Vertex D = graph.addVertex(T.label, "person", T.id, "D", "name", "D");
+
+        Vertex E = graph.addVertex(T.label, "movie", T.id, "E", "name", "E");
+        Vertex F = graph.addVertex(T.label, "movie", T.id, "F", "name", "F");
+        Vertex G = graph.addVertex(T.label, "movie", T.id, "G", "name", "G");
+        Vertex H = graph.addVertex(T.label, "movie", T.id, "H", "name", "H");
+        Vertex I = graph.addVertex(T.label, "movie", T.id, "I", "name", "I");
+        Vertex J = graph.addVertex(T.label, "movie", T.id, "J", "name", "J");
+
+        Vertex K = graph.addVertex(T.label, "person", T.id, "K", "name", "K");
+        Vertex L = graph.addVertex(T.label, "person", T.id, "L", "name", "L");
+        Vertex M = graph.addVertex(T.label, "person", T.id, "M", "name", "M");
+
+        O.addEdge("follow", A);
+        O.addEdge("follow", B);
+        O.addEdge("follow", C);
+        D.addEdge("follow", O);
+
+        A.addEdge("follow", B);
+        A.addEdge("like", E);
+        A.addEdge("like", F);
+
+        B.addEdge("like", G);
+        B.addEdge("like", H);
+
+        C.addEdge("like", I);
+        C.addEdge("like", J);
+
+        E.addEdge("directedBy", K);
+        F.addEdge("directedBy", B);
+        F.addEdge("directedBy", L);
+
+        G.addEdge("directedBy", M);
     }
 
-    @Before
-    public void setup() {
-        initNeighborRankGraph();
-    }
-
-    @After
-    public void teardown() {
-        clearNeighborRankGraph();
+    @AfterClass
+    public static void clearNeighborRankGraph() {
+        List<Long> taskIds = new ArrayList<>();
+        taskIds.add(edgeLabelAPI.delete("directedBy"));
+        taskIds.add(edgeLabelAPI.delete("like"));
+        taskIds.add(edgeLabelAPI.delete("follow"));
+        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
+        taskIds.clear();
+        taskIds.add(vertexLabelAPI.delete("movie"));
+        taskIds.add(vertexLabelAPI.delete("person"));
+        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
     }
 
     @Test
@@ -335,91 +407,5 @@ public class NeighborRankApiTest extends BaseApiTest {
             builder.source("A");
             builder.build();
         });
-    }
-
-    private static void initNeighborRankGraph() {
-        GraphManager graph = graph();
-        SchemaManager schema = schema();
-
-        schema.vertexLabel("person")
-              .properties("name")
-              .useCustomizeStringId()
-              .ifNotExist()
-              .create();
-
-        schema.vertexLabel("movie")
-              .properties("name")
-              .useCustomizeStringId()
-              .ifNotExist()
-              .create();
-
-        schema.edgeLabel("follow")
-              .sourceLabel("person")
-              .targetLabel("person")
-              .ifNotExist()
-              .create();
-
-        schema.edgeLabel("like")
-              .sourceLabel("person")
-              .targetLabel("movie")
-              .ifNotExist()
-              .create();
-
-        schema.edgeLabel("directedBy")
-              .sourceLabel("movie")
-              .targetLabel("person")
-              .ifNotExist()
-              .create();
-
-        Vertex O = graph.addVertex(T.label, "person", T.id, "O", "name", "O");
-
-        Vertex A = graph.addVertex(T.label, "person", T.id, "A", "name", "A");
-        Vertex B = graph.addVertex(T.label, "person", T.id, "B", "name", "B");
-        Vertex C = graph.addVertex(T.label, "person", T.id, "C", "name", "C");
-        Vertex D = graph.addVertex(T.label, "person", T.id, "D", "name", "D");
-
-        Vertex E = graph.addVertex(T.label, "movie", T.id, "E", "name", "E");
-        Vertex F = graph.addVertex(T.label, "movie", T.id, "F", "name", "F");
-        Vertex G = graph.addVertex(T.label, "movie", T.id, "G", "name", "G");
-        Vertex H = graph.addVertex(T.label, "movie", T.id, "H", "name", "H");
-        Vertex I = graph.addVertex(T.label, "movie", T.id, "I", "name", "I");
-        Vertex J = graph.addVertex(T.label, "movie", T.id, "J", "name", "J");
-
-        Vertex K = graph.addVertex(T.label, "person", T.id, "K", "name", "K");
-        Vertex L = graph.addVertex(T.label, "person", T.id, "L", "name", "L");
-        Vertex M = graph.addVertex(T.label, "person", T.id, "M", "name", "M");
-
-        O.addEdge("follow", A);
-        O.addEdge("follow", B);
-        O.addEdge("follow", C);
-        D.addEdge("follow", O);
-
-        A.addEdge("follow", B);
-        A.addEdge("like", E);
-        A.addEdge("like", F);
-
-        B.addEdge("like", G);
-        B.addEdge("like", H);
-
-        C.addEdge("like", I);
-        C.addEdge("like", J);
-
-        E.addEdge("directedBy", K);
-        F.addEdge("directedBy", B);
-        F.addEdge("directedBy", L);
-
-        G.addEdge("directedBy", M);
-    }
-
-    private static void clearNeighborRankGraph() {
-        List<Long> taskIds = new ArrayList<>();
-        taskIds.add(edgeLabelAPI.delete("directedBy"));
-        taskIds.add(edgeLabelAPI.delete("like"));
-        taskIds.add(edgeLabelAPI.delete("follow"));
-        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
-        taskIds.clear();
-        taskIds.add(vertexLabelAPI.delete("movie"));
-        taskIds.add(vertexLabelAPI.delete("person"));
-        taskIds.forEach(BaseApiTest::waitUntilTaskCompleted);
     }
 }

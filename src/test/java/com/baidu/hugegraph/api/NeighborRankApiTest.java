@@ -21,6 +21,7 @@ package com.baidu.hugegraph.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.After;
 import org.junit.Before;
@@ -28,6 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.baidu.hugegraph.api.traverser.NeighborRankAPI;
+import com.baidu.hugegraph.api.traverser.PersonalRankAPI;
 import com.baidu.hugegraph.api.traverser.structure.Ranks;
 import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.SchemaManager;
@@ -257,6 +259,81 @@ public class NeighborRankApiTest extends BaseApiTest {
 
         Assert.assertThrows(ServerException.class, () -> {
             neighborRankAPI.post(request);
+        });
+    }
+
+    @Test
+    public void testNeighborRankWithIsolatedVertex() {
+        Vertex isolate = graph().addVertex(T.label, "person", T.id, "isolate",
+                                           "name", "isolate-vertex");
+
+        NeighborRankAPI.Request.Builder builder;
+        builder = NeighborRankAPI.Request.builder();
+        builder.source("isolate").alpha(0.9);
+        builder.steps().direction(Direction.BOTH);
+        NeighborRankAPI.Request request = builder.build();
+
+        List<Ranks> ranks = neighborRankAPI.post(request);
+        Assert.assertEquals(2, ranks.size());
+        Assert.assertEquals(ImmutableMap.of("isolate", 1.0D), ranks.get(0));
+        Assert.assertEquals(ImmutableMap.of(), ranks.get(1));
+
+        graph().removeVertex(isolate.id());
+    }
+
+    @Test
+    public void testNeighborRankWithInvalidParams() {
+        // Invalid source
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.source(null);
+        });
+
+        // Invalid degree
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.steps().degree(-2);
+        });
+
+        // Invalid top
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.steps().top(0);
+        });
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.steps().top(1001);
+        });
+
+        // Invalid alpha
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.alpha(0.0);
+        });
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.alpha(1.1);
+        });
+
+        // Invalid capacity
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.capacity(-2);
+        });
+
+        // Without steps
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            NeighborRankAPI.Request.Builder builder;
+            builder = NeighborRankAPI.Request.builder();
+            builder.source("A");
+            builder.build();
         });
     }
 

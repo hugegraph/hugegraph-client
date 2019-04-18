@@ -50,13 +50,13 @@ public class PersonalRankAPI extends TraversersAPI {
         @JsonProperty("label")
         private String label;
         @JsonProperty("alpha")
-        private double alpha;
+        private double alpha = Traverser.DEFAULT_ALPHA;
         @JsonProperty("degree")
         public long degree = Traverser.DEFAULT_DEGREE;
         @JsonProperty("limit")
         private long limit = Traverser.DEFAULT_LIMIT;
         @JsonProperty("max_depth")
-        private int maxDepth;
+        private int maxDepth = Traverser.DEFAULT_MAX_DEPTH;
         @JsonProperty("with_label")
         private WithLabel withLabel = WithLabel.BOTH_LABEL;
         @JsonProperty("sorted")

@@ -46,10 +46,7 @@ public class CustomizedPathsApiTest extends BaseApiTest {
     public static void prepareSchemaAndGraph() {
         BaseApiTest.initPropertyKey();
         BaseApiTest.initVertexLabel();
-        BaseApiTest.initEdgeLabel();
-        BaseApiTest.initIndexLabel();
         BaseApiTest.initVertex();
-        BaseApiTest.initEdge();
     }
 
     @Before

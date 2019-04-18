@@ -31,5 +31,6 @@ public class Traverser {
     public static final double DEFAULT_WEIGHT = 0.0D;
     public static final long DEFAULT_PAGE_LIMIT = 100_000L;
     public static final double DEFAULT_ALPHA = 0.9;
-    public static final int DEFAULT_MAX_TOP = 100_000;
+    public static final int DEFAULT_MAX_TOP = 1000;
+    public static final int DEFAULT_MAX_DEPTH = 50;
 }

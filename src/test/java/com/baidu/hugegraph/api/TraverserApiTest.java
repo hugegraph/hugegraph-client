@@ -84,12 +84,16 @@ public class TraverserApiTest extends BaseApiTest {
     @Test
     public void testShortestPathWithCapacity() {
         Object markoId = getVertexId("person", "name", "marko");
+        Object joshId = getVertexId("person", "name", "josh");
         Object rippleId = getVertexId("software", "name", "ripple");
 
-        Assert.assertThrows(ServerException.class, () -> {
-            shortestPathAPI.get(markoId, rippleId, Direction.BOTH,
-                                null, 3, 1L, 0L, 2L);
-        });
+        // NOTE: Don't throw exception after server fix degree limit lost
+        Path path = shortestPathAPI.get(markoId, rippleId, Direction.BOTH,
+                                        null, 3, 1L, 0L, 2L);
+        Assert.assertEquals(3, path.size());
+        Assert.assertEquals(markoId, path.objects().get(0));
+        Assert.assertEquals(joshId, path.objects().get(1));
+        Assert.assertEquals(rippleId, path.objects().get(2));
     }
 
     @Test

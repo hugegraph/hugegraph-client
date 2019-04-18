@@ -38,7 +38,7 @@ import org.junit.runners.Suite;
     TraverserApiTest.class,
     CustomizedPathsApiTest.class,
     NeighborRankApiTest.class,
-    PersonalRankApiTest.class,
+    PersonalRankApiTest.class
 })
 public class ApiTestSuite {
 }

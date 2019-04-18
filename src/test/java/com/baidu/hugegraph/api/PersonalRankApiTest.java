@@ -198,6 +198,56 @@ public class PersonalRankApiTest extends BaseApiTest {
         graph().removeVertex(isolate.id());
     }
 
+    @Test
+    public void testPersonalRankWithInvalidParams() {
+        // Invalid source
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.source(null);
+        });
+
+        // Invalid label
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.label(null);
+        });
+
+        // Invalid alpha
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.alpha(0.0);
+        });
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.alpha(1.1);
+        });
+
+        // Invalid degree
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.degree(-2);
+        });
+
+        // Invalid limit
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.limit(-2);
+        });
+
+        // Invalid maxDepth
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            PersonalRankAPI.Request.Builder builder;
+            builder = PersonalRankAPI.Request.builder();
+            builder.maxDepth(0);
+        });
+    }
+
     private static void initPersonalRankGraph() {
         GraphManager graph = graph();
         SchemaManager schema = schema();

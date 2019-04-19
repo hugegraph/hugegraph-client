@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.baidu.hugegraph.api.graph.GraphAPI;
 import com.baidu.hugegraph.api.traverser.structure.Ranks;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
@@ -51,7 +50,7 @@ public class NeighborRankAPI extends TraversersAPI {
     public static class Request {
 
         @JsonProperty("source")
-        private String source;
+        private Object source;
         @JsonProperty("steps")
         private List<Step> steps;
         @JsonProperty("alpha")
@@ -88,7 +87,9 @@ public class NeighborRankAPI extends TraversersAPI {
             }
 
             public Builder source(Object source) {
-                this.request.source = GraphAPI.formatVertexId(source);
+                E.checkArgument(source != null, "The label of request " +
+                                "for neighbor rank can't be null");
+                this.request.source = source;
                 return this;
             }
 

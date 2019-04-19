@@ -19,7 +19,6 @@
 
 package com.baidu.hugegraph.api.traverser;
 
-import com.baidu.hugegraph.api.graph.GraphAPI;
 import com.baidu.hugegraph.api.traverser.structure.Ranks;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
@@ -46,7 +45,7 @@ public class PersonalRankAPI extends TraversersAPI {
     public static class Request {
 
         @JsonProperty("source")
-        private String source;
+        private Object source;
         @JsonProperty("label")
         private String label;
         @JsonProperty("alpha")
@@ -91,12 +90,14 @@ public class PersonalRankAPI extends TraversersAPI {
             }
 
             public Builder source(Object source) {
-                this.request.source = GraphAPI.formatVertexId(source);
+                E.checkArgument(source != null, "The source of request " +
+                                "for personal rank can't be null");
+                this.request.source = source;
                 return this;
             }
 
             public Builder label(String label) {
-                E.checkArgument(label != null, "The label of rank request " +
+                E.checkArgument(label != null, "The label of request " +
                                 "for personal rank can't be null");
                 this.request.label = label;
                 return this;

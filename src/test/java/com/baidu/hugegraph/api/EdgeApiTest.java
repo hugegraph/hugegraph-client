@@ -20,6 +20,7 @@
 package com.baidu.hugegraph.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ public class EdgeApiTest extends BaseApiTest {
 
     @Override
     @After
-    public void teardown() throws Exception {
+    public void teardown() {
         edgeAPI.list(-1).results().forEach(e -> edgeAPI.delete(e.id()));
     }
 
@@ -495,6 +496,27 @@ public class EdgeApiTest extends BaseApiTest {
 
         Utils.assertResponseError(400, () -> {
             edgeAPI.create(edges, false);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateProperties() {
+        final int num = 5;
+        // Init old vertices
+        graph().addVertices(this.createNVertexBatch("testV", num << 1, "old"));
+        // Init old edges
+        graph().addEdges(this.createNEdgesBatch("testV", "testE", "old", num));
+
+        Map<String, Object> strategies = ImmutableMap.of("set", "union",
+                                                         "fullDate", "smaller");
+        List<Edge> newEdges = this.createNEdgesBatch("testV", "testE",
+                                                     "new", num);
+        // TODO: Consider better way to test.
+        graph().updateEdges(newEdges, strategies, false, true).forEach(edge -> {
+            Object set = edge.properties().get("set");
+            Assert.assertTrue(set instanceof Collection);
+            Assert.assertTrue(((Collection)set).size() == 2);
+            System.out.println(edge);
         });
     }
 

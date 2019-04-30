@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.ws.rs.core.MultivaluedHashMap;
 
 import com.baidu.hugegraph.client.RestClient;
+import com.baidu.hugegraph.exception.InvalidResponseException;
 import com.baidu.hugegraph.exception.NotAllCreatedException;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
@@ -62,6 +63,28 @@ public class VertexAPI extends GraphAPI {
                       ids, vertices.size(), ids.size());
         }
         return ids;
+    }
+
+    public List<Vertex> update(List<Vertex> vertices,
+                               Map<String, Object> strategies,
+                               boolean createIfNotExist) {
+        MultivaluedHashMap<String, Object> headers = new MultivaluedHashMap<>();
+        headers.putSingle("Content-Encoding", BATCH_ENCODING);
+        String updateStrategies = GraphAPI.formatProperties(strategies);
+        Map<String ,Object> params = ImmutableMap.of("updateStrategies",
+                                                     updateStrategies,
+                                                     "createIfNotExist",
+                                                     createIfNotExist);
+        RestResult result = this.client.post(this.batchPath() + "Update",
+                                             vertices, headers, params);
+        // TODO: Consider better way to check exception
+        int responseCode = result.status();
+        if (responseCode != 200) {
+            throw new InvalidResponseException(
+                      "Batch update vertices failed, " +
+                      "the wrong http response code is %s", responseCode);
+        }
+        return result.readList(this.type(), Vertex.class);
     }
 
     public Vertex append(Vertex vertex) {

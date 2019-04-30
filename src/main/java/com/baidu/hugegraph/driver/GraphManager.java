@@ -147,6 +147,16 @@ public class GraphManager {
         this.vertexAPI.delete(vertexId);
     }
 
+    public List<Vertex> updateVertices(List<Vertex> vertices,
+                                       Map<String, Object> updateStrategies,
+                                       boolean createIfNotExist) {
+        List<Vertex> newVertices = this.vertexAPI.update(vertices,
+                                                         updateStrategies,
+                                                         createIfNotExist);
+        newVertices.forEach(vertex -> this.attachManager(vertex));
+        return newVertices;
+    }
+
     public Vertex appendVertexProperty(Vertex vertex) {
         vertex = this.vertexAPI.append(vertex);
         this.attachManager(vertex);
@@ -346,6 +356,16 @@ public class GraphManager {
 
     public void removeEdge(String edgeId) {
         this.edgeAPI.delete(edgeId);
+    }
+
+    public List<Edge> updateEdges(List<Edge> edges,
+                                  Map<String, Object> updateStrategies,
+                                  boolean checkVertex,
+                                  boolean createIfNotExist) {
+        List<Edge> newEdges = this.edgeAPI.update(edges, updateStrategies,
+                                                  checkVertex, createIfNotExist);
+        newEdges.forEach(edge -> this.attachManager(edge));
+        return newEdges;
     }
 
     public Edge appendEdgeProperty(Edge edge) {

@@ -1,6 +1,7 @@
 package com.baidu.hugegraph;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.schema.VertexLabel;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 public class BaseClientTest {
 
@@ -116,6 +118,10 @@ public class BaseClientTest {
         schema.propertyKey("date").asText().ifNotExist().create();
         schema.propertyKey("price").asInt().ifNotExist().create();
         schema.propertyKey("weight").asDouble().ifNotExist().create();
+        // Add for test updateStrategies & Date
+        schema.propertyKey("fullDate").asDate().ifNotExist().create();
+        schema.propertyKey("set").asText().valueSet().ifNotExist().create();
+        schema.propertyKey("list").asText().valueList().ifNotExist().create();
     }
 
     protected static void initVertexLabel() {
@@ -147,6 +153,13 @@ public class BaseClientTest {
               .properties("date")
               .ifNotExist()
               .create();
+
+        schema.vertexLabel("testV")
+              .properties("name", "set", "fullDate")
+              .primaryKeys("name")
+              .nullableKeys("set", "fullDate")
+              .ifNotExist()
+              .create();
     }
 
     protected static void initEdgeLabel() {
@@ -165,6 +178,14 @@ public class BaseClientTest {
               .targetLabel("software")
               .properties("date", "city")
               .nullableKeys("city")
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("testE")
+              .sourceLabel("testV")
+              .targetLabel("testV")
+              .properties("set", "fullDate")
+              .nullableKeys("set", "fullDate")
               .ifNotExist()
               .create();
     }
@@ -236,6 +257,20 @@ public class BaseClientTest {
                         "date", "20170110", "city", "Hongkong");
     }
 
+    protected List<Vertex> createNVertexBatch(String vertexLabel, int num,
+                                              String symbol) {
+        List<Vertex> vertices = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            Vertex vertex = new Vertex(vertexLabel);
+            vertex.property("name", "p" + i);
+            vertex.property("set", ImmutableSet.of(symbol + i));
+            vertex.property("fullDate",
+                            new Date(System.currentTimeMillis() + i));
+            vertices.add(vertex);
+        }
+        return vertices;
+    }
+
     protected List<Vertex> create100PersonBatch() {
         List<Vertex> vertices = new ArrayList<>(100);
         for (int i = 0; i < 100; i++) {
@@ -289,6 +324,24 @@ public class BaseClientTest {
             edge.sourceId(person.id() + ":Person-" + i);
             edge.targetId(person.id() + ":Person-" + (i + 50));
             edge.property("date", "20170324");
+            edges.add(edge);
+        }
+        return edges;
+    }
+
+    protected List<Edge> createNEdgesBatch(String vertexLabel, String edgeLabel,
+                                           String symbol, int num) {
+        VertexLabel vLabel = schema().getVertexLabel(vertexLabel);
+
+        List<Edge> edges = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            Edge edge = new Edge(edgeLabel);
+            edge.sourceLabel(vertexLabel);
+            edge.targetLabel(vertexLabel);
+            edge.sourceId(vLabel.id() + ":p" + i);
+            edge.targetId(vLabel.id() + ":p" + i * 2);
+            edge.property("fullDate", new Date(System.currentTimeMillis() + i));
+            edge.property("set", ImmutableSet.of(symbol + i));
             edges.add(edge);
         }
         return edges;

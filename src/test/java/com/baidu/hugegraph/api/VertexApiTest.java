@@ -44,7 +44,7 @@ public class VertexApiTest extends BaseApiTest {
 
     @Override
     @After
-    public void teardown() throws Exception {
+    public void teardown() {
         vertexAPI.list(-1).results().forEach(v -> vertexAPI.delete(v.id()));
     }
 
@@ -207,6 +207,27 @@ public class VertexApiTest extends BaseApiTest {
                                                         "age", 30);
             Assert.assertEquals(props, person.properties());
         }
+    }
+
+    @Test
+    public void testBatchUpdateProperties() {
+        Map<String, Object> strategies = ImmutableMap.of("set", "union",
+                                                         "fullDate", "smaller");
+        // Init old vertices
+        graph().addVertices(this.createNVertexBatch("testV", 5, "old"));
+        List<Vertex> vertices = this.createNVertexBatch("testV", 5, "new");
+
+        // TODO: List from server is unordered, need consider better way to test
+        graph().updateVertices(vertices, strategies, true).forEach(vertex -> {
+            Object object = vertex.properties().get("set");
+            Assert.assertTrue(object instanceof List);
+            // Vertex's property has pid now, diff with edge
+            Map maps = (Map) (((List) object).get(0));
+            Object sets = maps.get("value");
+            Assert.assertTrue(sets instanceof List);
+            Assert.assertTrue(maps.size() == 2 && ((List) sets).size() == 2);
+            System.out.println(vertex);
+        });
     }
 
     @Test

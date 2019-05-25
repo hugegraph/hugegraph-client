@@ -19,9 +19,17 @@
 
 package com.baidu.hugegraph.api.traverser;
 
-import com.baidu.hugegraph.client.RestClient;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class RingsAPI extends SubGraphAPI {
+import com.baidu.hugegraph.api.graph.GraphAPI;
+import com.baidu.hugegraph.client.RestClient;
+import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.constant.Direction;
+import com.baidu.hugegraph.structure.graph.Path;
+
+public class RingsAPI extends TraversersAPI {
 
     public RingsAPI(RestClient client, String graph) {
         super(client, graph);
@@ -30,5 +38,28 @@ public class RingsAPI extends SubGraphAPI {
     @Override
     protected String type() {
         return "rings";
+    }
+
+    public List<Path> get(Object sourceId, Direction direction, String label,
+                          int depth, boolean sourceInRing, long degree,
+                          long capacity, long limit) {
+        String source = GraphAPI.formatVertexId(sourceId, false);
+
+        checkPositive(depth, "Max depth of path");
+        checkDegree(degree);
+        checkCapacity(capacity);
+        checkLimit(limit);
+
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put("source", source);
+        params.put("direction", direction);
+        params.put("label", label);
+        params.put("max_depth", depth);
+        params.put("source_in_ring", sourceInRing);
+        params.put("max_degree", degree);
+        params.put("capacity", capacity);
+        params.put("limit", limit);
+        RestResult result = this.client.get(this.path(), params);
+        return result.readList(this.type(), Path.class);
     }
 }

@@ -21,7 +21,6 @@ package com.baidu.hugegraph.api;
 
 import java.util.List;
 
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -94,12 +93,6 @@ public class ShortestPathApiTest extends BaseApiTest {
         v10.addEdge("link", v16);
         v10.addEdge("link", v17);
         v10.addEdge("link", v18);
-    }
-
-    @AfterClass
-    public static void clearShortestPathGraph() {
-        waitUntilTaskCompleted(edgeLabelAPI.delete("link"));
-        waitUntilTaskCompleted(vertexLabelAPI.delete("node"));
     }
 
     @Test

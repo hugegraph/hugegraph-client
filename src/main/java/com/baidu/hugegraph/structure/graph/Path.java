@@ -25,10 +25,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.baidu.hugegraph.driver.GraphManager;
+import com.baidu.hugegraph.structure.constant.GraphAttachable;
+import com.baidu.hugegraph.util.E;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 
-public class Path {
+public class Path implements GraphAttachable {
 
     @JsonProperty
     private List<Object> labels;
@@ -77,6 +80,22 @@ public class Path {
 
     public int size() {
         return this.objects.size();
+    }
+
+    @Override
+    public void attachManager(GraphManager manager) {
+        E.checkNotNull(this.objects, "objects of path");
+        E.checkNotNull(this.crosspoint, "crosspoint of path");
+        for (Object object : this.objects) {
+            if (object instanceof GraphAttachable) {
+                GraphAttachable attachable = (GraphAttachable) object;
+                attachable.attachManager(manager);
+            }
+        }
+        if (this.crosspoint instanceof GraphAttachable) {
+            GraphAttachable attachable = (GraphAttachable) this.crosspoint;
+            attachable.attachManager(manager);
+        }
     }
 
     @Override

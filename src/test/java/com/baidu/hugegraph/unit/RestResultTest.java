@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.serializer.PathDeserializer;
 import com.baidu.hugegraph.structure.constant.Cardinality;
@@ -30,20 +31,28 @@ import com.baidu.hugegraph.structure.schema.PropertyKey;
 import com.baidu.hugegraph.structure.schema.VertexLabel;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
+import com.baidu.hugegraph.testutil.Whitebox;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
-public class RestResultTest {
+public class RestResultTest extends BaseUnitTest {
 
     private javax.ws.rs.core.Response mockResponse;
+    private static GraphManager graphManager;
 
     @BeforeClass
     public static void init() {
+        graphManager = Mockito.mock(GraphManager.class);
+
         SimpleModule module = new SimpleModule();
         module.addDeserializer(Path.class, new PathDeserializer());
         RestResult.registerModule(module);
+    }
+
+    public static GraphManager graph() {
+        return graphManager;
     }
 
     @Before
@@ -627,6 +636,9 @@ public class RestResultTest {
         Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
+        Whitebox.setInternalState(response.result(), "graphManager", graph());
+        Assert.assertEquals("b0fd8ead-333f-43ac-97b0-4d78784726ae",
+                            response.requestId());
         Assert.assertEquals(200, response.status().code());
 
         Vertex marko = new Vertex("person");
@@ -712,6 +724,7 @@ public class RestResultTest {
         Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
+        Whitebox.setInternalState(response.result(), "graphManager", graph());
         Assert.assertEquals(200, response.status().code());
 
         Edge created = new Edge("created");
@@ -799,6 +812,7 @@ public class RestResultTest {
         Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
+        Whitebox.setInternalState(response.result(), "graphManager", graph());
         Assert.assertEquals(200, response.status().code());
 
         Iterator<Result> results = response.result().iterator();
@@ -856,6 +870,7 @@ public class RestResultTest {
         Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
+        Whitebox.setInternalState(response.result(), "graphManager", graph());
         Assert.assertEquals(200, response.status().code());
 
         Iterator<Result> results = response.result().iterator();
@@ -900,6 +915,7 @@ public class RestResultTest {
         Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
+        Whitebox.setInternalState(response.result(), "graphManager", graph());
         Assert.assertEquals(200, response.status().code());
 
         Iterator<Result> results = response.result().iterator();
@@ -959,6 +975,7 @@ public class RestResultTest {
         Assert.assertNull(restResult.headers());
 
         Response response = restResult.readObject(Response.class);
+        Whitebox.setInternalState(response.result(), "graphManager", graph());
         Assert.assertEquals(200, response.status().code());
 
         Iterator<Result> results = response.result().iterator();

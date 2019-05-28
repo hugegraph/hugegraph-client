@@ -41,7 +41,7 @@ public class ResultSet {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private GraphManager graphManager;
+    private GraphManager graphManager = null;
 
     @JsonProperty
     private List<Object> data;
@@ -86,8 +86,7 @@ public class ResultSet {
             String rawValue = MAPPER.writeValueAsString(object);
             object = MAPPER.readValue(rawValue, clazz);
             if (object instanceof GraphAttachable) {
-                GraphAttachable attachable = (GraphAttachable) object;
-                attachable.attachManager(graphManager);
+                ((GraphAttachable) object).attachManager(graphManager);
             }
             return new Result(object);
         } catch (Exception e) {
@@ -122,7 +121,7 @@ public class ResultSet {
 
     public Iterator<Result> iterator() {
         E.checkState(this.data != null, "Invalid response from server");
-        E.checkState(this.graphManager != null, "Must hold a graphManager");
+        E.checkState(this.graphManager != null, "Must hold a graph manager");
 
         return new Iterator<Result>() {
 

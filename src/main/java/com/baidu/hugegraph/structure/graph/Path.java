@@ -27,7 +27,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.structure.constant.GraphAttachable;
-import com.baidu.hugegraph.util.E;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;
 
@@ -84,17 +83,13 @@ public class Path implements GraphAttachable {
 
     @Override
     public void attachManager(GraphManager manager) {
-        E.checkNotNull(this.objects, "objects of path");
-        E.checkNotNull(this.crosspoint, "crosspoint of path");
         for (Object object : this.objects) {
             if (object instanceof GraphAttachable) {
-                GraphAttachable attachable = (GraphAttachable) object;
-                attachable.attachManager(manager);
+                ((GraphAttachable) object).attachManager(manager);
             }
         }
         if (this.crosspoint instanceof GraphAttachable) {
-            GraphAttachable attachable = (GraphAttachable) this.crosspoint;
-            attachable.attachManager(manager);
+            ((GraphAttachable) this.crosspoint).attachManager(manager);
         }
     }
 

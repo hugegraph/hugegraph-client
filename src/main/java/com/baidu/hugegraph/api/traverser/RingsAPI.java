@@ -61,8 +61,8 @@ public class RingsAPI extends TraversersAPI {
         params.put("max_depth", depth);
         if (sourceInRing) {
             Version apiVersion = this.client.apiVersion();
-            E.checkNotNull(apiVersion, "api version");
-            if (VersionUtil.match(apiVersion, "0.38", "0.40")) {
+            if (apiVersion != null &&
+                VersionUtil.match(apiVersion, "0.38", "0.40")) {
                 throw new ClientException("HugeGraphServer API version must " +
                                           "be >= 0.40 to support " +
                                           "source_in_ring arg of ring API, " +

@@ -25,9 +25,13 @@ import java.util.Map;
 
 import com.baidu.hugegraph.api.graph.GraphAPI;
 import com.baidu.hugegraph.client.RestClient;
+import com.baidu.hugegraph.rest.ClientException;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Path;
+import com.baidu.hugegraph.util.E;
+import com.baidu.hugegraph.util.VersionUtil;
+import com.baidu.hugegraph.util.VersionUtil.Version;
 
 public class RingsAPI extends TraversersAPI {
 
@@ -55,6 +59,18 @@ public class RingsAPI extends TraversersAPI {
         params.put("direction", direction);
         params.put("label", label);
         params.put("max_depth", depth);
+        if (sourceInRing) {
+            Version apiVersion = this.client.apiVersion();
+            E.checkNotNull(apiVersion, "api version");
+            if (VersionUtil.match(apiVersion, "0.38", "0.40")) {
+                throw new ClientException("HugeGraphServer API version must " +
+                                          "be >= 0.40 to support " +
+                                          "source_in_ring arg of ring API, " +
+                                          "but current HugeGraphServer " +
+                                          "API version is: %s",
+                                          apiVersion.get());
+            }
+        }
         params.put("source_in_ring", sourceInRing);
         params.put("max_degree", degree);
         params.put("capacity", capacity);

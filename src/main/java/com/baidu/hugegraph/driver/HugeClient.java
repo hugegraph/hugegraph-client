@@ -122,6 +122,7 @@ public class HugeClient implements Closeable {
                                          this.version.getApiVersion());
         VersionUtil.check(apiVersion, "0.38", "0.41",
                           "hugegraph-api in server");
+        this.client.apiVersion(apiVersion);
     }
 
     public GraphsManager graphs() {

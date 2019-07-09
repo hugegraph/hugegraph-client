@@ -28,6 +28,8 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.baidu.hugegraph.api.graph.structure.BatchEdgeRequest;
+import com.baidu.hugegraph.api.graph.structure.UpdateStrategy;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
@@ -499,20 +501,13 @@ public class EdgeApiTest extends BaseApiTest {
         });
     }
 
+    // TODO: After the vertex's strategies test passed, then add others here
     @Test
-    public void testBatchUpdateProperties() {
-        final int num = 5;
-        // Init old vertices
-        graph().addVertices(this.createNVertexBatch("testV", num << 1, "old"));
-        // Init old edges
-        graph().addEdges(this.createNEdgesBatch("testV", "testE", "old", num));
-
-        Map<String, Object> strategies = ImmutableMap.of("set", "union",
-                                                         "fullDate", "smaller");
-        List<Edge> newEdges = this.createNEdgesBatch("testV", "testE",
-                                                     "new", num);
+    public void testBatchUpdateStrategyUnion() {
+        BatchEdgeRequest req = batchEdgeRequest("set", "old", "new",
+                                                UpdateStrategy.UNION);
         // TODO: Consider better way to test.
-        graph().updateEdges(newEdges, strategies, false, true).forEach(edge -> {
+        graph().updateEdges(req).forEach(edge -> {
             Object set = edge.properties().get("set");
             Assert.assertTrue(set instanceof Collection);
             Assert.assertTrue(((Collection)set).size() == 2);
@@ -620,6 +615,28 @@ public class EdgeApiTest extends BaseApiTest {
         Utils.assertResponseError(400, () -> {
             edgeAPI.delete("not-exist-e");
         });
+    }
+
+    private BatchEdgeRequest batchEdgeRequest(String key, Object oldData,
+                                              Object newData,
+                                              UpdateStrategy strategy) {
+        Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
+        // Init old vertices & new vertices
+        this.graph().addVertices(this.createNVertexBatch("testV", oldData, 10));
+        this.graph().addEdges(this.createNEdgesBatch("testV", "testE",
+                                                     "old", 5));
+
+        List<Edge> edges = this.createNEdgesBatch("testV", "testE", "new", 5);
+
+        // TODO:Del after test
+        edges.forEach(System.out::println);
+        BatchEdgeRequest req;
+        req = new BatchEdgeRequest.Builder().edges(edges)
+                                            .updateStrategies(strategies)
+                                            .checkVertex(false)
+                                            .createIfNotExist(true)
+                                            .build();
+        return req;
     }
 
     @SuppressWarnings("unused")

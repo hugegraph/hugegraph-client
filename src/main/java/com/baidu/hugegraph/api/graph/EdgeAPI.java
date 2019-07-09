@@ -25,6 +25,7 @@ import java.util.Map;
 
 import javax.ws.rs.core.MultivaluedHashMap;
 
+import com.baidu.hugegraph.api.graph.structure.BatchEdgeRequest;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.exception.InvalidResponseException;
 import com.baidu.hugegraph.exception.NotAllCreatedException;
@@ -68,22 +69,10 @@ public class EdgeAPI extends GraphAPI {
         return ids;
     }
 
-    public List<Edge> update(List<Edge> edges,
-                             Map<String, Object> strategies,
-                             boolean checkVertex,
-                             boolean createIfNotExist) {
-        MultivaluedHashMap<String, Object> headers = new MultivaluedHashMap<>();
-        headers.putSingle("Content-Encoding", BATCH_ENCODING);
-        String updateStrategies = GraphAPI.formatProperties(strategies);
-        Map<String ,Object> params = ImmutableMap.of("updateStrategies",
-                                                     updateStrategies,
-                                                     "check_vertex",
-                                                     checkVertex,
-                                                     "createIfNotExist",
-                                                     createIfNotExist);
-        RestResult result = this.client.post(this.batchPath() + "Update",
-                                             edges, headers, params);
-        // TODO: Consider better way to check exception
+    public List<Edge> update(BatchEdgeRequest request) {
+        RestResult result = this.client.put(this.batchPath(), null, request);
+
+        // TODO: Consider better way to check exception & deserialized result
         int responseCode = result.status();
         if (responseCode != 200) {
             throw new InvalidResponseException(

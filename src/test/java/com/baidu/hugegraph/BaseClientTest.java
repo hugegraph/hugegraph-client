@@ -22,6 +22,7 @@ import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.schema.VertexLabel;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
@@ -78,7 +79,7 @@ public class BaseClientTest {
 
     @Before
     public void setup() {
-        // this.clearData();
+         //this.clearData();
     }
 
     @After
@@ -118,7 +119,7 @@ public class BaseClientTest {
         schema.propertyKey("date").asText().ifNotExist().create();
         schema.propertyKey("price").asInt().ifNotExist().create();
         schema.propertyKey("weight").asDouble().ifNotExist().create();
-        // Add for test updateStrategies & Date
+        // Add for test updateStrategies & Date type
         schema.propertyKey("fullDate").asDate().ifNotExist().create();
         schema.propertyKey("set").asText().valueSet().ifNotExist().create();
         schema.propertyKey("list").asText().valueList().ifNotExist().create();
@@ -155,9 +156,9 @@ public class BaseClientTest {
               .create();
 
         schema.vertexLabel("testV")
-              .properties("name", "set", "fullDate")
+              .properties("name", "set", "fullDate", "price", "list")
               .primaryKeys("name")
-              .nullableKeys("set", "fullDate")
+              .nullableKeys("set", "fullDate", "price", "list")
               .ifNotExist()
               .create();
     }
@@ -257,13 +258,18 @@ public class BaseClientTest {
                         "date", "20170110", "city", "Hongkong");
     }
 
-    protected List<Vertex> createNVertexBatch(String vertexLabel, int num,
-                                              String symbol) {
+    protected List<Vertex> createNVertexBatch(String vertexLabel, Object symbol,
+                                              int num) {
         List<Vertex> vertices = new ArrayList<>(num);
         for (int i = 0; i < num; i++) {
             Vertex vertex = new Vertex(vertexLabel);
             vertex.property("name", "p" + i);
-            vertex.property("set", ImmutableSet.of(symbol + i));
+            vertex.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
+            if (symbol instanceof Number) {
+                vertex.property("price", (i + 1) * (int) symbol);
+            }
+            vertex.property("list",
+                            ImmutableList.of(String.valueOf(symbol) + i));
             vertex.property("fullDate",
                             new Date(System.currentTimeMillis() + i));
             vertices.add(vertex);

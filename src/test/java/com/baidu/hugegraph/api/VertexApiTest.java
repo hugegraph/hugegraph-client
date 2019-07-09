@@ -19,6 +19,8 @@
 
 package com.baidu.hugegraph.api;
 
+import static com.baidu.hugegraph.api.graph.structure.UpdateStrategy.INTERSECTION;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +29,8 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.baidu.hugegraph.api.graph.structure.BatchVertexRequest;
+import com.baidu.hugegraph.api.graph.structure.UpdateStrategy;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.testutil.Assert;
@@ -210,22 +214,94 @@ public class VertexApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testBatchUpdateProperties() {
-        Map<String, Object> strategies = ImmutableMap.of("set", "union",
-                                                         "fullDate", "smaller");
-        // Init old vertices
-        graph().addVertices(this.createNVertexBatch("testV", 5, "old"));
-        List<Vertex> vertices = this.createNVertexBatch("testV", 5, "new");
+    public void testBatchUpdateStrategySum() {
+        BatchVertexRequest req = batchVertexRequest("price", 1, -1,
+                                                    UpdateStrategy.SUM);
 
-        // TODO: List from server is unordered, need consider better way to test
-        graph().updateVertices(vertices, strategies, true).forEach(vertex -> {
-            Object object = vertex.properties().get("set");
-            Assert.assertTrue(object instanceof List);
-            // Vertex's property has pid now, diff with edge
-            Map maps = (Map) (((List) object).get(0));
-            Object sets = maps.get("value");
-            Assert.assertTrue(sets instanceof List);
-            Assert.assertTrue(maps.size() == 2 && ((List) sets).size() == 2);
+        this.graph().updateVertices(req).forEach(vertex -> {
+            Object price = vertex.properties().get("price");
+            Assert.assertTrue(price instanceof Number);
+            Assert.assertTrue((int) price == 0);
+            System.out.println(vertex);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyBigger() {
+        BatchVertexRequest req = batchVertexRequest("price", 1, -1,
+                                                    UpdateStrategy.BIGGER);
+
+        this.graph().updateVertices(req).forEach(vertex -> {
+            Object price = vertex.properties().get("price");
+            Assert.assertTrue(price instanceof Number);
+            Assert.assertTrue((int) price > 0);
+            System.out.println(vertex);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategySmaller() {
+        BatchVertexRequest req = batchVertexRequest("fullDate", -1, 1,
+                                                    UpdateStrategy.SMALLER);
+
+        this.graph().updateVertices(req).forEach(vertex -> {
+            Object oldTime = vertex.properties().get("fullDate");
+            Assert.assertTrue(oldTime instanceof Number);
+            long now = System.currentTimeMillis();
+            Assert.assertTrue(now > (long) oldTime);
+            System.out.println(vertex);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyUnion() {
+        BatchVertexRequest req = batchVertexRequest("set", "old", "new",
+                                                    UpdateStrategy.UNION);
+
+        // TODO: List from server is unordered, consider better way to validate
+        this.graph().updateVertices(req).forEach(vertex -> {
+            Object list = vertex.properties().get("set");
+            Assert.assertTrue(list instanceof List);
+            Assert.assertTrue(((List) list).size() == 2);
+            System.out.println(vertex);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyIntersection() {
+        BatchVertexRequest req = batchVertexRequest("set", "old", "new",
+                                                    INTERSECTION);
+
+        this.graph().updateVertices(req).forEach(vertex -> {
+            Object list = vertex.properties().get("set");
+            Assert.assertTrue(list instanceof List);
+            Assert.assertTrue(((List) list).isEmpty());
+            System.out.println(vertex);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyAppend() {
+        BatchVertexRequest req = batchVertexRequest("list", "old", "old",
+                                                    UpdateStrategy.APPEND);
+
+        this.graph().updateVertices(req).forEach(vertex -> {
+            Object list = vertex.properties().get("list");
+            Assert.assertTrue(list instanceof List);
+            Assert.assertTrue(((List) list).size() == 2);
+            System.out.println(vertex);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyEliminate() {
+        BatchVertexRequest req = batchVertexRequest("list", "old", "old",
+                                                    UpdateStrategy.ELIMINATE);
+
+        this.graph().updateVertices(req).forEach(vertex -> {
+            Object list = vertex.properties().get("list");
+            Assert.assertTrue(list instanceof List);
+            Assert.assertTrue(((List) list).isEmpty());
             System.out.println(vertex);
         });
     }
@@ -343,6 +419,25 @@ public class VertexApiTest extends BaseApiTest {
         Utils.assertResponseError(400, () -> {
             vertexAPI.delete("not-exist-v");
         });
+    }
+
+
+    private BatchVertexRequest batchVertexRequest(String key, Object oldData,
+                                                  Object newData,
+                                                  UpdateStrategy strategy) {
+        Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
+        // Init old vertices & new vertices
+        this.graph().addVertices(this.createNVertexBatch("testV", oldData, 5));
+        List<Vertex> vertices = this.createNVertexBatch("testV", newData, 5);
+
+        // TODO:Del after test
+        vertices.forEach(System.out::println);
+        BatchVertexRequest req;
+        req = new BatchVertexRequest.Builder().vertices(vertices)
+                                              .updateStrategies(strategies)
+                                              .createIfNotExist(true)
+                                              .build();
+        return req;
     }
 
     @SuppressWarnings("unused")

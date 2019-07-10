@@ -19,57 +19,46 @@
 
 package com.baidu.hugegraph.api.graph.structure;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.util.E;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BatchVertexRequest {
 
-    // TODO: Vertex seems OK, should we keep the JsonVertex's code?
     @JsonProperty("vertices")
-    private List<Vertex> jsonVertices;
+    private List<Vertex> vertices;
     @JsonProperty("update_strategies")
     private Map<String, UpdateStrategy> updateStrategies;
     @JsonProperty("create_if_not_exist")
     private boolean createIfNotExist;
 
     public BatchVertexRequest() {
-        this.jsonVertices = null;
+        this.vertices = null;
         this.updateStrategies = null;
         this.createIfNotExist = true;
     }
 
     @Override
     public String toString() {
-        return String.format("BatchVertexRequest{jsonVertices=%s," +
+        return String.format("BatchVertexRequest{vertices=%s," +
                              "updateStrategies=%s,createIfNotExist=%s}",
-                             this.jsonVertices, this.updateStrategies,
+                             this.vertices, this.updateStrategies,
                              this.createIfNotExist);
     }
 
     public static class Builder {
 
         private BatchVertexRequest req;
-        private List<JsonVertex.Builder> vertexBuilders;
 
         public Builder() {
             this.req = new BatchVertexRequest();
-            //this.vertexBuilders = new ArrayList<>();
-        }
-
-        public JsonVertex.Builder vertices() {
-            JsonVertex.Builder builder = new JsonVertex.Builder();
-            this.vertexBuilders.add(builder);
-            return builder;
         }
 
         public Builder vertices(List<Vertex> vertices) {
-            this.req.jsonVertices = vertices;
+            this.req.vertices = vertices;
             return this;
         }
 
@@ -84,89 +73,16 @@ public class BatchVertexRequest {
         }
 
         public BatchVertexRequest build() {
-            /*this.vertexBuilders.forEach(builder -> {
-                req.jsonVertices.add(builder.build());
-            });*/
             E.checkArgumentNotNull(req, "BatchVertexRequest cannot be null");
-            E.checkArgumentNotNull(req.jsonVertices,
+            E.checkArgumentNotNull(req.vertices,
                                    "Parameter 'vertices' cannot be null");
             E.checkArgument(req.updateStrategies != null &&
                             !req.updateStrategies.isEmpty(),
                             "Parameter 'update_strategies' cannot be empty");
-            // Not support createIfNotExist equals false now
-            E.checkArgument(req.createIfNotExist == true, "Parameter " +
-                            "'create_if_not_exist' is not supported now");
+            E.checkArgument(req.createIfNotExist == true,
+                            "Parameter 'create_if_not_exist' " +
+                            "dose not supported false now");
             return this.req;
-        }
-    }
-
-    @JsonIgnoreProperties(value = {"type"})
-    private static class JsonVertex {
-        @JsonProperty("id")
-        private Object id;
-        @JsonProperty("label")
-        private String label;
-        @JsonProperty("properties")
-        private Map<String, Object> properties;
-        @JsonProperty("type")
-        private String type;
-
-        public JsonVertex() {
-            this.id = null;
-            this.label = null;
-            this.properties = new HashMap<>();
-            this.type = null;
-        }
-
-        @Override
-        public String toString() {
-            return String.format("JsonVertex{label=%s, properties=%s}",
-                                 this.label, this.properties);
-        }
-
-        public static class Builder {
-
-            private JsonVertex vertex;
-
-            public Builder() {
-                this.vertex = new JsonVertex();
-            }
-
-            public Builder id(Object id) {
-                this.vertex.id = id;
-                return this;
-            }
-
-            public Builder label(String label) {
-                this.vertex.label = label;
-                return this;
-            }
-
-            public Builder properties(Map<String, Object> properties) {
-                this.vertex.properties = properties;
-                return this;
-            }
-
-            public Builder type(String type) {
-                this.vertex.type = type;
-                return this;
-            }
-
-            public JsonVertex build() {
-                E.checkArgumentNotNull(vertex.properties,
-                                       "The properties of vertex can't be null");
-
-                for (Map.Entry<String, Object> e :
-                     vertex.properties.entrySet()) {
-                    String key = e.getKey();
-                    Object value = e.getValue();
-                    E.checkArgumentNotNull(value, "Not allowed to set value " +
-                                           "of property '%s' to null for " +
-                                           "vertex '%s'", key, vertex.id);
-                }
-
-                return this.vertex;
-            }
         }
     }
 }

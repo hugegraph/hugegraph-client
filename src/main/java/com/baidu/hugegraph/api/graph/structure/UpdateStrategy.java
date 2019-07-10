@@ -20,11 +20,18 @@
 package com.baidu.hugegraph.api.graph.structure;
 
 public enum UpdateStrategy {
+
     SUM,
+
     BIGGER,
+
     SMALLER,
+
     UNION,
+
     INTERSECTION,
+
     APPEND,
+
     ELIMINATE
 }

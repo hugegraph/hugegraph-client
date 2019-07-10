@@ -336,7 +336,7 @@ public class BaseClientTest {
     }
 
     protected List<Edge> createNEdgesBatch(String vertexLabel, String edgeLabel,
-                                           String symbol, int num) {
+                                           Object symbol, int num) {
         VertexLabel vLabel = schema().getVertexLabel(vertexLabel);
 
         List<Edge> edges = new ArrayList<>(num);
@@ -347,7 +347,7 @@ public class BaseClientTest {
             edge.sourceId(vLabel.id() + ":p" + i);
             edge.targetId(vLabel.id() + ":p" + i * 2);
             edge.property("fullDate", new Date(System.currentTimeMillis() + i));
-            edge.property("set", ImmutableSet.of(symbol + i));
+            edge.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
             edges.add(edge);
         }
         return edges;

@@ -624,11 +624,11 @@ public class EdgeApiTest extends BaseApiTest {
         // Init old vertices & new vertices
         this.graph().addVertices(this.createNVertexBatch("testV", oldData, 10));
         this.graph().addEdges(this.createNEdgesBatch("testV", "testE",
-                                                     "old", 5));
+                                                     oldData, 5));
 
-        List<Edge> edges = this.createNEdgesBatch("testV", "testE", "new", 5);
+        List<Edge> edges = this.createNEdgesBatch("testV", "testE", newData, 5);
 
-        // TODO:Del after test
+        // TODO:Del after all test passes
         edges.forEach(System.out::println);
         BatchEdgeRequest req;
         req = new BatchEdgeRequest.Builder().edges(edges)

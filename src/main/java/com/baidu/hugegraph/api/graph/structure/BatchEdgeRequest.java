@@ -24,14 +24,12 @@ import java.util.Map;
 
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.util.E;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class BatchEdgeRequest {
 
-    // TODO: Edge seems OK, should we keep the JsonEdge's code?
     @JsonProperty("edges")
-    private List<Edge> jsonEdges;
+    private List<Edge> edges;
     @JsonProperty("update_strategies")
     private Map<String, UpdateStrategy> updateStrategies;
     @JsonProperty("check_vertex")
@@ -40,7 +38,7 @@ public class BatchEdgeRequest {
     private boolean createIfNotExist;
 
     public BatchEdgeRequest() {
-        this.jsonEdges = null;
+        this.edges = null;
         this.updateStrategies = null;
         this.checkVertex = false;
         this.createIfNotExist = true;
@@ -48,10 +46,10 @@ public class BatchEdgeRequest {
 
     @Override
     public String toString() {
-        return String.format("BatchEdgeRequest{jsonEdges=%s," +
+        return String.format("BatchEdgeRequest{edges=%s," +
                              "updateStrategies=%s," +
                              "checkVertex=%s,createIfNotExist=%s}",
-                             this.jsonEdges, this.updateStrategies,
+                             this.edges, this.updateStrategies,
                              this.checkVertex, this.createIfNotExist);
     }
 
@@ -64,7 +62,7 @@ public class BatchEdgeRequest {
         }
 
         public Builder edges(List<Edge> edges) {
-            this.req.jsonEdges = edges;
+            this.req.edges = edges;
             return this;
         }
 
@@ -85,37 +83,15 @@ public class BatchEdgeRequest {
 
         public BatchEdgeRequest build() {
             E.checkArgumentNotNull(req, "BatchEdgeRequest cannot be null");
-            E.checkArgumentNotNull(req.jsonEdges,
+            E.checkArgumentNotNull(req.edges,
                                    "Parameter 'edges' cannot be null");
             E.checkArgument(req.updateStrategies != null &&
                             !req.updateStrategies.isEmpty(),
                             "Parameter 'update_strategies' cannot be empty");
-            // Not support createIfNotExist equals false now
-            E.checkArgument(req.createIfNotExist == true, "Parameter " +
-                            "'create_if_not_exist' is not supported now");
-
+            E.checkArgument(req.createIfNotExist == true,
+                            "Parameter 'create_if_not_exist' " +
+                            "dose not supported false now");
             return this.req;
         }
-    }
-
-    @JsonIgnoreProperties(value = {"type"})
-    private class JsonEdge {
-        @JsonProperty("id")
-        private Object id;
-        @JsonProperty("label")
-        private String label;
-        @JsonProperty("properties")
-        private Map<String, Object> properties;
-        @JsonProperty("outV")
-        private Object source;
-        @JsonProperty("outVLabel")
-        private String sourceLabel;
-        @JsonProperty("inV")
-        private Object target;
-        @JsonProperty("inVLabel")
-        private String targetLabel;
-        @JsonProperty("type")
-        private String type;
-
     }
 }

@@ -222,7 +222,6 @@ public class VertexApiTest extends BaseApiTest {
             Object price = vertex.properties().get("price");
             Assert.assertTrue(price instanceof Number);
             Assert.assertTrue((int) price == 0);
-            System.out.println(vertex);
         });
     }
 
@@ -235,7 +234,6 @@ public class VertexApiTest extends BaseApiTest {
             Object price = vertex.properties().get("price");
             Assert.assertTrue(price instanceof Number);
             Assert.assertTrue((int) price > 0);
-            System.out.println(vertex);
         });
     }
 
@@ -249,7 +247,6 @@ public class VertexApiTest extends BaseApiTest {
             Assert.assertTrue(oldTime instanceof Number);
             long now = System.currentTimeMillis();
             Assert.assertTrue(now > (long) oldTime);
-            System.out.println(vertex);
         });
     }
 
@@ -263,7 +260,6 @@ public class VertexApiTest extends BaseApiTest {
             Object list = vertex.properties().get("set");
             Assert.assertTrue(list instanceof List);
             Assert.assertTrue(((List) list).size() == 2);
-            System.out.println(vertex);
         });
     }
 
@@ -289,7 +285,6 @@ public class VertexApiTest extends BaseApiTest {
             Object list = vertex.properties().get("list");
             Assert.assertTrue(list instanceof List);
             Assert.assertTrue(((List) list).size() == 2);
-            System.out.println(vertex);
         });
     }
 
@@ -302,7 +297,6 @@ public class VertexApiTest extends BaseApiTest {
             Object list = vertex.properties().get("list");
             Assert.assertTrue(list instanceof List);
             Assert.assertTrue(((List) list).isEmpty());
-            System.out.println(vertex);
         });
     }
 
@@ -430,8 +424,6 @@ public class VertexApiTest extends BaseApiTest {
         this.graph().addVertices(this.createNVertexBatch("testV", oldData, 5));
         List<Vertex> vertices = this.createNVertexBatch("testV", newData, 5);
 
-        // TODO:Del after test
-        vertices.forEach(System.out::println);
         BatchVertexRequest req;
         req = new BatchVertexRequest.Builder().vertices(vertices)
                                               .updateStrategies(strategies)

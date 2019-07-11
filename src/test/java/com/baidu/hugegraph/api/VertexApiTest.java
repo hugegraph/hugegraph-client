@@ -219,7 +219,7 @@ public class VertexApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("price", 1, -1,
                                                     UpdateStrategy.SUM);
 
-        this.graph().updateVertices(req).forEach(vertex -> {
+        this.vertexAPI.update(req).forEach(vertex -> {
             Object price = vertex.properties().get("price");
             Assert.assertTrue(price instanceof Number);
             Assert.assertEquals(0, price);
@@ -231,7 +231,7 @@ public class VertexApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("price", 1, -1,
                                                     UpdateStrategy.BIGGER);
 
-        this.graph().updateVertices(req).forEach(vertex -> {
+        this.vertexAPI.update(req).forEach(vertex -> {
             Object price = vertex.properties().get("price");
             Assert.assertTrue(price instanceof Number);
             Assert.assertTrue((int) price > 0);
@@ -244,7 +244,7 @@ public class VertexApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("price", -1, 1,
                                                     UpdateStrategy.SMALLER);
 
-        this.graph().updateVertices(req).forEach(vertex -> {
+        this.vertexAPI.update(req).forEach(vertex -> {
             Object price = vertex.properties().get("price");
             Assert.assertTrue(price instanceof Number);
             Assert.assertTrue((int) price < 0);
@@ -257,10 +257,10 @@ public class VertexApiTest extends BaseApiTest {
                                                     UpdateStrategy.UNION);
 
         // TODO: List from server is unordered, consider better way to validate
-        this.graph().updateVertices(req).forEach(vertex -> {
+        this.vertexAPI.update(req).forEach(vertex -> {
             Object set = vertex.properties().get("set");
             Assert.assertTrue(set instanceof Collection);
-            Assert.assertEquals(2, ((Collection) set).size());
+            Assert.assertEquals(2, ((Collection<?>) set).size());
         });
     }
 
@@ -269,10 +269,10 @@ public class VertexApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("set", "old", "new",
                                                     INTERSECTION);
 
-        this.graph().updateVertices(req).forEach(vertex -> {
+        this.vertexAPI.update(req).forEach(vertex -> {
             Object set = vertex.properties().get("set");
             Assert.assertTrue(set instanceof Collection);
-            Assert.assertTrue(((Collection) set).isEmpty());
+            Assert.assertTrue(((Collection<?>) set).isEmpty());
         });
     }
 
@@ -281,10 +281,10 @@ public class VertexApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("list", "old", "old",
                                                     UpdateStrategy.APPEND);
 
-        this.graph().updateVertices(req).forEach(vertex -> {
+        this.vertexAPI.update(req).forEach(vertex -> {
             Object list = vertex.properties().get("list");
             Assert.assertTrue(list instanceof List);
-            Assert.assertEquals(2, ((List) list).size());
+            Assert.assertEquals(2, ((List<?>) list).size());
         });
     }
 
@@ -293,10 +293,10 @@ public class VertexApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("list", "old", "old",
                                                     UpdateStrategy.ELIMINATE);
 
-        this.graph().updateVertices(req).forEach(vertex -> {
+        this.vertexAPI.update(req).forEach(vertex -> {
             Object list = vertex.properties().get("list");
             Assert.assertTrue(list instanceof List);
-            Assert.assertTrue(((List) list).isEmpty());
+            Assert.assertTrue(((List<?>) list).isEmpty());
         });
     }
 
@@ -424,6 +424,8 @@ public class VertexApiTest extends BaseApiTest {
         this.graph().addVertices(this.createNVertexBatch("testV", oldData, 5));
         List<Vertex> vertices = this.createNVertexBatch("testV", newData, 5);
 
+        // TODO: del later
+        //vertices.forEach(System.out::println);
         BatchVertexRequest req;
         req = new BatchVertexRequest.Builder().vertices(vertices)
                                               .updateStrategies(strategies)

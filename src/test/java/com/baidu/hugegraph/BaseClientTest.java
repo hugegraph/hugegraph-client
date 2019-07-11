@@ -185,8 +185,8 @@ public class BaseClientTest {
         schema.edgeLabel("testE")
               .sourceLabel("testV")
               .targetLabel("testV")
-              .properties("set", "fullDate")
-              .nullableKeys("set", "fullDate")
+              .properties("set", "fullDate", "price", "list")
+              .nullableKeys("set", "fullDate", "price", "list")
               .ifNotExist()
               .create();
     }
@@ -346,8 +346,12 @@ public class BaseClientTest {
             edge.targetLabel(vertexLabel);
             edge.sourceId(vLabel.id() + ":p" + i);
             edge.targetId(vLabel.id() + ":p" + i * 2);
-            edge.property("fullDate", new Date(System.currentTimeMillis() + i));
             edge.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
+            if (symbol instanceof Number) {
+                edge.property("price", (i + 1) * (int) symbol);
+            }
+            edge.property("list", ImmutableList.of(String.valueOf(symbol) + i));
+            edge.property("fullDate", new Date(System.currentTimeMillis() + i));
             edges.add(edge);
         }
         return edges;

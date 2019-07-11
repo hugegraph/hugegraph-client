@@ -501,17 +501,69 @@ public class EdgeApiTest extends BaseApiTest {
         });
     }
 
-    // TODO: After the vertex's strategies test passed, then add others here
+    @Test
+    public void testBatchUpdateStrategyBigger() {
+        BatchEdgeRequest req = batchEdgeRequest("price", 1, -1,
+                                                UpdateStrategy.BIGGER);
+        this.edgeAPI.update(req).forEach(edge -> {
+            Object price = edge.properties().get("price");
+            Assert.assertTrue(price instanceof Number);
+            Assert.assertTrue((int) price > 0);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategySmaller() {
+        BatchEdgeRequest req = batchEdgeRequest("price", -1, 1,
+                                                UpdateStrategy.SMALLER);
+        this.edgeAPI.update(req).forEach(edge -> {
+            Object price = edge.properties().get("price");
+            Assert.assertTrue(price instanceof Number);
+            Assert.assertTrue((int) price < 0);
+        });
+    }
+
     @Test
     public void testBatchUpdateStrategyUnion() {
         BatchEdgeRequest req = batchEdgeRequest("set", "old", "new",
                                                 UpdateStrategy.UNION);
-        // TODO: Consider better way to test.
-        graph().updateEdges(req).forEach(edge -> {
+        this.edgeAPI.update(req).forEach(edge -> {
             Object set = edge.properties().get("set");
             Assert.assertTrue(set instanceof Collection);
-            Assert.assertTrue(((Collection)set).size() == 2);
-            System.out.println(edge);
+            Assert.assertTrue(((Collection<?>)set).size() == 2);
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyIntersection() {
+        BatchEdgeRequest req = batchEdgeRequest("set", "old", "new",
+                                                UpdateStrategy.INTERSECTION);
+        this.edgeAPI.update(req).forEach(edge -> {
+            Object set = edge.properties().get("set");
+            Assert.assertTrue(set instanceof Collection);
+            Assert.assertTrue(((Collection<?>) set).isEmpty());
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyAppend() {
+        BatchEdgeRequest req = batchEdgeRequest("list", "old", "new",
+                                                UpdateStrategy.APPEND);
+        this.edgeAPI.update(req).forEach(edge -> {
+            Object list = edge.properties().get("list");
+            Assert.assertTrue(list instanceof List);
+            Assert.assertEquals(2, ((List<?>) list).size());
+        });
+    }
+
+    @Test
+    public void testBatchUpdateStrategyEliminate() {
+        BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
+                                                UpdateStrategy.ELIMINATE);
+        this.edgeAPI.update(req).forEach(edge -> {
+            Object list = edge.properties().get("list");
+            Assert.assertTrue(list instanceof List);
+            Assert.assertTrue(((List<?>) list).isEmpty());
         });
     }
 
@@ -628,8 +680,6 @@ public class EdgeApiTest extends BaseApiTest {
 
         List<Edge> edges = this.createNEdgesBatch("testV", "testE", newData, 5);
 
-        // TODO:Del after all test passes
-        edges.forEach(System.out::println);
         BatchEdgeRequest req;
         req = new BatchEdgeRequest.Builder().edges(edges)
                                             .updateStrategies(strategies)

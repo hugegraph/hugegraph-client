@@ -420,12 +420,10 @@ public class VertexApiTest extends BaseApiTest {
                                                   Object newData,
                                                   UpdateStrategy strategy) {
         Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
-        // Init old vertices & new vertices
+        // Init old & new vertices
         this.graph().addVertices(this.createNVertexBatch("testV", oldData, 5));
         List<Vertex> vertices = this.createNVertexBatch("testV", newData, 5);
 
-        // TODO: del later
-        //vertices.forEach(System.out::println);
         BatchVertexRequest req;
         req = new BatchVertexRequest.Builder().vertices(vertices)
                                               .updateStrategies(strategies)

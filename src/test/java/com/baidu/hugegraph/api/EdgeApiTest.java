@@ -673,7 +673,7 @@ public class EdgeApiTest extends BaseApiTest {
                                               Object newData,
                                               UpdateStrategy strategy) {
         Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
-        // Init old vertices & new vertices
+        // Init old vertices & edges
         this.graph().addVertices(this.createNVertexBatch("testV", oldData, 10));
         this.graph().addEdges(this.createNEdgesBatch("testV", "testE",
                                                      oldData, 5));

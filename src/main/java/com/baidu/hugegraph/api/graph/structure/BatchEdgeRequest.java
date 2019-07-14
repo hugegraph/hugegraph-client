@@ -19,6 +19,7 @@
 
 package com.baidu.hugegraph.api.graph.structure;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,8 +67,14 @@ public class BatchEdgeRequest {
             return this;
         }
 
-        public Builder updateStrategies(Map<String, UpdateStrategy> maps) {
-            this.req.updateStrategies = maps;
+        public Builder updatingStrategies(Map<String, UpdateStrategy> map) {
+            this.req.updateStrategies = new HashMap<>(map);
+            return this;
+        }
+
+        public Builder updatingStrategy(String property,
+                                        UpdateStrategy strategy) {
+            this.req.updateStrategies.put(property, strategy);
             return this;
         }
 

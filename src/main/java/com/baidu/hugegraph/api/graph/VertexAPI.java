@@ -27,7 +27,6 @@ import javax.ws.rs.core.MultivaluedHashMap;
 
 import com.baidu.hugegraph.api.graph.structure.BatchVertexRequest;
 import com.baidu.hugegraph.client.RestClient;
-import com.baidu.hugegraph.exception.InvalidResponseException;
 import com.baidu.hugegraph.exception.NotAllCreatedException;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
@@ -68,14 +67,6 @@ public class VertexAPI extends GraphAPI {
 
     public List<Vertex> update(BatchVertexRequest request) {
         RestResult result = this.client.put(this.batchPath(), null, request);
-
-        // TODO: Consider better way to check exception & deserialized result
-        int responseCode = result.status();
-        if (responseCode != 200) {
-            throw new InvalidResponseException(
-                      "Batch update vertices failed, " +
-                      "the wrong http response code is %s", responseCode);
-        }
         return result.readList(this.type(), Vertex.class);
     }
 

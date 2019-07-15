@@ -62,7 +62,8 @@ public class EdgeTest extends BaseFuncTest {
         Assert.assertEquals(props, created.properties());
 
         created.property("city", "HongKong");
-        props = ImmutableMap.of("date", Utils.date("2017-03-24"), "city", "HongKong");
+        props = ImmutableMap.of("date", Utils.date("2017-03-24"),
+                                "city", "HongKong");
         Assert.assertEquals(props, created.properties());
     }
 
@@ -85,7 +86,7 @@ public class EdgeTest extends BaseFuncTest {
     @Test
     public void testAddEdgePropertyValueList() {
         schema().propertyKey("time")
-                .asText()
+                .asDate()
                 .valueList()
                 .ifNotExist()
                 .create();
@@ -99,24 +100,24 @@ public class EdgeTest extends BaseFuncTest {
 
         Edge created = graph().addEdge(peterId, "created", lopId,
                                        "date", "2017-03-24",
-                                       "time", "20121010");
+                                       "time", "2012-10-10");
 
-        Map<String, Object> props = ImmutableMap.of("date",
-                                                    Utils.date("2017-03-24"),
-                                                    "time", ImmutableList.of(
-                                                    "20121010"));
+        Map<String, Object> props = ImmutableMap.of(
+                                    "date", Utils.date("2017-03-24"), "time",
+                                    ImmutableList.of(Utils.date("2012-10-10")));
         Assert.assertEquals(props, created.properties());
 
-        created.property("time", "20140214");
+        created.property("time", "2014-02-14");
         props = ImmutableMap.of("date", Utils.date("2017-03-24"), "time",
-                                ImmutableList.of("20121010", "20140214"));
+                                ImmutableList.of(Utils.date("2012-10-10"),
+                                                 Utils.date("2014-02-14")));
         Assert.assertEquals(props, created.properties());
     }
 
     @Test
     public void testAddEdgePropertyValueSet() {
         schema().propertyKey("time")
-                .asText()
+                .asDate()
                 .valueSet()
                 .ifNotExist()
                 .create();
@@ -130,24 +131,24 @@ public class EdgeTest extends BaseFuncTest {
 
         Edge created = graph().addEdge(peterId, "created", lopId,
                                        "date", "2017-03-24",
-                                       "time", "20121010");
+                                       "time", "2012-10-10");
 
-        Map<String, Object> props = ImmutableMap.of("date",
-                                                    Utils.date("2017-03-24"),
-                                                    "time", ImmutableList.of(
-                                                    "20121010"));
+        Map<String, Object> props = ImmutableMap.of(
+                                    "date", Utils.date("2017-03-24"), "time",
+                                    ImmutableList.of(Utils.date("2012-10-10")));
         Assert.assertEquals(props, created.properties());
 
-        created.property("time", "20140214");
+        created.property("time", "2014-02-14");
         props = ImmutableMap.of("date", Utils.date("2017-03-24"), "time",
-                                ImmutableList.of("20140214", "20121010"));
+                                ImmutableList.of(Utils.date("2012-10-10"),
+                                                 Utils.date("2014-02-14")));
         Assert.assertEquals(props, created.properties());
     }
 
     @Test
     public void testAddEdgePropertyValueListWithSameValue() {
         schema().propertyKey("time")
-                .asText()
+                .asDate()
                 .valueList()
                 .ifNotExist()
                 .create();
@@ -161,24 +162,24 @@ public class EdgeTest extends BaseFuncTest {
 
         Edge created = graph().addEdge(peterId, "created", lopId,
                                        "date", "2017-03-24",
-                                       "time", "20121010");
+                                       "time", "2012-10-10");
 
-        Map<String, Object> props = ImmutableMap.of("date",
-                                                    Utils.date("2017-03-24"),
-                                                    "time", ImmutableList.of(
-                                                    "20121010"));
+        Map<String, Object> props = ImmutableMap.of(
+                                    "date", Utils.date("2017-03-24"), "time",
+                                    ImmutableList.of(Utils.date("2012-10-10")));
         Assert.assertEquals(props, created.properties());
 
-        created.property("time", "20121010");
+        created.property("time", "2012-10-10");
         props = ImmutableMap.of("date", Utils.date("2017-03-24"), "time",
-                                ImmutableList.of("20121010", "20121010"));
+                                ImmutableList.of(Utils.date("2012-10-10"),
+                                                 Utils.date("2012-10-10")));
         Assert.assertEquals(props, created.properties());
     }
 
     @Test
     public void testAddEdgePropertyValueSetWithSameValue() {
         schema().propertyKey("time")
-                .asText()
+                .asDate()
                 .valueSet()
                 .ifNotExist()
                 .create();
@@ -192,24 +193,23 @@ public class EdgeTest extends BaseFuncTest {
 
         Edge created = graph().addEdge(peterId, "created", lopId,
                                        "date", "2017-03-24",
-                                       "time", "20121010");
+                                       "time", "2012-10-10");
 
-        Map<String, Object> props = ImmutableMap.of("date",
-                                                    Utils.date("2017-03-24"),
-                                                    "time", ImmutableList.of(
-                                                    "20121010"));
+        Map<String, Object> props = ImmutableMap.of(
+                                    "date", Utils.date("2017-03-24"), "time",
+                                    ImmutableList.of(Utils.date("2012-10-10")));
         Assert.assertEquals(props, created.properties());
 
-        created.property("time", "20121010");
+        created.property("time", "2012-10-10");
         props = ImmutableMap.of("date", Utils.date("2017-03-24"), "time",
-                                ImmutableList.of("20121010"));
+                                ImmutableList.of(Utils.date("2012-10-10")));
         Assert.assertEquals(props, created.properties());
     }
 
     @Test
     public void testRemoveEdgeProperty() {
         schema().propertyKey("time")
-                .asText()
+                .asDate()
                 .valueSet()
                 .ifNotExist()
                 .create();
@@ -223,12 +223,11 @@ public class EdgeTest extends BaseFuncTest {
 
         Edge created = graph().addEdge(peterId, "created", lopId,
                                        "date", "2017-03-24",
-                                       "time", "20121010");
+                                       "time", "2012-10-10");
 
-        Map<String, Object> props = ImmutableMap.of("date",
-                                                    Utils.date("2017-03-24"),
-                                                    "time", ImmutableList.of(
-                                                    "20121010"));
+        Map<String, Object> props = ImmutableMap.of(
+                                    "date", Utils.date("2017-03-24"), "time",
+                                    ImmutableList.of(Utils.date("2012-10-10")));
         Assert.assertEquals(props, created.properties());
 
         created.removeProperty("time");

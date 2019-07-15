@@ -297,9 +297,9 @@ public class TraverserApiTest extends BaseApiTest {
         Assert.assertEquals(date2016Id, edges.get(4).id());
         Assert.assertEquals(date2017Id, edges.get(5).id());
 
-        Map<String, Object> props = ImmutableMap.of("date",
-                                                    Utils.date("2014-01-10"),
-                                                    "city", "Shanghai");
+        Map<String, Object> props = ImmutableMap.of(
+                                    "date", Utils.date("2014-01-10"),
+                                    "city", "Shanghai");
         Assert.assertEquals(props, edges.get(2).properties());
     }
 

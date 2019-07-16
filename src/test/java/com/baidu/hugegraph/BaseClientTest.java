@@ -367,17 +367,6 @@ public class BaseClientTest {
         });
     }
 
-    protected void notAssertBatchResponse(List<? extends GraphElement> elements,
-                                          String property, int result) {
-        Assert.assertEquals(5, elements.size());
-        elements.forEach(element -> {
-            String index = String.valueOf(element.property("name"));
-            Object value = element.property(property);
-            Assert.assertTrue(value instanceof Number);
-            Assert.assertNotEquals(result, value);
-        });
-    }
-
     protected void assertBatchResponse(List<? extends GraphElement> elements,
                                        String property, String... data) {
         Assert.assertEquals(5, elements.size());

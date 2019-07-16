@@ -40,7 +40,7 @@ import com.google.common.collect.ImmutableMap;
 public class BatchElementRequestTest extends BaseClientTest {
 
     @Test
-    public void testEmptyUpdateStrategy() {
+    public void testVertexEmptyUpdateStrategy() {
         List<Vertex> vertices = this.createNVertexBatch("object", "new", 5);
         Map<String, UpdateStrategy> strategies = Collections.emptyMap();
 

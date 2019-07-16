@@ -19,8 +19,6 @@
 
 package com.baidu.hugegraph.api;
 
-import static com.baidu.hugegraph.api.graph.structure.UpdateStrategy.INTERSECTION;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +27,6 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.baidu.hugegraph.api.graph.structure.BatchEdgeRequest;
-import com.baidu.hugegraph.api.graph.structure.UpdateStrategy;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
@@ -503,91 +499,6 @@ public class EdgeApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testBatchUpdateStrategySum() {
-        BatchEdgeRequest req = batchEdgeRequest("price", -1, 1,
-                                                UpdateStrategy.SUM);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 0);
-
-        req = batchEdgeRequest("price", 2, 3, UpdateStrategy.SUM);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 5);
-    }
-
-    // TODO: Add date comparison after fixing the date serialization bug
-    @Test
-    public void testBatchUpdateStrategyBigger() {
-        BatchEdgeRequest req = batchEdgeRequest("price", -3, 1,
-                                                UpdateStrategy.BIGGER);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 1);
-
-        req = batchEdgeRequest("price", 7, 3, UpdateStrategy.BIGGER);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 7);
-    }
-
-    @Test
-    public void testBatchUpdateStrategySmaller() {
-        BatchEdgeRequest req = batchEdgeRequest("price", -3, 1,
-                                                UpdateStrategy.SMALLER);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", -3);
-
-        req = batchEdgeRequest("price", 7, 3, UpdateStrategy.SMALLER);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 3);
-    }
-
-    @Test
-    public void testBatchUpdateStrategyUnion() {
-        BatchEdgeRequest req = batchEdgeRequest("set", "old", "new",
-                                                UpdateStrategy.UNION);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set", "new", "old");
-
-        req = batchEdgeRequest("set", "old", "old", UpdateStrategy.UNION);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set", "old");
-    }
-
-    @Test
-    public void testBatchUpdateStrategyIntersection() {
-        BatchEdgeRequest req = batchEdgeRequest("set", "old", "new",
-                                                INTERSECTION);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set");
-
-        req = batchEdgeRequest("set", "old", "old", INTERSECTION);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set", "old");
-    }
-
-    @Test
-    public void testBatchUpdateStrategyAppend() {
-        BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
-                                                UpdateStrategy.APPEND);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list", "old", "old");
-
-        req = batchEdgeRequest("list", "old", "new", UpdateStrategy.APPEND);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list", "old", "new");
-    }
-
-    @Test
-    public void testBatchUpdateStrategyEliminate() {
-        BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
-                                                UpdateStrategy.ELIMINATE);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list");
-
-        req = batchEdgeRequest("list", "old", "new", UpdateStrategy.ELIMINATE);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list", "old");
-    }
-
-    @Test
     public void testGet() {
         Object outVId = getVertexId("person", "name", "peter");
         Object inVId = getVertexId("software", "name", "lop");
@@ -687,26 +598,6 @@ public class EdgeApiTest extends BaseApiTest {
         Utils.assertResponseError(400, () -> {
             edgeAPI.delete("not-exist-e");
         });
-    }
-
-    private BatchEdgeRequest batchEdgeRequest(String key, Object oldData,
-                                              Object newData,
-                                              UpdateStrategy strategy) {
-        // Init old vertices & edges
-        this.graph().addVertices(this.createNVertexBatch("testV", oldData, 10));
-        this.graph().addEdges(this.createNEdgesBatch("testV", "testE",
-                                                     oldData, 5));
-
-        List<Edge> edges = this.createNEdgesBatch("testV", "testE", newData, 5);
-
-        Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
-        BatchEdgeRequest req;
-        req = new BatchEdgeRequest.Builder().edges(edges)
-                                            .updatingStrategies(strategies)
-                                            .checkVertex(false)
-                                            .createIfNotExist(true)
-                                            .build();
-        return req;
     }
 
     @SuppressWarnings("unused")

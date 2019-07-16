@@ -1,7 +1,6 @@
 package com.baidu.hugegraph;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -120,8 +119,7 @@ public class BaseClientTest {
         schema.propertyKey("date").asText().ifNotExist().create();
         schema.propertyKey("price").asInt().ifNotExist().create();
         schema.propertyKey("weight").asDouble().ifNotExist().create();
-        // Add for assertBatchResponse updatingStrategies & Date type
-        schema.propertyKey("fullDate").asDate().ifNotExist().create();
+        // Add for test UpdateStrategies
         schema.propertyKey("set").asText().valueSet().ifNotExist().create();
         schema.propertyKey("list").asText().valueList().ifNotExist().create();
     }
@@ -156,10 +154,10 @@ public class BaseClientTest {
               .ifNotExist()
               .create();
 
-        schema.vertexLabel("testV")
-              .properties("name", "set", "fullDate", "price", "list")
+        schema.vertexLabel("object")
+              .properties("name", "price", "date", "set", "list")
               .primaryKeys("name")
-              .nullableKeys("set", "fullDate", "price", "list")
+              .nullableKeys("price", "date", "set", "list")
               .ifNotExist()
               .create();
     }
@@ -183,11 +181,11 @@ public class BaseClientTest {
               .ifNotExist()
               .create();
 
-        schema.edgeLabel("testE")
-              .sourceLabel("testV")
-              .targetLabel("testV")
-              .properties("name", "set", "fullDate", "price", "list")
-              .nullableKeys("name", "set", "fullDate", "price", "list")
+        schema.edgeLabel("updates")
+              .sourceLabel("object")
+              .targetLabel("object")
+              .properties("name", "price", "date", "set", "list")
+              .nullableKeys("name", "price", "date", "set", "list")
               .ifNotExist()
               .create();
     }
@@ -259,25 +257,6 @@ public class BaseClientTest {
                         "date", "20170110", "city", "Hongkong");
     }
 
-    protected List<Vertex> createNVertexBatch(String vertexLabel,
-                                              Object symbol, int num) {
-        List<Vertex> vertices = new ArrayList<>(num);
-        for (int i = 1; i <= num; i++) {
-            Vertex vertex = new Vertex(vertexLabel);
-            vertex.property("name", String.valueOf(i));
-            vertex.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
-            if (symbol instanceof Number) {
-                vertex.property("price", (int) symbol * i);
-            }
-            vertex.property("list",
-                            ImmutableList.of(String.valueOf(symbol) + i));
-            vertex.property("fullDate",
-                            new Date(System.currentTimeMillis() + i));
-            vertices.add(vertex);
-        }
-        return vertices;
-    }
-
     protected List<Vertex> create100PersonBatch() {
         List<Vertex> vertices = new ArrayList<>(100);
         for (int i = 0; i < 100; i++) {
@@ -336,6 +315,24 @@ public class BaseClientTest {
         return edges;
     }
 
+    protected List<Vertex> createNVertexBatch(String vertexLabel,
+                                              Object symbol, int num) {
+        List<Vertex> vertices = new ArrayList<>(num);
+        for (int i = 1; i <= num; i++) {
+            Vertex vertex = new Vertex(vertexLabel);
+            vertex.property("name", String.valueOf(i));
+            if (symbol instanceof Number) {
+                vertex.property("price", (int) symbol * i);
+            }
+            //vertex.property("date", new Date(System.currentTimeMillis() + i));
+            vertex.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
+            vertex.property("list",
+                            ImmutableList.of(String.valueOf(symbol) + i));
+            vertices.add(vertex);
+        }
+        return vertices;
+    }
+
     protected List<Edge> createNEdgesBatch(String vertexLabel, String edgeLabel,
                                            Object symbol, int num) {
         VertexLabel vLabel = schema().getVertexLabel(vertexLabel);
@@ -348,12 +345,12 @@ public class BaseClientTest {
             edge.sourceId(vLabel.id() + ":" + i);
             edge.targetId(vLabel.id() + ":" + i * 2);
             edge.property("name", String.valueOf(i));
-            edge.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
             if (symbol instanceof Number) {
                 edge.property("price", (int) symbol * i);
             }
+            //edge.property("date", new Date(System.currentTimeMillis() + i));
+            edge.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
             edge.property("list", ImmutableList.of(String.valueOf(symbol) + i));
-            edge.property("fullDate", new Date(System.currentTimeMillis() + i));
             edges.add(edge);
         }
         return edges;
@@ -367,6 +364,17 @@ public class BaseClientTest {
             Object value = element.property(property);
             Assert.assertTrue(value instanceof Number);
             Assert.assertEquals(result * Integer.valueOf(index), value);
+        });
+    }
+
+    protected void notAssertBatchResponse(List<? extends GraphElement> elements,
+                                          String property, int result) {
+        Assert.assertEquals(5, elements.size());
+        elements.forEach(element -> {
+            String index = String.valueOf(element.property("name"));
+            Object value = element.property(property);
+            Assert.assertTrue(value instanceof Number);
+            Assert.assertNotEquals(result, value);
         });
     }
 

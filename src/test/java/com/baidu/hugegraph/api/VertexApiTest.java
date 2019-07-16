@@ -19,8 +19,6 @@
 
 package com.baidu.hugegraph.api;
 
-import static com.baidu.hugegraph.api.graph.structure.UpdateStrategy.INTERSECTION;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,8 +27,6 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.baidu.hugegraph.api.graph.structure.BatchVertexRequest;
-import com.baidu.hugegraph.api.graph.structure.UpdateStrategy;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.testutil.Assert;
@@ -214,97 +210,6 @@ public class VertexApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testBatchUpdateStrategySum() {
-        BatchVertexRequest req = batchVertexRequest("price", 1, -1,
-                                                    UpdateStrategy.SUM);
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 0);
-
-        req = batchVertexRequest("price", 2, 3, UpdateStrategy.SUM);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 5);
-    }
-
-    // TODO: Add date comparison after fixing the date serialization bug
-    @Test
-    public void testBatchUpdateStrategyBigger() {
-        BatchVertexRequest req = batchVertexRequest("price", -3, 1,
-                                                    UpdateStrategy.BIGGER);
-
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 1);
-
-        req = batchVertexRequest("price", 7, 3, UpdateStrategy.BIGGER);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 7);
-    }
-
-    @Test
-    public void testBatchUpdateStrategySmaller() {
-        BatchVertexRequest req = batchVertexRequest("price", -3, 1,
-                                                    UpdateStrategy.SMALLER);
-
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", -3);
-
-        req = batchVertexRequest("price", 7, 3, UpdateStrategy.SMALLER);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 3);
-    }
-
-    @Test
-    public void testBatchUpdateStrategyUnion() {
-        BatchVertexRequest req = batchVertexRequest("set", "old", "new",
-                                                    UpdateStrategy.UNION);
-
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set", "new", "old");
-
-        req = batchVertexRequest("set", "old", "old", UpdateStrategy.UNION);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set", "old");
-    }
-
-    @Test
-    public void testBatchUpdateStrategyIntersection() {
-        BatchVertexRequest req = batchVertexRequest("set", "old", "new",
-                                                    INTERSECTION);
-
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set");
-
-        req = batchVertexRequest("set", "old", "old", INTERSECTION);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set", "old");
-    }
-
-    @Test
-    public void testBatchUpdateStrategyAppend() {
-        BatchVertexRequest req = batchVertexRequest("list", "old", "old",
-                                                    UpdateStrategy.APPEND);
-
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list", "old", "old");
-
-        req = batchVertexRequest("list", "old", "new", UpdateStrategy.APPEND);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list", "old", "new");
-    }
-
-    @Test
-    public void testBatchUpdateStrategyEliminate() {
-        BatchVertexRequest req = batchVertexRequest("list", "old", "old",
-                                                    UpdateStrategy.ELIMINATE);
-
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list");
-
-        req = batchVertexRequest("list", "old", "x", UpdateStrategy.ELIMINATE);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list", "old");
-    }
-
-    @Test
     public void testBatchCreateContainsInvalidVertex() {
         List<Vertex> vertices = super.create100PersonBatch();
         vertices.get(0).property("invalid-key", "invalid-value");
@@ -417,23 +322,6 @@ public class VertexApiTest extends BaseApiTest {
         Utils.assertResponseError(400, () -> {
             vertexAPI.delete("not-exist-v");
         });
-    }
-
-
-    private BatchVertexRequest batchVertexRequest(String key, Object oldData,
-                                                  Object newData,
-                                                  UpdateStrategy strategy) {
-        // Init old & new vertices
-        this.graph().addVertices(this.createNVertexBatch("testV", oldData, 5));
-        List<Vertex> vertices = this.createNVertexBatch("testV", newData, 5);
-
-        Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
-        BatchVertexRequest req;
-        req = new BatchVertexRequest.Builder().vertices(vertices)
-                                              .updatingStrategies(strategies)
-                                              .createIfNotExist(true)
-                                              .build();
-        return req;
     }
 
     @SuppressWarnings("unused")

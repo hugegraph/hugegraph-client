@@ -146,7 +146,21 @@ public class IndexLabelApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testCreateSearchIndexOnNotNumberProperty() {
+    public void testCreateShardIndexOnMultiPropertiesOverrideExist() {
+        schema().indexLabel("personByCity")
+                .onV("person")
+                .by("city")
+                .secondary()
+                .create();
+        schema().indexLabel("personByCityAndAge")
+                .onV("person")
+                .by("city", "age")
+                .range()
+                .create();
+    }
+
+    @Test
+    public void testCreateRangeIndexOnNotNumberProperty() {
         IndexLabel indexLabel = schema().indexLabel("personByCity")
                                         .onV("person")
                                         .by("city")

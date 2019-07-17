@@ -21,28 +21,27 @@ package com.baidu.hugegraph.unit;
 
 import static com.baidu.hugegraph.api.graph.structure.UpdateStrategy.INTERSECTION;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
 
-import com.baidu.hugegraph.BaseClientTest;
 import com.baidu.hugegraph.api.graph.structure.BatchEdgeRequest;
 import com.baidu.hugegraph.api.graph.structure.BatchVertexRequest;
 import com.baidu.hugegraph.api.graph.structure.UpdateStrategy;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.testutil.Assert;
+import com.baidu.hugegraph.testutil.Whitebox;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class BatchElementRequestTest extends BaseClientTest {
+public class BatchElementRequestTest {
 
     @Test
     public void testVertexEmptyUpdateStrategy() {
-        List<Vertex> vertices = this.createNVertexBatch("object", "new", 5);
-        Map<String, UpdateStrategy> strategies = Collections.emptyMap();
+        List<Vertex> vertices = ImmutableList.of(this.createVertex());
+        Map<String, UpdateStrategy> strategies = ImmutableMap.of();
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             new BatchVertexRequest.Builder().vertices(vertices)
@@ -54,7 +53,7 @@ public class BatchElementRequestTest extends BaseClientTest {
 
     @Test
     public void testVertexNotSupportedUpdateParameter() {
-        List<Vertex> vertices = this.createNVertexBatch("object", "new", 5);
+        List<Vertex> vertices = ImmutableList.of(this.createVertex());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
                                                                  INTERSECTION);
 
@@ -67,17 +66,30 @@ public class BatchElementRequestTest extends BaseClientTest {
     }
 
     @Test
-    public void testEdgeEmptyUpdateStrategy() {
-        Edge edge = new Edge("updates");
-        edge.id("object:1>updates>>object:2");
-        edge.sourceId("object:1");
-        edge.sourceLabel("object");
-        edge.targetId("object:2");
-        edge.targetLabel("object");
-        edge.property("price", 1);
+    public void testVertexRequestBuildOK() {
+        List<Vertex> vertices = ImmutableList.of(this.createVertex());
+        Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
+                                                                 INTERSECTION);
 
-        List<Edge> edges = ImmutableList.of(edge);
-        Map<String, UpdateStrategy> strategies = Collections.emptyMap();
+        BatchVertexRequest req;
+        req = new BatchVertexRequest.Builder().vertices(vertices)
+                                              .updatingStrategies(strategies)
+                                              .createIfNotExist(true)
+                                              .build();
+
+        Assert.assertNotNull(req);
+        Object list = Whitebox.getInternalState(req, "vertices");
+        Assert.assertEquals(vertices, list);
+        Object map = Whitebox.getInternalState(req, "updateStrategies");
+        Assert.assertEquals(strategies, map);
+        Object created = Whitebox.getInternalState(req, "createIfNotExist");
+        Assert.assertEquals(true, created);
+    }
+
+    @Test
+    public void testEdgeEmptyUpdateStrategy() {
+        List<Edge> edges = ImmutableList.of(this.createEdge());
+        Map<String, UpdateStrategy> strategies = ImmutableMap.of();
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             new BatchEdgeRequest.Builder().edges(edges)
@@ -90,15 +102,7 @@ public class BatchElementRequestTest extends BaseClientTest {
 
     @Test
     public void testEdgeNotSupportedUpdateParameter() {
-        Edge edge = new Edge("updates");
-        edge.id("object:1>updates>>object:2");
-        edge.sourceId("object:1");
-        edge.sourceLabel("object");
-        edge.targetId("object:2");
-        edge.targetLabel("object");
-        edge.property("price", 1);
-
-        List<Edge> edges = ImmutableList.of(edge);
+        List<Edge> edges = ImmutableList.of(this.createEdge());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
                                                                  INTERSECTION);
 
@@ -109,5 +113,48 @@ public class BatchElementRequestTest extends BaseClientTest {
                                           .createIfNotExist(false)
                                           .build();
         });
+    }
+
+    @Test
+    public void testEdgeRequestBuildOK() {
+        List<Edge> edges = ImmutableList.of(this.createEdge());
+        Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
+                                                                 INTERSECTION);
+
+        BatchEdgeRequest req;
+        req = new BatchEdgeRequest.Builder().edges(edges)
+                                            .updatingStrategies(strategies)
+                                            .checkVertex(false)
+                                            .createIfNotExist(true)
+                                            .build();
+
+        Assert.assertNotNull(req);
+        Object list = Whitebox.getInternalState(req, "edges");
+        Assert.assertEquals(edges, list);
+        Object map = Whitebox.getInternalState(req, "updateStrategies");
+        Assert.assertEquals(strategies, map);
+        Object checked = Whitebox.getInternalState(req, "checkVertex");
+        Assert.assertEquals(false, checked);
+        Object created = Whitebox.getInternalState(req, "createIfNotExist");
+        Assert.assertEquals(true, created);
+    }
+
+    private Vertex createVertex() {
+        Vertex vertex = new Vertex("object");
+        vertex.id("object:1");
+        vertex.property("name", 1);
+        vertex.property("price", 2);
+        return vertex;
+    }
+
+    private Edge createEdge() {
+        Edge edge = new Edge("updates");
+        edge.id("object:1>updates>>object:2");
+        edge.sourceId("object:1");
+        edge.sourceLabel("object");
+        edge.targetId("object:2");
+        edge.targetLabel("object");
+        edge.property("price", 1);
+        return edge;
     }
 }

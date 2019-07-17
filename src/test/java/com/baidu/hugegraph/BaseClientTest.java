@@ -17,7 +17,6 @@ import com.baidu.hugegraph.driver.HugeClient;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.driver.TaskManager;
 import com.baidu.hugegraph.driver.TraverserManager;
-import com.baidu.hugegraph.structure.GraphElement;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
@@ -79,7 +78,7 @@ public class BaseClientTest {
 
     @Before
     public void setup() {
-         //this.clearData();
+        // this.clearData();
     }
 
     @After
@@ -119,9 +118,6 @@ public class BaseClientTest {
         schema.propertyKey("date").asText().ifNotExist().create();
         schema.propertyKey("price").asInt().ifNotExist().create();
         schema.propertyKey("weight").asDouble().ifNotExist().create();
-        // Add for test UpdateStrategies
-        schema.propertyKey("set").asText().valueSet().ifNotExist().create();
-        schema.propertyKey("list").asText().valueList().ifNotExist().create();
     }
 
     protected static void initVertexLabel() {
@@ -153,13 +149,6 @@ public class BaseClientTest {
               .properties("date")
               .ifNotExist()
               .create();
-
-        schema.vertexLabel("object")
-              .properties("name", "price", "date", "set", "list")
-              .primaryKeys("name")
-              .nullableKeys("price", "date", "set", "list")
-              .ifNotExist()
-              .create();
     }
 
     protected static void initEdgeLabel() {
@@ -178,14 +167,6 @@ public class BaseClientTest {
               .targetLabel("software")
               .properties("date", "city")
               .nullableKeys("city")
-              .ifNotExist()
-              .create();
-
-        schema.edgeLabel("updates")
-              .sourceLabel("object")
-              .targetLabel("object")
-              .properties("name", "price", "date", "set", "list")
-              .nullableKeys("name", "price", "date", "set", "list")
               .ifNotExist()
               .create();
     }
@@ -354,34 +335,5 @@ public class BaseClientTest {
             edges.add(edge);
         }
         return edges;
-    }
-
-    protected void assertBatchResponse(List<? extends GraphElement> elements,
-                                       String property, int result) {
-        Assert.assertEquals(5, elements.size());
-        elements.forEach(element -> {
-            String index = String.valueOf(element.property("name"));
-            Object value = element.property(property);
-            Assert.assertTrue(value instanceof Number);
-            Assert.assertEquals(result * Integer.valueOf(index), value);
-        });
-    }
-
-    protected void assertBatchResponse(List<? extends GraphElement> elements,
-                                       String property, String... data) {
-        Assert.assertEquals(5, elements.size());
-        elements.forEach(element -> {
-            String index = String.valueOf(element.property("name"));
-            Object value = element.property(property);
-            Assert.assertTrue(value instanceof List);
-            if (data.length == 0) {
-                Assert.assertTrue(((List<?>) value).isEmpty());
-            } else if (data.length == 1) {
-                Assert.assertEquals(ImmutableList.of(data[0] + index), value);
-            }else {
-                Assert.assertEquals(ImmutableList.of(data[0] + index,
-                                                     data[1] + index), value);
-            }
-        });
     }
 }

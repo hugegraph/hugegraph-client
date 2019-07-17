@@ -31,19 +31,43 @@ import org.junit.Test;
 import com.baidu.hugegraph.api.graph.structure.BatchEdgeRequest;
 import com.baidu.hugegraph.api.graph.structure.BatchVertexRequest;
 import com.baidu.hugegraph.api.graph.structure.UpdateStrategy;
+import com.baidu.hugegraph.driver.SchemaManager;
+import com.baidu.hugegraph.exception.ServerException;
+import com.baidu.hugegraph.structure.GraphElement;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
+import com.baidu.hugegraph.testutil.Assert;
+import com.baidu.hugegraph.testutil.Whitebox;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
 public class BatchUpdateElementApiTest extends BaseApiTest {
 
-    final int number = 5;
+    private static final int BATCH_SIZE = 5;
 
     @BeforeClass
     public static void prepareSchema() {
-        BaseApiTest.initPropertyKey();
-        BaseApiTest.initVertexLabel();
-        BaseApiTest.initEdgeLabel();
+        SchemaManager schema = schema();
+        schema.propertyKey("name").asText().ifNotExist().create();
+        schema.propertyKey("price").asInt().ifNotExist().create();
+        schema.propertyKey("date").asText().ifNotExist().create();
+        schema.propertyKey("set").asText().valueSet().ifNotExist().create();
+        schema.propertyKey("list").asText().valueList().ifNotExist().create();
+
+        schema.vertexLabel("object")
+              .properties("name", "price", "date", "set", "list")
+              .primaryKeys("name")
+              .nullableKeys("price", "date", "set", "list")
+              .ifNotExist()
+              .create();
+
+        schema.edgeLabel("updates")
+              .sourceLabel("object")
+              .targetLabel("object")
+              .properties("name", "price", "date", "set", "list")
+              .nullableKeys("name", "price", "date", "set", "list")
+              .ifNotExist()
+              .create();
     }
 
     @Override
@@ -145,6 +169,17 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         this.assertBatchResponse(vertices, "list", "old");
     }
 
+    @Test
+    public void testVertexEmptyUpdateStrategy() {
+        BatchVertexRequest req = batchVertexRequest("set", "old", "old",
+                                                    UpdateStrategy.UNION);
+
+        Whitebox.setInternalState(req, "updateStrategies", null);
+        Assert.assertThrows(ServerException.class, () -> {
+            this.vertexAPI.update(req);
+        });
+    }
+
     /* Edge Test */
     @Test
     public void testEdgeBatchUpdateStrategySum() {
@@ -231,14 +266,25 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         this.assertBatchResponse(edges, "list", "old");
     }
 
+    @Test
+    public void testEdgeEmptyUpdateStrategy() {
+        BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
+                                                UpdateStrategy.ELIMINATE);
+
+        Whitebox.setInternalState(req, "updateStrategies", null);
+        Assert.assertThrows(ServerException.class, () -> {
+            this.edgeAPI.update(req);
+        });
+    }
+
     private BatchVertexRequest batchVertexRequest(String key, Object oldData,
                                                   Object newData,
                                                   UpdateStrategy strategy) {
         // Init old & new vertices
         this.graph().addVertices(this.createNVertexBatch("object", oldData,
-                                                         number));
+                                                         BATCH_SIZE));
         List<Vertex> vertices = this.createNVertexBatch("object", newData,
-                                                        number);
+                                                        BATCH_SIZE);
 
         Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
         BatchVertexRequest req;
@@ -254,12 +300,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                                               UpdateStrategy strategy) {
         // Init old vertices & edges
         this.graph().addVertices(this.createNVertexBatch("object", oldData,
-                                                         number * 2));
+                                                         BATCH_SIZE * 2));
         this.graph().addEdges(this.createNEdgesBatch("object", "updates",
-                                                     oldData, number));
+                                                     oldData, BATCH_SIZE));
 
         List<Edge> edges = this.createNEdgesBatch("object", "updates",
-                                                  newData, number);
+                                                  newData, BATCH_SIZE);
 
         Map<String, UpdateStrategy> strategies = ImmutableMap.of(key, strategy);
         BatchEdgeRequest req;
@@ -269,5 +315,34 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                                             .createIfNotExist(true)
                                             .build();
         return req;
+    }
+
+    private void assertBatchResponse(List<? extends GraphElement> elements,
+                                       String property, int result) {
+        Assert.assertEquals(5, elements.size());
+        elements.forEach(element -> {
+            String index = String.valueOf(element.property("name"));
+            Object value = element.property(property);
+            Assert.assertTrue(value instanceof Number);
+            Assert.assertEquals(result * Integer.valueOf(index), value);
+        });
+    }
+
+    private void assertBatchResponse(List<? extends GraphElement> elements,
+                                       String property, String... data) {
+        Assert.assertEquals(5, elements.size());
+        elements.forEach(element -> {
+            String index = String.valueOf(element.property("name"));
+            Object value = element.property(property);
+            Assert.assertTrue(value instanceof List);
+            if (data.length == 0) {
+                Assert.assertTrue(((List<?>) value).isEmpty());
+            } else if (data.length == 1) {
+                Assert.assertEquals(ImmutableList.of(data[0] + index), value);
+            }else {
+                Assert.assertEquals(ImmutableList.of(data[0] + index,
+                                                     data[1] + index), value);
+            }
+        });
     }
 }

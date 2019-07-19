@@ -360,10 +360,9 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                                               UpdateStrategy strategy) {
         // Init old vertices & edges
         graph().addVertices(this.createNVertexBatch("object", oldData,
-                                                         BATCH_SIZE * 2));
+                                                    BATCH_SIZE * 2));
         graph().addEdges(this.createNEdgesBatch("object", "updates",
-                                                     oldData, BATCH_SIZE));
-
+                                                oldData, BATCH_SIZE));
         List<Edge> edges = this.createNEdgesBatch("object", "updates",
                                                   newData, BATCH_SIZE);
 
@@ -440,7 +439,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                 Assert.assertTrue(((List<?>) value).isEmpty());
             } else if (data.length == 1) {
                 Assert.assertEquals(ImmutableList.of(data[0] + index), value);
-            }else {
+            } else {
                 Assert.assertEquals(ImmutableList.of(data[0] + index,
                                                      data[1] + index), value);
             }

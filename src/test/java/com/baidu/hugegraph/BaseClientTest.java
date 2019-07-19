@@ -21,9 +21,7 @@ import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.schema.VertexLabel;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 public class BaseClientTest {
 
@@ -291,47 +289,6 @@ public class BaseClientTest {
             edge.sourceId(person.id() + ":Person-" + i);
             edge.targetId(person.id() + ":Person-" + (i + 50));
             edge.property("date", "20170324");
-            edges.add(edge);
-        }
-        return edges;
-    }
-
-    protected List<Vertex> createNVertexBatch(String vertexLabel,
-                                              Object symbol, int num) {
-        List<Vertex> vertices = new ArrayList<>(num);
-        for (int i = 1; i <= num; i++) {
-            Vertex vertex = new Vertex(vertexLabel);
-            vertex.property("name", String.valueOf(i));
-            if (symbol instanceof Number) {
-                vertex.property("price", (int) symbol * i);
-            }
-            //vertex.property("date", new Date(System.currentTimeMillis() + i));
-            vertex.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
-            vertex.property("list",
-                            ImmutableList.of(String.valueOf(symbol) + i));
-            vertices.add(vertex);
-        }
-        return vertices;
-    }
-
-    protected List<Edge> createNEdgesBatch(String vertexLabel, String edgeLabel,
-                                           Object symbol, int num) {
-        VertexLabel vLabel = schema().getVertexLabel(vertexLabel);
-
-        List<Edge> edges = new ArrayList<>(num);
-        for (int i = 1; i <= num; i++) {
-            Edge edge = new Edge(edgeLabel);
-            edge.sourceLabel(vertexLabel);
-            edge.targetLabel(vertexLabel);
-            edge.sourceId(vLabel.id() + ":" + i);
-            edge.targetId(vLabel.id() + ":" + i * 2);
-            edge.property("name", String.valueOf(i));
-            if (symbol instanceof Number) {
-                edge.property("price", (int) symbol * i);
-            }
-            //edge.property("date", new Date(System.currentTimeMillis() + i));
-            edge.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
-            edge.property("list", ImmutableList.of(String.valueOf(symbol) + i));
             edges.add(edge);
         }
         return edges;

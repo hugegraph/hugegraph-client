@@ -21,6 +21,8 @@ package com.baidu.hugegraph.api;
 
 import static com.baidu.hugegraph.api.graph.structure.UpdateStrategy.INTERSECTION;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +38,12 @@ import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.GraphElement;
 import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
+import com.baidu.hugegraph.structure.schema.VertexLabel;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Whitebox;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 public class BatchUpdateElementApiTest extends BaseApiTest {
 
@@ -50,7 +54,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         SchemaManager schema = schema();
         schema.propertyKey("name").asText().ifNotExist().create();
         schema.propertyKey("price").asInt().ifNotExist().create();
-        schema.propertyKey("date").asText().ifNotExist().create();
+        schema.propertyKey("date").asDate().ifNotExist().create();
         schema.propertyKey("set").asText().valueSet().ifNotExist().create();
         schema.propertyKey("list").asText().valueList().ifNotExist().create();
 
@@ -82,12 +86,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
     public void testVertexBatchUpdateStrategySum() {
         BatchVertexRequest req = batchVertexRequest("price", 1, -1,
                                                     UpdateStrategy.SUM);
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 0);
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", 0);
 
         req = batchVertexRequest("price", 2, 3, UpdateStrategy.SUM);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 5);
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", 5);
     }
 
     @Test
@@ -96,12 +100,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("price", -3, 1,
                                                     UpdateStrategy.BIGGER);
 
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 1);
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", 1);
 
         req = batchVertexRequest("price", 7, 3, UpdateStrategy.BIGGER);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 7);
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", 7);
     }
 
     @Test
@@ -109,12 +113,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("price", -3, 1,
                                                     UpdateStrategy.SMALLER);
 
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", -3);
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", -3);
 
         req = batchVertexRequest("price", 7, 3, UpdateStrategy.SMALLER);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "price", 3);
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", 3);
     }
 
     @Test
@@ -122,12 +126,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("set", "old", "new",
                                                     UpdateStrategy.UNION);
 
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set", "new", "old");
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "set", "new", "old");
 
         req = batchVertexRequest("set", "old", "old", UpdateStrategy.UNION);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set", "old");
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "set", "old");
     }
 
     @Test
@@ -135,12 +139,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("set", "old", "new",
                                                     INTERSECTION);
 
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set");
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "set");
 
         req = batchVertexRequest("set", "old", "old", INTERSECTION);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "set", "old");
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "set", "old");
     }
 
     @Test
@@ -148,12 +152,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("list", "old", "old",
                                                     UpdateStrategy.APPEND);
 
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list", "old", "old");
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "list", "old", "old");
 
         req = batchVertexRequest("list", "old", "new", UpdateStrategy.APPEND);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list", "old", "new");
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "list", "old", "new");
     }
 
     @Test
@@ -161,12 +165,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("list", "old", "old",
                                                     UpdateStrategy.ELIMINATE);
 
-        List<Vertex> vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list");
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "list");
 
         req = batchVertexRequest("list", "old", "x", UpdateStrategy.ELIMINATE);
-        vertices = this.vertexAPI.update(req);
-        this.assertBatchResponse(vertices, "list", "old");
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "list", "old");
     }
 
     @Test
@@ -174,9 +178,37 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchVertexRequest req = batchVertexRequest("set", "old", "old",
                                                     UpdateStrategy.UNION);
 
-        Whitebox.setInternalState(req, "updateStrategies", null);
         Assert.assertThrows(ServerException.class, () -> {
-            this.vertexAPI.update(req);
+            List<Vertex> vertices = Whitebox.getInternalState(req, "vertices");
+            vertices.set(1, null);
+            Whitebox.setInternalState(req, "vertices", vertices);
+            vertexAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "vertices", null);
+            vertexAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "vertices", ImmutableList.of());
+            vertexAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "createIfNotExist", false);
+            vertexAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "updateStrategies", null);
+            vertexAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "updateStrategies",
+                                      ImmutableMap.of());
+            vertexAPI.update(req);
         });
     }
 
@@ -185,12 +217,12 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
     public void testEdgeBatchUpdateStrategySum() {
         BatchEdgeRequest req = batchEdgeRequest("price", -1, 1,
                                                 UpdateStrategy.SUM);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 0);
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", 0);
 
         req = batchEdgeRequest("price", 2, 3, UpdateStrategy.SUM);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 5);
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", 5);
     }
 
     @Test
@@ -198,72 +230,72 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         // TODO: Add date comparison after fixing the date serialization bug
         BatchEdgeRequest req = batchEdgeRequest("price", -3, 1,
                                                 UpdateStrategy.BIGGER);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 1);
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", 1);
 
         req = batchEdgeRequest("price", 7, 3, UpdateStrategy.BIGGER);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 7);
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", 7);
     }
 
     @Test
     public void testEdgeBatchUpdateStrategySmaller() {
         BatchEdgeRequest req = batchEdgeRequest("price", -3, 1,
                                                 UpdateStrategy.SMALLER);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", -3);
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", -3);
 
         req = batchEdgeRequest("price", 7, 3, UpdateStrategy.SMALLER);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "price", 3);
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", 3);
     }
 
     @Test
     public void testEdgeBatchUpdateStrategyUnion() {
         BatchEdgeRequest req = batchEdgeRequest("set", "old", "new",
                                                 UpdateStrategy.UNION);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set", "new", "old");
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "set", "new", "old");
 
         req = batchEdgeRequest("set", "old", "old", UpdateStrategy.UNION);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set", "old");
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "set", "old");
     }
 
     @Test
     public void testEdgeBatchUpdateStrategyIntersection() {
         BatchEdgeRequest req = batchEdgeRequest("set", "old", "new",
                                                 INTERSECTION);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set");
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "set");
 
         req = batchEdgeRequest("set", "old", "old", INTERSECTION);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "set", "old");
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "set", "old");
     }
 
     @Test
     public void testEdgeBatchUpdateStrategyAppend() {
         BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
                                                 UpdateStrategy.APPEND);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list", "old", "old");
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "list", "old", "old");
 
         req = batchEdgeRequest("list", "old", "new", UpdateStrategy.APPEND);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list", "old", "new");
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "list", "old", "new");
     }
 
     @Test
     public void testEdgeBatchUpdateStrategyEliminate() {
         BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
                                                 UpdateStrategy.ELIMINATE);
-        List<Edge> edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list");
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "list");
 
         req = batchEdgeRequest("list", "old", "new", UpdateStrategy.ELIMINATE);
-        edges = this.edgeAPI.update(req);
-        this.assertBatchResponse(edges, "list", "old");
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "list", "old");
     }
 
     @Test
@@ -271,9 +303,37 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
                                                 UpdateStrategy.ELIMINATE);
 
-        Whitebox.setInternalState(req, "updateStrategies", null);
         Assert.assertThrows(ServerException.class, () -> {
-            this.edgeAPI.update(req);
+            List<Edge> edges = Whitebox.getInternalState(req, "edges");
+            edges.set(1, null);
+            Whitebox.setInternalState(req, "edges", edges);
+            edgeAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "edges", null);
+            edgeAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "edges", ImmutableList.of());
+            edgeAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "createIfNotExist", false);
+            edgeAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "updateStrategies", null);
+            edgeAPI.update(req);
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Whitebox.setInternalState(req, "updateStrategies",
+                                      ImmutableMap.of());
+            edgeAPI.update(req);
         });
     }
 
@@ -281,7 +341,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                                                   Object newData,
                                                   UpdateStrategy strategy) {
         // Init old & new vertices
-        this.graph().addVertices(this.createNVertexBatch("object", oldData,
+        graph().addVertices(this.createNVertexBatch("object", oldData,
                                                          BATCH_SIZE));
         List<Vertex> vertices = this.createNVertexBatch("object", newData,
                                                         BATCH_SIZE);
@@ -299,9 +359,9 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                                               Object newData,
                                               UpdateStrategy strategy) {
         // Init old vertices & edges
-        this.graph().addVertices(this.createNVertexBatch("object", oldData,
+        graph().addVertices(this.createNVertexBatch("object", oldData,
                                                          BATCH_SIZE * 2));
-        this.graph().addEdges(this.createNEdgesBatch("object", "updates",
+        graph().addEdges(this.createNEdgesBatch("object", "updates",
                                                      oldData, BATCH_SIZE));
 
         List<Edge> edges = this.createNEdgesBatch("object", "updates",
@@ -317,10 +377,51 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         return req;
     }
 
-    private void assertBatchResponse(List<? extends GraphElement> elements,
-                                       String property, int result) {
-        Assert.assertEquals(5, elements.size());
-        elements.forEach(element -> {
+    private List<Vertex> createNVertexBatch(String vertexLabel,
+                                            Object symbol, int num) {
+        List<Vertex> vertices = new ArrayList<>(num);
+        for (int i = 1; i <= num; i++) {
+            Vertex vertex = new Vertex(vertexLabel);
+            vertex.property("name", String.valueOf(i));
+            if (symbol instanceof Number) {
+                vertex.property("price", (int) symbol * i);
+            }
+            vertex.property("date", new Date(System.currentTimeMillis() + i));
+            vertex.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
+            vertex.property("list",
+                            ImmutableList.of(String.valueOf(symbol) + i));
+            vertices.add(vertex);
+        }
+        return vertices;
+    }
+
+    private List<Edge> createNEdgesBatch(String vertexLabel, String edgeLabel,
+                                         Object symbol, int num) {
+        VertexLabel vLabel = schema().getVertexLabel(vertexLabel);
+
+        List<Edge> edges = new ArrayList<>(num);
+        for (int i = 1; i <= num; i++) {
+            Edge edge = new Edge(edgeLabel);
+            edge.sourceLabel(vertexLabel);
+            edge.targetLabel(vertexLabel);
+            edge.sourceId(vLabel.id() + ":" + i);
+            edge.targetId(vLabel.id() + ":" + i * 2);
+            edge.property("name", String.valueOf(i));
+            if (symbol instanceof Number) {
+                edge.property("price", (int) symbol * i);
+            }
+            edge.property("date", new Date(System.currentTimeMillis() + i));
+            edge.property("set", ImmutableSet.of(String.valueOf(symbol) + i));
+            edge.property("list", ImmutableList.of(String.valueOf(symbol) + i));
+            edges.add(edge);
+        }
+        return edges;
+    }
+
+    private static void assertBatchResponse(List<? extends GraphElement> list,
+                                            String property, int result) {
+        Assert.assertEquals(5, list.size());
+        list.forEach(element -> {
             String index = String.valueOf(element.property("name"));
             Object value = element.property(property);
             Assert.assertTrue(value instanceof Number);
@@ -328,10 +429,10 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         });
     }
 
-    private void assertBatchResponse(List<? extends GraphElement> elements,
-                                       String property, String... data) {
-        Assert.assertEquals(5, elements.size());
-        elements.forEach(element -> {
+    private static void assertBatchResponse(List<? extends GraphElement> list,
+                                            String property, String... data) {
+        Assert.assertEquals(5, list.size());
+        list.forEach(element -> {
             String index = String.valueOf(element.property("name"));
             Object value = element.property(property);
             Assert.assertTrue(value instanceof List);

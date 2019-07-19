@@ -26,7 +26,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     VertexSerializerTest.class,
     PathSerializerTest.class,
-    RestResultTest.class
+    RestResultTest.class,
+    BatchElementRequestTest.class
 })
 public class UnitTestSuite {
 }

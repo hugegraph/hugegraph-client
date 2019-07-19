@@ -36,11 +36,11 @@ import com.baidu.hugegraph.testutil.Whitebox;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class BatchElementRequestTest {
+public class BatchElementRequestTest extends BaseUnitTest {
 
     @Test
     public void testVertexEmptyUpdateStrategy() {
-        List<Vertex> vertices = ImmutableList.of(this.createVertex());
+        List<Vertex> vertices = ImmutableList.of(createVertex());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of();
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
@@ -53,7 +53,7 @@ public class BatchElementRequestTest {
 
     @Test
     public void testVertexNotSupportedUpdateParameter() {
-        List<Vertex> vertices = ImmutableList.of(this.createVertex());
+        List<Vertex> vertices = ImmutableList.of(createVertex());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
                                                                  INTERSECTION);
 
@@ -67,7 +67,7 @@ public class BatchElementRequestTest {
 
     @Test
     public void testVertexRequestBuildOK() {
-        List<Vertex> vertices = ImmutableList.of(this.createVertex());
+        List<Vertex> vertices = ImmutableList.of(createVertex());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
                                                                  INTERSECTION);
 
@@ -88,7 +88,7 @@ public class BatchElementRequestTest {
 
     @Test
     public void testEdgeEmptyUpdateStrategy() {
-        List<Edge> edges = ImmutableList.of(this.createEdge());
+        List<Edge> edges = ImmutableList.of(createEdge());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of();
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
@@ -102,7 +102,7 @@ public class BatchElementRequestTest {
 
     @Test
     public void testEdgeNotSupportedUpdateParameter() {
-        List<Edge> edges = ImmutableList.of(this.createEdge());
+        List<Edge> edges = ImmutableList.of(createEdge());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
                                                                  INTERSECTION);
 
@@ -117,7 +117,7 @@ public class BatchElementRequestTest {
 
     @Test
     public void testEdgeRequestBuildOK() {
-        List<Edge> edges = ImmutableList.of(this.createEdge());
+        List<Edge> edges = ImmutableList.of(createEdge());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
                                                                  INTERSECTION);
 
@@ -139,7 +139,7 @@ public class BatchElementRequestTest {
         Assert.assertEquals(true, created);
     }
 
-    private Vertex createVertex() {
+    private static Vertex createVertex() {
         Vertex vertex = new Vertex("object");
         vertex.id("object:1");
         vertex.property("name", 1);
@@ -147,7 +147,7 @@ public class BatchElementRequestTest {
         return vertex;
     }
 
-    private Edge createEdge() {
+    private static Edge createEdge() {
         Edge edge = new Edge("updates");
         edge.id("object:1>updates>>object:2");
         edge.sourceId("object:1");

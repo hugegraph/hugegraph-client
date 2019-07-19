@@ -174,7 +174,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testVertexEmptyUpdateStrategy() {
+    public void testVertexBatchUpdateWithInvalidArgs() {
         BatchVertexRequest req = batchVertexRequest("set", "old", "old",
                                                     UpdateStrategy.UNION);
 
@@ -299,7 +299,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testEdgeEmptyUpdateStrategy() {
+    public void testEdgeBatchUpdateWithInvalidArgs() {
         BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
                                                 UpdateStrategy.ELIMINATE);
 

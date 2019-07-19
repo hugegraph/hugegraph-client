@@ -39,6 +39,27 @@ import com.google.common.collect.ImmutableMap;
 public class BatchElementRequestTest extends BaseUnitTest {
 
     @Test
+    public void testVertexRequestBuildOK() {
+        List<Vertex> vertices = ImmutableList.of(createVertex());
+        Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
+                                                                 INTERSECTION);
+
+        BatchVertexRequest req;
+        req = new BatchVertexRequest.Builder().vertices(vertices)
+                                              .updatingStrategies(strategies)
+                                              .createIfNotExist(true)
+                                              .build();
+
+        Assert.assertNotNull(req);
+        Object list = Whitebox.getInternalState(req, "vertices");
+        Assert.assertEquals(vertices, list);
+        Object map = Whitebox.getInternalState(req, "updateStrategies");
+        Assert.assertEquals(strategies, map);
+        Object created = Whitebox.getInternalState(req, "createIfNotExist");
+        Assert.assertEquals(true, created);
+    }
+
+    @Test
     public void testVertexEmptyUpdateStrategy() {
         List<Vertex> vertices = ImmutableList.of(createVertex());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of();
@@ -66,22 +87,25 @@ public class BatchElementRequestTest extends BaseUnitTest {
     }
 
     @Test
-    public void testVertexRequestBuildOK() {
-        List<Vertex> vertices = ImmutableList.of(createVertex());
+    public void testEdgeRequestBuildOK() {
+        List<Edge> edges = ImmutableList.of(createEdge());
         Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
                                                                  INTERSECTION);
 
-        BatchVertexRequest req;
-        req = new BatchVertexRequest.Builder().vertices(vertices)
-                                              .updatingStrategies(strategies)
-                                              .createIfNotExist(true)
-                                              .build();
+        BatchEdgeRequest req;
+        req = new BatchEdgeRequest.Builder().edges(edges)
+                                            .updatingStrategies(strategies)
+                                            .checkVertex(false)
+                                            .createIfNotExist(true)
+                                            .build();
 
         Assert.assertNotNull(req);
-        Object list = Whitebox.getInternalState(req, "vertices");
-        Assert.assertEquals(vertices, list);
+        Object list = Whitebox.getInternalState(req, "edges");
+        Assert.assertEquals(edges, list);
         Object map = Whitebox.getInternalState(req, "updateStrategies");
         Assert.assertEquals(strategies, map);
+        Object checked = Whitebox.getInternalState(req, "checkVertex");
+        Assert.assertEquals(false, checked);
         Object created = Whitebox.getInternalState(req, "createIfNotExist");
         Assert.assertEquals(true, created);
     }
@@ -113,30 +137,6 @@ public class BatchElementRequestTest extends BaseUnitTest {
                                           .createIfNotExist(false)
                                           .build();
         });
-    }
-
-    @Test
-    public void testEdgeRequestBuildOK() {
-        List<Edge> edges = ImmutableList.of(createEdge());
-        Map<String, UpdateStrategy> strategies = ImmutableMap.of("set",
-                                                                 INTERSECTION);
-
-        BatchEdgeRequest req;
-        req = new BatchEdgeRequest.Builder().edges(edges)
-                                            .updatingStrategies(strategies)
-                                            .checkVertex(false)
-                                            .createIfNotExist(true)
-                                            .build();
-
-        Assert.assertNotNull(req);
-        Object list = Whitebox.getInternalState(req, "edges");
-        Assert.assertEquals(edges, list);
-        Object map = Whitebox.getInternalState(req, "updateStrategies");
-        Assert.assertEquals(strategies, map);
-        Object checked = Whitebox.getInternalState(req, "checkVertex");
-        Assert.assertEquals(false, checked);
-        Object created = Whitebox.getInternalState(req, "createIfNotExist");
-        Assert.assertEquals(true, created);
     }
 
     private static Vertex createVertex() {

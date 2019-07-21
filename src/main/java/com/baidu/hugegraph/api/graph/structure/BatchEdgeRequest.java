@@ -89,12 +89,12 @@ public class BatchEdgeRequest {
         }
 
         public BatchEdgeRequest build() {
-            E.checkArgumentNotNull(req, "BatchEdgeRequest cannot be null");
+            E.checkArgumentNotNull(req, "BatchEdgeRequest can't be null");
             E.checkArgumentNotNull(req.edges,
-                                   "Parameter 'edges' cannot be null");
+                                   "Parameter 'edges' can't be null");
             E.checkArgument(req.updateStrategies != null &&
                             !req.updateStrategies.isEmpty(),
-                            "Parameter 'update_strategies' cannot be empty");
+                            "Parameter 'update_strategies' can't be empty");
             E.checkArgument(req.createIfNotExist == true,
                             "Parameter 'create_if_not_exist' " +
                             "dose not supported false now");

@@ -80,12 +80,12 @@ public class BatchVertexRequest {
         }
 
         public BatchVertexRequest build() {
-            E.checkArgumentNotNull(req, "BatchVertexRequest cannot be null");
+            E.checkArgumentNotNull(req, "BatchVertexRequest can't be null");
             E.checkArgumentNotNull(req.vertices,
-                                   "Parameter 'vertices' cannot be null");
+                                   "Parameter 'vertices' can't be null");
             E.checkArgument(req.updateStrategies != null &&
                             !req.updateStrategies.isEmpty(),
-                            "Parameter 'update_strategies' cannot be empty");
+                            "Parameter 'update_strategies' can't be empty");
             E.checkArgument(req.createIfNotExist == true,
                             "Parameter 'create_if_not_exist' " +
                             "dose not supported false now");

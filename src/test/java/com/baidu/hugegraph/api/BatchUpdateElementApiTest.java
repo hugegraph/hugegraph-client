@@ -175,40 +175,139 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
 
     @Test
     public void testVertexBatchUpdateWithInvalidArgs() {
-        BatchVertexRequest req = batchVertexRequest("set", "old", "old",
-                                                    UpdateStrategy.UNION);
+        BatchVertexRequest req1 = batchVertexRequest("set", "old", "old",
+                                                     UpdateStrategy.UNION);
 
         Assert.assertThrows(ServerException.class, () -> {
-            List<Vertex> vertices = Whitebox.getInternalState(req, "vertices");
+            List<Vertex> vertices = Whitebox.getInternalState(req1, "vertices");
             vertices.set(1, null);
-            Whitebox.setInternalState(req, "vertices", vertices);
-            vertexAPI.update(req);
+            Whitebox.setInternalState(req1, "vertices", vertices);
+            vertexAPI.update(req1);
+        }, e -> {
+            String expect = "The batch body can't contain null record";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchVertexRequest req2 = batchVertexRequest("list", "old", "old",
+                                                     UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "vertices", null);
-            vertexAPI.update(req);
+            Whitebox.setInternalState(req2, "vertices", null);
+            vertexAPI.update(req2);
+        }, e -> {
+            String expect = "Parameter 'vertices' can't be null";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchVertexRequest req3 = batchVertexRequest("list", "old", "old",
+                                                     UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "vertices", ImmutableList.of());
-            vertexAPI.update(req);
+            Whitebox.setInternalState(req3, "vertices", ImmutableList.of());
+            vertexAPI.update(req3);
+        }, e -> {
+            String expect = "The number of vertices can't be 0";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchVertexRequest req4 = batchVertexRequest("list", "old", "old",
+                                                     UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "createIfNotExist", false);
-            vertexAPI.update(req);
+            Whitebox.setInternalState(req4, "createIfNotExist", false);
+            vertexAPI.update(req4);
+        }, e -> {
+            String expect = "Parameter 'create_if_not_exist' " +
+                            "dose not support false now";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchVertexRequest req5 = batchVertexRequest("list", "old", "old",
+                                                     UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "updateStrategies", null);
-            vertexAPI.update(req);
+            Whitebox.setInternalState(req5, "updateStrategies", null);
+            vertexAPI.update(req5);
+        }, e -> {
+            String expect = "Parameter 'update_strategies' can't be empty";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchVertexRequest req6 = batchVertexRequest("list", "old", "old",
+                                                     UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "updateStrategies",
+            Whitebox.setInternalState(req6, "updateStrategies",
                                       ImmutableMap.of());
-            vertexAPI.update(req);
+            vertexAPI.update(req6);
+        }, e -> {
+            String expect = "Parameter 'update_strategies' can't be empty";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+    }
+
+    @Test
+    public void testVertexInvalidUpdateStrategy() {
+        BatchVertexRequest req1 = batchVertexRequest("name", "old", "new",
+                                                     UpdateStrategy.SUM);
+
+        Assert.assertThrows(ServerException.class, () -> {
+            vertexAPI.update(req1);
+        }, e -> {
+            String expect = "Property must be Number, but got String, String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchVertexRequest req2 = batchVertexRequest("name", "old", "new",
+                                                     UpdateStrategy.BIGGER);
+
+        Assert.assertThrows(ServerException.class, () -> {
+            vertexAPI.update(req2);
+        }, e -> {
+            String expect = "Property must be Date or Number, but got String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchVertexRequest req3 = batchVertexRequest("name", "old", "new",
+                                                     UpdateStrategy.SMALLER);
+
+        Assert.assertThrows(ServerException.class, () -> {
+            vertexAPI.update(req3);
+        }, e -> {
+            String expect = "Property must be Date or Number, but got String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchVertexRequest req4 = batchVertexRequest("price", 1, -1,
+                                                     UpdateStrategy.UNION);
+
+        Assert.assertThrows(ServerException.class, () -> {
+            vertexAPI.update(req4);
+        }, e -> {
+            String expect = "Property must be Set or List, but got Integer";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchVertexRequest req5 = batchVertexRequest("date", "old", "new",
+                                                     INTERSECTION);
+        Assert.assertThrows(ServerException.class, () -> {
+            vertexAPI.update(req5);
+        }, e -> {
+            String expect = "Property must be Set or List, but got Date, Long";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchVertexRequest req6 = batchVertexRequest("price", 1, -1,
+                                                     UpdateStrategy.APPEND);
+        Assert.assertThrows(ServerException.class, () -> {
+            vertexAPI.update(req6);
+        }, e -> {
+            String expect = "Property must be Set or List, but got Integer";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchVertexRequest req7 = batchVertexRequest("name", "old", "new",
+                                                     UpdateStrategy.ELIMINATE);
+        Assert.assertThrows(ServerException.class, () -> {
+            vertexAPI.update(req7);
+        }, e -> {
+            String expect = "Property must be Set or List, but got String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
     }
 
@@ -300,40 +399,146 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
 
     @Test
     public void testEdgeBatchUpdateWithInvalidArgs() {
-        BatchEdgeRequest req = batchEdgeRequest("list", "old", "old",
+        BatchEdgeRequest req1 = batchEdgeRequest("list", "old", "old",
                                                 UpdateStrategy.ELIMINATE);
-
         Assert.assertThrows(ServerException.class, () -> {
-            List<Edge> edges = Whitebox.getInternalState(req, "edges");
+            List<Edge> edges = Whitebox.getInternalState(req1, "edges");
             edges.set(1, null);
-            Whitebox.setInternalState(req, "edges", edges);
-            edgeAPI.update(req);
+            Whitebox.setInternalState(req1, "edges", edges);
+            edgeAPI.update(req1);
+        }, e -> {
+            String expect = "The batch body can't contain null record";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchEdgeRequest req2 = batchEdgeRequest("list", "old", "old",
+                                                 UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "edges", null);
-            edgeAPI.update(req);
+            Whitebox.setInternalState(req2, "edges", null);
+            edgeAPI.update(req2);
+        }, e -> {
+            String expect = "Parameter 'edges' can't be null";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchEdgeRequest req3 = batchEdgeRequest("list", "old", "old",
+                                                 UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "edges", ImmutableList.of());
-            edgeAPI.update(req);
+            Whitebox.setInternalState(req3, "edges", ImmutableList.of());
+            edgeAPI.update(req3);
+        }, e -> {
+            String expect = "The number of edges can't be 0";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchEdgeRequest req4 = batchEdgeRequest("list", "old", "old",
+                                                 UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "createIfNotExist", false);
-            edgeAPI.update(req);
+            Whitebox.setInternalState(req4, "createIfNotExist", false);
+            edgeAPI.update(req4);
+        }, e -> {
+            String expect = "Parameter 'create_if_not_exist' " +
+                            "dose not support false now";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchEdgeRequest req5 = batchEdgeRequest("list", "old", "old",
+                                                 UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "updateStrategies", null);
-            edgeAPI.update(req);
+            Whitebox.setInternalState(req5, "updateStrategies", null);
+            edgeAPI.update(req5);
+        }, e -> {
+            String expect = "Parameter 'update_strategies' can't be empty";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
+        BatchEdgeRequest req6 = batchEdgeRequest("list", "old", "old",
+                                                 UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
-            Whitebox.setInternalState(req, "updateStrategies",
+            Whitebox.setInternalState(req6, "updateStrategies",
                                       ImmutableMap.of());
-            edgeAPI.update(req);
+            edgeAPI.update(req6);
+        }, e -> {
+            String expect = "Parameter 'update_strategies' can't be empty";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchEdgeRequest req7 = batchEdgeRequest("list", "old", "old",
+                                                 UpdateStrategy.ELIMINATE);
+        Assert.assertThrows(ServerException.class, () -> {
+            List<Edge> edges = this.createNEdgesBatch("object", "updates",
+                                                      "old", 501);
+            Whitebox.setInternalState(req7, "edges", edges);
+            edgeAPI.update(req7);
+        }, e -> {
+            String expect = "Too many edges for one time post";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+    }
+
+    @Test
+    public void testEdgeInvalidUpdateStrategy() {
+        BatchEdgeRequest req1 = batchEdgeRequest("name", "old", "new",
+                                                 UpdateStrategy.SUM);
+        Assert.assertThrows(ServerException.class, () -> {
+            edgeAPI.update(req1);
+        }, e -> {
+            String expect = "Property must be Number, but got String, String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchEdgeRequest req2 = batchEdgeRequest("name", "old", "new",
+                                                 UpdateStrategy.BIGGER);
+        Assert.assertThrows(ServerException.class, () -> {
+            edgeAPI.update(req2);
+        }, e -> {
+            String expect = "Property must be Date or Number, but got String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchEdgeRequest req3 = batchEdgeRequest("name", "old", "new",
+                                                 UpdateStrategy.SMALLER);
+        Assert.assertThrows(ServerException.class, () -> {
+            edgeAPI.update(req3);
+        }, e -> {
+            String expect = "Property must be Date or Number, but got String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchEdgeRequest req4 = batchEdgeRequest("price", 1, -1,
+                                                 UpdateStrategy.UNION);
+        Assert.assertThrows(ServerException.class, () -> {
+            edgeAPI.update(req4);
+        }, e -> {
+            String expect = "Property must be Set or List, but got Integer";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchEdgeRequest req5 = batchEdgeRequest("date", "old", "new",
+                                                 INTERSECTION);
+        Assert.assertThrows(ServerException.class, () -> {
+            edgeAPI.update(req5);
+        }, e -> {
+            String expect = "Property must be Set or List, but got Date, Long";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchEdgeRequest req6 = batchEdgeRequest("price", 1, -1,
+                                                 UpdateStrategy.APPEND);
+        Assert.assertThrows(ServerException.class, () -> {
+            edgeAPI.update(req6);
+        }, e -> {
+            String expect = "Property must be Set or List, but got Integer";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+        });
+
+        BatchEdgeRequest req7 = batchEdgeRequest("name", "old", "new",
+                                                 UpdateStrategy.ELIMINATE);
+        Assert.assertThrows(ServerException.class, () -> {
+            edgeAPI.update(req7);
+        }, e -> {
+            String expect = "Property must be Set or List, but got String";
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
     }
 
@@ -342,7 +547,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                                                   UpdateStrategy strategy) {
         // Init old & new vertices
         graph().addVertices(this.createNVertexBatch("object", oldData,
-                                                         BATCH_SIZE));
+                                                    BATCH_SIZE));
         List<Vertex> vertices = this.createNVertexBatch("object", newData,
                                                         BATCH_SIZE);
 

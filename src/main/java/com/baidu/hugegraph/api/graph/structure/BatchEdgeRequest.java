@@ -97,7 +97,7 @@ public class BatchEdgeRequest {
                             "Parameter 'update_strategies' can't be empty");
             E.checkArgument(req.createIfNotExist == true,
                             "Parameter 'create_if_not_exist' " +
-                            "dose not supported false now");
+                            "dose not support false now");
             return this.req;
         }
     }

@@ -248,7 +248,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             vertexAPI.update(req1);
         }, e -> {
-            String expect = "Property must be Number type for strategy SUM, " +
+            String expect = "Property type must be Number for strategy SUM, " +
                             "but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -258,7 +258,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             vertexAPI.update(req2);
         }, e -> {
-            String expect = "Property must be Date or Number type " +
+            String expect = "Property type must be Date or Number " +
                             "for strategy BIGGER, but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -268,7 +268,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             vertexAPI.update(req3);
         }, e -> {
-            String expect = "Property must be Date or Number type " +
+            String expect = "Property type must be Date or Number " +
                             "for strategy BIGGER, but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -278,7 +278,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             vertexAPI.update(req4);
         }, e -> {
-            String expect = "Property must be Set or List type " +
+            String expect = "Property type must be Set or List " +
                             "for strategy UNION, but got type Integer, Integer";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -288,8 +288,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             vertexAPI.update(req5);
         }, e -> {
-            String expect = "Property must be Set or List type" +
-                            " for strategy UNION, but got type Date, Long";
+            String expect = "Property type must be Set or List " +
+                            "for strategy UNION, but got type Date, Long";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
@@ -298,7 +298,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             vertexAPI.update(req6);
         }, e -> {
-            String expect = "Property must be Set or List type for " +
+            String expect = "Property type must be Set or List for " +
                             "strategy UNION, but got type Integer, Integer";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -308,7 +308,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             vertexAPI.update(req7);
         }, e -> {
-            String expect = "Property must be Set or List type for " +
+            String expect = "Property type must be Set or List for " +
                             "strategy UNION, but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -486,7 +486,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             edgeAPI.update(req1);
         }, e -> {
-            String expect = "Property must be Number type for strategy SUM, " +
+            String expect = "Property type must be Number for strategy SUM, " +
                             "but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -496,7 +496,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             edgeAPI.update(req2);
         }, e -> {
-            String expect = "Property must be Date or Number type " +
+            String expect = "Property type must be Date or Number " +
                             "for strategy BIGGER, but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -506,7 +506,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             edgeAPI.update(req3);
         }, e -> {
-            String expect = "Property must be Date or Number type " +
+            String expect = "Property type must be Date or Number " +
                             "for strategy BIGGER, but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -516,7 +516,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             edgeAPI.update(req4);
         }, e -> {
-            String expect = "Property must be Set or List type " +
+            String expect = "Property type must be Set or List " +
                             "for strategy UNION, but got type Integer, Integer";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -526,8 +526,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             edgeAPI.update(req5);
         }, e -> {
-            String expect = "Property must be Set or List type" +
-                            " for strategy UNION, but got type Date, Long";
+            String expect = "Property type must be Set or List " +
+                            "for strategy UNION, but got type Date, Long";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
 
@@ -536,7 +536,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             edgeAPI.update(req6);
         }, e -> {
-            String expect = "Property must be Set or List type for " +
+            String expect = "Property type must be Set or List for " +
                             "strategy UNION, but got type Integer, Integer";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
@@ -546,7 +546,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             edgeAPI.update(req7);
         }, e -> {
-            String expect = "Property must be Set or List type for " +
+            String expect = "Property type must be Set or List for " +
                             "strategy UNION, but got type String, String";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });

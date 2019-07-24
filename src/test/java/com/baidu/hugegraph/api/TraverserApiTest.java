@@ -41,6 +41,7 @@ import com.baidu.hugegraph.structure.graph.Shard;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.graph.Vertices;
 import com.baidu.hugegraph.testutil.Assert;
+import com.baidu.hugegraph.testutil.Utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
@@ -212,190 +213,6 @@ public class TraverserApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testRings() {
-        Object markoId = getVertexId("person", "name", "marko");
-        Object joshId = getVertexId("person", "name", "josh");
-        Object vadasId = getVertexId("person", "name", "vadas");
-        Object lopId = getVertexId("software", "name", "lop");
-
-        List<Path> paths = ringsAPI.get(markoId, Direction.BOTH, null,
-                                        2, -1L, -1L, -1L);
-        Assert.assertEquals(3, paths.size());
-        List<Object> path1 = ImmutableList.of(markoId, joshId, markoId);
-        List<Object> path2 = ImmutableList.of(markoId, vadasId, markoId);
-        List<Object> path3 = ImmutableList.of(markoId, lopId, markoId);
-        List<List<Object>> expectedPaths = ImmutableList.of(path1, path2,
-                                                            path3);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(2).objects()));
-    }
-
-    @Test
-    public void testRingsWithLimit() {
-        Object markoId = getVertexId("person", "name", "marko");
-        Object joshId = getVertexId("person", "name", "josh");
-        Object vadasId = getVertexId("person", "name", "vadas");
-        Object lopId = getVertexId("software", "name", "lop");
-
-        List<Path> paths = ringsAPI.get(markoId, Direction.BOTH, null,
-                                        2, -1L, -1L, 2L);
-        Assert.assertEquals(2, paths.size());
-        List<Object> path1 = ImmutableList.of(markoId, joshId, markoId);
-        List<Object> path2 = ImmutableList.of(markoId, vadasId, markoId);
-        List<Object> path3 = ImmutableList.of(markoId, lopId, markoId);
-        List<List<Object>> expectedPaths = ImmutableList.of(path1, path2,
-                                                            path3);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-    }
-
-    @Test
-    public void testRingsWithDepth() {
-        Object markoId = getVertexId("person", "name", "marko");
-        Object joshId = getVertexId("person", "name", "josh");
-        Object vadasId = getVertexId("person", "name", "vadas");
-        Object lopId = getVertexId("software", "name", "lop");
-        Object peterId = getVertexId("person", "name", "peter");
-        Object rippleId = getVertexId("software", "name", "ripple");
-
-        List<Path> paths = ringsAPI.get(markoId, Direction.BOTH, null,
-                                        1, -1L, -1L, -1L);
-        Assert.assertEquals(0, paths.size());
-
-        paths = ringsAPI.get(markoId, Direction.BOTH, null,
-                             2, -1L, -1L, -1L);
-        Assert.assertEquals(3, paths.size());
-        List<Object> path1 = ImmutableList.of(markoId, joshId, markoId);
-        List<Object> path2 = ImmutableList.of(markoId, vadasId, markoId);
-        List<Object> path3 = ImmutableList.of(markoId, lopId, markoId);
-        List<List<Object>> expectedPaths = ImmutableList.of(path1, path2,
-                                                            path3);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(2).objects()));
-
-        paths = ringsAPI.get(markoId, Direction.BOTH, null,
-                             3, -1L, -1L, -1L);
-
-        Assert.assertEquals(9, paths.size());
-        List<Object> path4 = ImmutableList.of(markoId, joshId, lopId, joshId);
-        List<Object> path5 = ImmutableList.of(markoId, joshId, lopId, markoId);
-        List<Object> path6 = ImmutableList.of(markoId, lopId, peterId, lopId);
-        List<Object> path7 = ImmutableList.of(markoId, joshId, rippleId,
-                                              joshId);
-        List<Object> path8 = ImmutableList.of(markoId, lopId, joshId, markoId);
-        List<Object> path9 = ImmutableList.of(markoId, lopId, joshId, lopId);
-        expectedPaths = ImmutableList.of(path1, path2, path3, path4, path5,
-                                         path6, path7, path8, path9);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(2).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(3).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(4).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(5).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(6).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(7).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(8).objects()));
-    }
-
-    @Test
-    public void testRingsWithCapacity() {
-        Object markoId = getVertexId("person", "name", "marko");
-
-        Assert.assertThrows(ServerException.class, () -> {
-            ringsAPI.get(markoId, Direction.BOTH, null,
-                         2, -1L, 1L, -1L);
-        });
-    }
-
-    @Test
-    public void testRays() {
-        Object markoId = getVertexId("person", "name", "marko");
-        Object joshId = getVertexId("person", "name", "josh");
-        Object vadasId = getVertexId("person", "name", "vadas");
-        Object lopId = getVertexId("software", "name", "lop");
-        Object rippleId = getVertexId("software", "name", "ripple");
-
-        List<Path> paths = raysAPI.get(markoId, Direction.OUT, null,
-                                       2, -1L, -1L, -1L);
-        Assert.assertEquals(4, paths.size());
-        List<Object> path1 = ImmutableList.of(markoId, lopId);
-        List<Object> path2 = ImmutableList.of(markoId, vadasId);
-        List<Object> path3 = ImmutableList.of(markoId, joshId, rippleId);
-        List<Object> path4 = ImmutableList.of(markoId, joshId, lopId);
-        List<List<Object>> expectedPaths = ImmutableList.of(path1, path2,
-                                                            path3, path4);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(2).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(3).objects()));
-    }
-
-    @Test
-    public void testRaysWithLimit() {
-        Object markoId = getVertexId("person", "name", "marko");
-        Object vadasId = getVertexId("person", "name", "vadas");
-        Object lopId = getVertexId("software", "name", "lop");
-
-        List<Path> paths = raysAPI.get(markoId, Direction.OUT, null,
-                                       2, -1L, -1L, 2L);
-        Assert.assertEquals(2, paths.size());
-        List<Object> path1 = ImmutableList.of(markoId, lopId);
-        List<Object> path2 = ImmutableList.of(markoId, vadasId);
-        List<List<Object>> expectedPaths = ImmutableList.of(path1, path2);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-    }
-
-    @Test
-    public void testRaysWithDepth() {
-        Object markoId = getVertexId("person", "name", "marko");
-        Object joshId = getVertexId("person", "name", "josh");
-        Object vadasId = getVertexId("person", "name", "vadas");
-        Object lopId = getVertexId("software", "name", "lop");
-        Object rippleId = getVertexId("software", "name", "ripple");
-
-        List<Path> paths = raysAPI.get(markoId, Direction.OUT, null,
-                                       1, -1L, -1L, -1L);
-        Assert.assertEquals(2, paths.size());
-        List<Object> path1 = ImmutableList.of(markoId, lopId);
-        List<Object> path2 = ImmutableList.of(markoId, vadasId);
-        List<List<Object>> expectedPaths = ImmutableList.of(path1, path2);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-
-        paths = raysAPI.get(markoId, Direction.OUT, null,
-                            2, -1L, -1L, -1L);
-        Assert.assertEquals(4, paths.size());
-        List<Object> path3 = ImmutableList.of(markoId, joshId, rippleId);
-        List<Object> path4 = ImmutableList.of(markoId, joshId, lopId);
-        expectedPaths = ImmutableList.of(path1, path2, path3, path4);
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(2).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(3).objects()));
-
-        paths = raysAPI.get(markoId, Direction.OUT, null,
-                            3, -1L, -1L, -1L);
-        Assert.assertEquals(4, paths.size());
-        Assert.assertTrue(expectedPaths.contains(paths.get(0).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(1).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(2).objects()));
-        Assert.assertTrue(expectedPaths.contains(paths.get(3).objects()));
-    }
-
-    @Test
-    public void testRaysWithCapacity() {
-        Object markoId = getVertexId("person", "name", "marko");
-
-        Assert.assertThrows(ServerException.class, () -> {
-            raysAPI.get(markoId, Direction.OUT, null,
-                        2, -1L, 1L, -1L);
-        });
-    }
-
-    @Test
     public void testCustomizedCrosspoints() {
         Object lopId = getVertexId("software", "name", "lop");
         Object joshId = getVertexId("person", "name", "josh");
@@ -459,12 +276,12 @@ public class TraverserApiTest extends BaseApiTest {
 
     @Test
     public void testEdges() {
-        String date2012Id = getEdgeId("knows", "date", "20120110");
-        String date2013Id = getEdgeId("knows", "date", "20130110");
-        String date2014Id = getEdgeId("created", "date", "20140110");
-        String date2015Id = getEdgeId("created", "date", "20150110");
-        String date2016Id = getEdgeId("created", "date", "20160110");
-        String date2017Id = getEdgeId("created", "date", "20170110");
+        String date2012Id = getEdgeId("knows", "date", "2012-01-10");
+        String date2013Id = getEdgeId("knows", "date", "2013-01-10");
+        String date2014Id = getEdgeId("created", "date", "2014-01-10");
+        String date2015Id = getEdgeId("created", "date", "2015-01-10");
+        String date2016Id = getEdgeId("created", "date", "2016-01-10");
+        String date2017Id = getEdgeId("created", "date", "2017-01-10");
 
         List<String> ids = ImmutableList.of(date2012Id, date2013Id, date2014Id,
                                             date2015Id, date2016Id, date2017Id);
@@ -480,8 +297,9 @@ public class TraverserApiTest extends BaseApiTest {
         Assert.assertEquals(date2016Id, edges.get(4).id());
         Assert.assertEquals(date2017Id, edges.get(5).id());
 
-        Map<String, Object> props = ImmutableMap.of("date", "20140110",
-                                                    "city", "Shanghai");
+        Map<String, Object> props = ImmutableMap.of(
+                                    "date", Utils.date("2014-01-10"),
+                                    "city", "Shanghai");
         Assert.assertEquals(props, edges.get(2).properties());
     }
 

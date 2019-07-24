@@ -66,7 +66,10 @@ public class VertexAPI extends GraphAPI {
     }
 
     public List<Vertex> update(BatchVertexRequest request) {
-        RestResult result = this.client.put(this.batchPath(), null, request);
+        MultivaluedHashMap<String, Object> headers = new MultivaluedHashMap<>();
+        headers.putSingle("Content-Encoding", BATCH_ENCODING);
+        RestResult result = this.client.put(this.batchPath(), null,
+                                            request, headers);
         return result.readList(this.type(), Vertex.class);
     }
 

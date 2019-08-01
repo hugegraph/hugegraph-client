@@ -155,7 +155,7 @@ public class IndexLabelApiTest extends BaseApiTest {
         schema().indexLabel("personByCityAndAge")
                 .onV("person")
                 .by("city", "age")
-                .range()
+                .shard()
                 .create();
     }
 

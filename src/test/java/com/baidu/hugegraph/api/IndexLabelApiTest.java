@@ -89,7 +89,7 @@ public class IndexLabelApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testCreateExistedVertexLabel() {
+    public void testCreateExistedIndexLabel() {
         indexLabelAPI.create(fillIndexLabel.apply("personByAge"));
 
         Utils.assertResponseError(400, () -> {
@@ -124,7 +124,7 @@ public class IndexLabelApiTest extends BaseApiTest {
         IndexLabel indexLabel = schema().indexLabel("personByAgeAndCity")
                                         .onV("person")
                                         .by("age", "city")
-                                        .range()
+                                        .search()
                                         .build();
         Utils.assertResponseError(400, () -> {
             indexLabelAPI.create(indexLabel);
@@ -138,11 +138,19 @@ public class IndexLabelApiTest extends BaseApiTest {
                 .by("city")
                 .secondary()
                 .create();
+        indexLabelAPI.get("personByCity");
+        Assert.assertThrows(ServerException.class, () -> {
+            indexLabelAPI.get("personByCityAndAge");
+        });
         schema().indexLabel("personByCityAndAge")
                 .onV("person")
                 .by("city", "age")
                 .secondary()
                 .create();
+        Assert.assertThrows(ServerException.class, () -> {
+            indexLabelAPI.get("personByCity");
+        });
+        indexLabelAPI.get("personByCityAndAge");
     }
 
     @Test
@@ -152,11 +160,19 @@ public class IndexLabelApiTest extends BaseApiTest {
                 .by("city")
                 .secondary()
                 .create();
+        indexLabelAPI.get("personByCity");
+        Assert.assertThrows(ServerException.class, () -> {
+            indexLabelAPI.get("personByCityAndAge");
+        });
         schema().indexLabel("personByCityAndAge")
                 .onV("person")
                 .by("city", "age")
                 .shard()
                 .create();
+        Assert.assertThrows(ServerException.class, () -> {
+            indexLabelAPI.get("personByCity");
+        });
+        indexLabelAPI.get("personByCityAndAge");
     }
 
     @Test

@@ -133,46 +133,66 @@ public class IndexLabelApiTest extends BaseApiTest {
 
     @Test
     public void testCreateSecondaryIndexOnMultiPropertiesOverrideExist() {
+        String personByCity = "personByCity";
+        String personByCityAndAge = "personByCityAndAge";
         schema().indexLabel("personByCity")
                 .onV("person")
                 .by("city")
                 .secondary()
                 .create();
-        indexLabelAPI.get("personByCity");
+        indexLabelAPI.get(personByCity);
         Assert.assertThrows(ServerException.class, () -> {
-            indexLabelAPI.get("personByCityAndAge");
+            indexLabelAPI.get(personByCityAndAge);
+        }, e -> {
+            String expect = String.format("index label with name '%s' does " +
+                                          "not exist", personByCityAndAge);
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
-        schema().indexLabel("personByCityAndAge")
+        schema().indexLabel(personByCityAndAge)
                 .onV("person")
                 .by("city", "age")
                 .secondary()
                 .create();
         Assert.assertThrows(ServerException.class, () -> {
-            indexLabelAPI.get("personByCity");
+            indexLabelAPI.get(personByCity);
+        }, e -> {
+            String expect = String.format("index label with name '%s' does " +
+                                          "not exist", personByCity);
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
-        indexLabelAPI.get("personByCityAndAge");
+        indexLabelAPI.get(personByCityAndAge);
     }
 
     @Test
     public void testCreateShardIndexOnMultiPropertiesOverrideExist() {
-        schema().indexLabel("personByCity")
+        String personByCity = "personByCity";
+        String personByCityAndAge = "personByCityAndAge";
+        schema().indexLabel(personByCity)
                 .onV("person")
                 .by("city")
                 .secondary()
                 .create();
-        indexLabelAPI.get("personByCity");
+        indexLabelAPI.get(personByCity);
         Assert.assertThrows(ServerException.class, () -> {
-            indexLabelAPI.get("personByCityAndAge");
+            indexLabelAPI.get(personByCityAndAge);
+        }, e -> {
+            String expect = String.format("index label with name '%s' does " +
+                                          "not exist", personByCityAndAge);
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
-        schema().indexLabel("personByCityAndAge")
+        schema().indexLabel(personByCityAndAge)
                 .onV("person")
                 .by("city", "age")
                 .shard()
                 .create();
         Assert.assertThrows(ServerException.class, () -> {
-            indexLabelAPI.get("personByCity");
+            indexLabelAPI.get(personByCity);
+        }, e -> {
+            String expect = String.format("index label with name '%s' does " +
+                                          "not exist", personByCity);
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
-        indexLabelAPI.get("personByCityAndAge");
+        indexLabelAPI.get(personByCityAndAge);
     }
 
     @Test
@@ -235,13 +255,18 @@ public class IndexLabelApiTest extends BaseApiTest {
 
     @Test
     public void testDelete() {
-        indexLabelAPI.create(fillIndexLabel.apply("personByAge"));
+        String name = "personByAge";
+        indexLabelAPI.create(fillIndexLabel.apply(name));
 
-        long taskId = indexLabelAPI.delete("personByAge");
+        long taskId = indexLabelAPI.delete(name);
         waitUntilTaskCompleted(taskId);
 
         Assert.assertThrows(ServerException.class, () -> {
-            indexLabelAPI.get("personByAge");
+            indexLabelAPI.get(name);
+        }, e -> {
+            String expect = String.format("index label with name '%s' does " +
+                                          "not exist", name);
+            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
     }
 

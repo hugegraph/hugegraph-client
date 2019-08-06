@@ -360,7 +360,8 @@ public class TraverserApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             verticesAPI.shards(1 * 1024 * 1024 - 1);
         }, e -> {
-            String expect = "The split-size must be >= 1048576 bytes, but got 1048575";
+            String expect = "The split-size must be >= 1048576 bytes, " +
+                            "but got 1048575";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
     }

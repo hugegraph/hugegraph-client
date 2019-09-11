@@ -32,6 +32,7 @@ import com.baidu.hugegraph.structure.constant.Frequency;
 import com.baidu.hugegraph.structure.schema.EdgeLabel;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class EdgeLabelApiTest extends BaseApiTest {
@@ -281,7 +282,7 @@ public class EdgeLabelApiTest extends BaseApiTest {
                                        .singleTime()
                                        .properties("date")
                                        .build();
-        
+
         edgeLabel1 = edgeLabelAPI.create(edgeLabel1);
 
         Assert.assertEquals("created", edgeLabel1.name());
@@ -389,6 +390,40 @@ public class EdgeLabelApiTest extends BaseApiTest {
         edgeLabel2 = edgeLabelAPI.create(edgeLabel2);
 
         List<EdgeLabel> edgeLabels = edgeLabelAPI.list();
+        Assert.assertEquals(2, edgeLabels.size());
+        assertContains(edgeLabels, edgeLabel1);
+        assertContains(edgeLabels, edgeLabel2);
+    }
+
+    @Test
+    public void testListByNames() {
+        EdgeLabel edgeLabel1 = schema().edgeLabel("created")
+                                       .sourceLabel("person")
+                                       .targetLabel("software")
+                                       .singleTime()
+                                       .properties("date", "city")
+                                       .build();
+        edgeLabel1 = edgeLabelAPI.create(edgeLabel1);
+
+        EdgeLabel edgeLabel2 = schema().edgeLabel("knows")
+                                       .sourceLabel("person")
+                                       .targetLabel("person")
+                                       .singleTime()
+                                       .properties("date")
+                                       .build();
+        edgeLabel2 = edgeLabelAPI.create(edgeLabel2);
+
+        List<EdgeLabel> edgeLabels;
+
+        edgeLabels = edgeLabelAPI.list(ImmutableList.of("created"));
+        Assert.assertEquals(1, edgeLabels.size());
+        assertContains(edgeLabels, edgeLabel1);
+
+        edgeLabels = edgeLabelAPI.list(ImmutableList.of("knows"));
+        Assert.assertEquals(1, edgeLabels.size());
+        assertContains(edgeLabels, edgeLabel2);
+
+        edgeLabels = edgeLabelAPI.list(ImmutableList.of("created", "knows"));
         Assert.assertEquals(2, edgeLabels.size());
         assertContains(edgeLabels, edgeLabel1);
         assertContains(edgeLabels, edgeLabel2);

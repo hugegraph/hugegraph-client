@@ -79,6 +79,14 @@ public class PropertyKeyAPI extends SchemaAPI {
         return result.readList(this.type(), PropertyKey.class);
     }
 
+    public List<PropertyKey> list(List<String> names) {
+        E.checkArgument(names != null && !names.isEmpty(),
+                        "The property key names can't be null or empty");
+        Map<String, Object> params = ImmutableMap.of("names", names);
+        RestResult result = this.client.get(this.path(), params);
+        return result.readList(this.type(), PropertyKey.class);
+    }
+
     public void delete(String name) {
         this.client.delete(this.path(), name);
     }

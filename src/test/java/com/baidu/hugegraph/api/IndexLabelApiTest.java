@@ -287,6 +287,36 @@ public class IndexLabelApiTest extends BaseApiTest {
     }
 
     @Test
+    public void testListByNames() {
+        IndexLabel indexLabel1 = indexLabelAPI.create(
+                                 fillIndexLabel.apply("personByAge"))
+                                 .indexLabel();
+
+        IndexLabel indexLabel2 = schema().indexLabel("personByCity")
+                                         .onV("person")
+                                         .by("city")
+                                         .secondary()
+                                         .build();
+        indexLabel2 = indexLabelAPI.create(indexLabel2).indexLabel();
+
+        List<IndexLabel> indexLabels;
+
+        indexLabels = indexLabelAPI.list(ImmutableList.of("personByAge"));
+        Assert.assertEquals(1, indexLabels.size());
+        assertContains(indexLabels, indexLabel1);
+
+        indexLabels = indexLabelAPI.list(ImmutableList.of("personByCity"));
+        Assert.assertEquals(1, indexLabels.size());
+        assertContains(indexLabels, indexLabel2);
+
+        indexLabels = indexLabelAPI.list(ImmutableList.of("personByAge",
+                                                          "personByCity"));
+        Assert.assertEquals(2, indexLabels.size());
+        assertContains(indexLabels, indexLabel1);
+        assertContains(indexLabels, indexLabel2);
+    }
+
+    @Test
     public void testDelete() {
         String name = "personByAge";
         indexLabelAPI.create(fillIndexLabel.apply(name));

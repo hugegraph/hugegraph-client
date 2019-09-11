@@ -31,6 +31,7 @@ import com.baidu.hugegraph.structure.constant.IdStrategy;
 import com.baidu.hugegraph.structure.schema.VertexLabel;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public class VertexLabelApiTest extends BaseApiTest {
@@ -362,6 +363,37 @@ public class VertexLabelApiTest extends BaseApiTest {
         vertexLabel2 = vertexLabelAPI.create(vertexLabel2);
 
         List<VertexLabel> vertexLabels = vertexLabelAPI.list();
+        Assert.assertEquals(2, vertexLabels.size());
+        assertContains(vertexLabels, vertexLabel1);
+        assertContains(vertexLabels, vertexLabel2);
+    }
+
+    @Test
+    public void testListByNames() {
+        VertexLabel vertexLabel1 = schema().vertexLabel("person")
+                                           .useAutomaticId()
+                                           .properties("name", "age", "city")
+                                           .build();
+        vertexLabel1 = vertexLabelAPI.create(vertexLabel1);
+
+        VertexLabel vertexLabel2 = schema().vertexLabel("software")
+                                           .useCustomizeStringId()
+                                           .properties("name", "lang", "price")
+                                           .build();
+        vertexLabel2 = vertexLabelAPI.create(vertexLabel2);
+
+        List<VertexLabel> vertexLabels;
+
+        vertexLabels = vertexLabelAPI.list(ImmutableList.of("person"));
+        Assert.assertEquals(1, vertexLabels.size());
+        assertContains(vertexLabels, vertexLabel1);
+
+        vertexLabels = vertexLabelAPI.list(ImmutableList.of("software"));
+        Assert.assertEquals(1, vertexLabels.size());
+        assertContains(vertexLabels, vertexLabel2);
+
+        vertexLabels = vertexLabelAPI.list(ImmutableList.of("person",
+                                                            "software"));
         Assert.assertEquals(2, vertexLabels.size());
         assertContains(vertexLabels, vertexLabel1);
         assertContains(vertexLabels, vertexLabel2);

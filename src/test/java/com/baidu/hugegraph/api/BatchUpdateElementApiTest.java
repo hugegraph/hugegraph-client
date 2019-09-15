@@ -174,6 +174,28 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
     }
 
     @Test
+    public void testVertexBatchUpdateStrategyOverride() {
+        BatchVertexRequest req = batchVertexRequest("price", -1, 1,
+                                                    UpdateStrategy.OVERRIDE);
+
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", 1);
+
+        req = batchVertexRequest("list", "old", "new", UpdateStrategy.OVERRIDE);
+        vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "list", "new");
+    }
+
+    @Test
+    public void testVertexBatchUpdateWithNullValues() {
+        BatchVertexRequest req = batchVertexRequest("price", 1, null,
+                                                    UpdateStrategy.OVERRIDE);
+
+        List<Vertex> vertices = vertexAPI.update(req);
+        assertBatchResponse(vertices, "price", 1);
+    }
+
+    @Test
     public void testVertexBatchUpdateWithInvalidArgs() {
         BatchVertexRequest req1 = batchVertexRequest("set", "old", "old",
                                                      UpdateStrategy.UNION);
@@ -398,6 +420,28 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         req = batchEdgeRequest("list", "old", "new", UpdateStrategy.ELIMINATE);
         edges = edgeAPI.update(req);
         assertBatchResponse(edges, "list", "old");
+    }
+
+    @Test
+    public void testEdgeBatchUpdateStrategyOverride() {
+        BatchEdgeRequest req = batchEdgeRequest("price", -1, 1,
+                                                UpdateStrategy.OVERRIDE);
+
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", 1);
+
+        req = batchEdgeRequest("list", "old", "new", UpdateStrategy.OVERRIDE);
+        edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "list", "new");
+    }
+
+    @Test
+    public void testEdgeBatchUpdateWithNullValues() {
+        BatchEdgeRequest req = batchEdgeRequest("price", 1, null,
+                                                UpdateStrategy.OVERRIDE);
+
+        List<Edge> edges = edgeAPI.update(req);
+        assertBatchResponse(edges, "price", 1);
     }
 
     @Test
@@ -634,7 +678,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
 
     private static void assertBatchResponse(List<? extends GraphElement> list,
                                             String property, int result) {
-        Assert.assertEquals(5, list.size());
+        Assert.assertEquals(BATCH_SIZE, list.size());
         list.forEach(element -> {
             String index = String.valueOf(element.property("name"));
             Object value = element.property(property);
@@ -645,7 +689,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
 
     private static void assertBatchResponse(List<? extends GraphElement> list,
                                             String property, String... data) {
-        Assert.assertEquals(5, list.size());
+        Assert.assertEquals(BATCH_SIZE, list.size());
         list.forEach(element -> {
             String index = String.valueOf(element.property("name"));
             Object value = element.property(property);

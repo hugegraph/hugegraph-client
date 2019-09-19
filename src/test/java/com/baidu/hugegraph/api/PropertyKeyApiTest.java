@@ -24,6 +24,7 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 
+import com.baidu.hugegraph.structure.constant.AggregateType;
 import com.baidu.hugegraph.structure.constant.Cardinality;
 import com.baidu.hugegraph.structure.constant.DataType;
 import com.baidu.hugegraph.structure.schema.PropertyKey;
@@ -78,6 +79,80 @@ public class PropertyKeyApiTest extends BaseApiTest {
         Assert.assertEquals("name", propertyKey.name());
         Assert.assertEquals(DataType.TEXT, propertyKey.dataType());
         Assert.assertEquals(Cardinality.SET, propertyKey.cardinality());
+    }
+
+    @Test
+    public void testCreateWithAggregateType() {
+        PropertyKey propertyKey = schema().propertyKey("name")
+                                          .asText().valueSingle()
+                                          .build();
+
+        propertyKey = propertyKeyAPI.create(propertyKey);
+
+        Assert.assertEquals("name", propertyKey.name());
+        Assert.assertEquals(DataType.TEXT, propertyKey.dataType());
+        Assert.assertEquals(Cardinality.SINGLE, propertyKey.cardinality());
+        Assert.assertEquals(AggregateType.NONE, propertyKey.aggregateType());
+
+        propertyKey = schema().propertyKey("no")
+                              .asText().valueSingle()
+                              .aggregateType(AggregateType.OLD)
+                              .build();
+
+        propertyKey = propertyKeyAPI.create(propertyKey);
+
+        Assert.assertEquals("no", propertyKey.name());
+        Assert.assertEquals(DataType.TEXT, propertyKey.dataType());
+        Assert.assertEquals(Cardinality.SINGLE, propertyKey.cardinality());
+        Assert.assertEquals(AggregateType.OLD, propertyKey.aggregateType());
+
+        propertyKey = schema().propertyKey("max")
+                              .asInt().valueSingle()
+                              .aggregateType(AggregateType.MAX)
+                              .build();
+
+        propertyKey = propertyKeyAPI.create(propertyKey);
+
+        Assert.assertEquals("max", propertyKey.name());
+        Assert.assertEquals(DataType.INT, propertyKey.dataType());
+        Assert.assertEquals(Cardinality.SINGLE, propertyKey.cardinality());
+        Assert.assertEquals(AggregateType.MAX, propertyKey.aggregateType());
+
+        propertyKey = schema().propertyKey("min")
+                              .asInt().valueSingle()
+                              .aggregateType(AggregateType.MIN)
+                              .build();
+
+        propertyKey = propertyKeyAPI.create(propertyKey);
+
+        Assert.assertEquals("min", propertyKey.name());
+        Assert.assertEquals(DataType.INT, propertyKey.dataType());
+        Assert.assertEquals(Cardinality.SINGLE, propertyKey.cardinality());
+        Assert.assertEquals(AggregateType.MIN, propertyKey.aggregateType());
+
+        propertyKey = schema().propertyKey("sum")
+                              .asInt().valueSingle()
+                              .aggregateType(AggregateType.SUM)
+                              .build();
+
+        propertyKey = propertyKeyAPI.create(propertyKey);
+
+        Assert.assertEquals("sum", propertyKey.name());
+        Assert.assertEquals(DataType.INT, propertyKey.dataType());
+        Assert.assertEquals(Cardinality.SINGLE, propertyKey.cardinality());
+        Assert.assertEquals(AggregateType.SUM, propertyKey.aggregateType());
+
+        propertyKey = schema().propertyKey("total")
+                              .asInt().valueSingle()
+                              .aggregateType(AggregateType.SUM)
+                              .build();
+
+        propertyKey = propertyKeyAPI.create(propertyKey);
+
+        Assert.assertEquals("total", propertyKey.name());
+        Assert.assertEquals(DataType.INT, propertyKey.dataType());
+        Assert.assertEquals(Cardinality.SINGLE, propertyKey.cardinality());
+        Assert.assertEquals(AggregateType.SUM, propertyKey.aggregateType());
     }
 
     @Test

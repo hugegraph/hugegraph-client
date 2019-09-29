@@ -48,11 +48,6 @@ public class VertexApiTest extends BaseApiTest {
     @After
     public void teardown() {
         vertexAPI.list(-1).results().forEach(v -> vertexAPI.delete(v.id()));
-        try {
-            vertexLabelAPI.delete("log");
-        } catch (ServerException e) {
-            e.printStackTrace();
-        }
     }
 
     @Test

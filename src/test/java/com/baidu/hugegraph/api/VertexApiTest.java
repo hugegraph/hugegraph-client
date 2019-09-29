@@ -155,18 +155,18 @@ public class VertexApiTest extends BaseApiTest {
 
     @Test
     public void testCreateWithCustomizeUuidId() {
-        schema().vertexLabel("log")
+        schema().vertexLabel("user")
                 .useCustomizeUuidId()
                 .properties("date")
                 .ifNotExist()
                 .create();
 
-        Vertex log = new Vertex("log");
+        Vertex log = new Vertex("user");
         log.id("835e1153-9281-4957-8691-cf79258e90eb");
         log.property("date", "2018-01-01");
 
         Vertex vertex = vertexAPI.create(log);
-        Assert.assertEquals("log", vertex.label());
+        Assert.assertEquals("user", vertex.label());
         Assert.assertEquals("835e1153-9281-4957-8691-cf79258e90eb",
                             vertex.id());
         Map<String, Object> props = ImmutableMap.of("date",
@@ -320,13 +320,13 @@ public class VertexApiTest extends BaseApiTest {
 
     @Test
     public void testGetWithCustomizeUuidId() {
-        schema().vertexLabel("log")
+        schema().vertexLabel("user")
                 .useCustomizeUuidId()
                 .properties("date")
                 .ifNotExist()
                 .create();
 
-        Vertex vertex1 = new Vertex("log");
+        Vertex vertex1 = new Vertex("user");
         vertex1.id("835e1153-9281-4957-8691-cf79258e90eb");
         vertex1.property("date", "2018-01-01");
 

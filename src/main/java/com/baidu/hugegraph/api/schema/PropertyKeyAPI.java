@@ -40,15 +40,15 @@ public class PropertyKeyAPI extends SchemaAPI {
     }
 
     public PropertyKey create(PropertyKey propertyKey) {
-        Object pk;
+        Object pkey;
         if (!propertyKey.aggregateType().isNone()) {
             this.client.checkApiVersion("0.47", "aggregate property");
-            pk = propertyKey;
+            pkey = propertyKey;
         } else {
-            pk = propertyKey.switchV46();
+            pkey = propertyKey.switchV46();
         }
 
-        RestResult result = this.client.post(this.path(), pk);
+        RestResult result = this.client.post(this.path(), pkey);
         return result.readObject(PropertyKey.class);
     }
 

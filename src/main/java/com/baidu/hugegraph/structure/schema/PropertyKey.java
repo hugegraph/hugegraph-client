@@ -310,6 +310,10 @@ public class PropertyKey extends SchemaElement {
             super(propertyKey.name);
             this.dataType = propertyKey.dataType;
             this.cardinality = propertyKey.cardinality;
+            this.id = propertyKey.id();
+            this.properties = propertyKey.properties();
+            this.userdata = propertyKey.userdata();
+            this.checkExist = propertyKey.checkExist();
         }
 
         @Override

@@ -177,7 +177,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
                               .build();
         PropertyKey.PropertyKeyV46 pk = propertyKey.switchV46();
         Assert.assertEquals("nameV46", pk.name());
-        Assert.assertEquals(DataType.INT, pk.dataType());
+        Assert.assertEquals(DataType.TEXT, pk.dataType());
         Assert.assertEquals(Cardinality.SINGLE, pk.cardinality());
     }
 

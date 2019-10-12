@@ -316,6 +316,14 @@ public class PropertyKey extends SchemaElement {
             this.checkExist = propertyKey.checkExist();
         }
 
+        public DataType dataType() {
+            return this.dataType;
+        }
+
+        public Cardinality cardinality() {
+            return this.cardinality;
+        }
+
         @Override
         public String toString() {
             return String.format("{name=%s, cardinality=%s, dataType=%s, " +

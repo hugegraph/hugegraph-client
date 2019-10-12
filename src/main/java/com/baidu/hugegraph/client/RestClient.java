@@ -73,7 +73,7 @@ public class RestClient extends com.baidu.hugegraph.rest.RestClient {
     }
 
     public void checkApiVersion(String minVersion, String message) {
-        if (this.ltApiVersion(minVersion)) {
+        if (this.apiVersionLt(minVersion)) {
             throw new ClientException(
                       "HugeGraphServer API version must be >= %s to support " +
                       "%s, but current HugeGraphServer API version is: %s",
@@ -81,7 +81,7 @@ public class RestClient extends com.baidu.hugegraph.rest.RestClient {
         }
     }
 
-    public boolean ltApiVersion(String minVersion) {
+    public boolean apiVersionLt(String minVersion) {
         String apiVersion = this.apiVersion == null ?
                             null : this.apiVersion.get();
         return apiVersion != null && !VersionUtil.gte(apiVersion, minVersion);

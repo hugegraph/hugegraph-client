@@ -42,7 +42,7 @@ public class PropertyKeyAPI extends SchemaAPI {
 
     public PropertyKey create(PropertyKey propertyKey) {
         Object pkey = propertyKey;
-        if (this.client.ltApiVersion("0.47")) {
+        if (this.client.apiVersionLt("0.47")) {
             E.checkArgument(propertyKey.aggregateType().isNone(),
                             "Not support aggregate property until " +
                             "api version 0.47");

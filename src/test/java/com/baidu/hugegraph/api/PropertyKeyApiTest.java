@@ -173,10 +173,12 @@ public class PropertyKeyApiTest extends BaseApiTest {
         Assert.assertTrue(propertyKey.aggregateType().isNumber());
 
         propertyKey = schema().propertyKey("nameV46")
-                                          .asText().valueSingle()
-                                          .build();
+                              .asText().valueSingle()
+                              .build();
         PropertyKey.PropertyKeyV46 pk = propertyKey.switchV46();
         Assert.assertEquals("nameV46", pk.name());
+        Assert.assertEquals(DataType.INT, pk.dataType());
+        Assert.assertEquals(Cardinality.SINGLE, pk.cardinality());
     }
 
     @Test

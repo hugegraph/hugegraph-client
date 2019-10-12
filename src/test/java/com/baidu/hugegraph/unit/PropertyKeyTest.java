@@ -43,6 +43,8 @@ public class PropertyKeyTest {
                           "aggregateType=NONE, properties=[]}";
         Assert.assertEquals(pkString, propertyKey.toString());
         Assert.assertEquals(HugeType.PROPERTY_KEY.string(), propertyKey.type());
+        Assert.assertEquals(0, propertyKey.aggregateType().code());
+        Assert.assertEquals("none", propertyKey.aggregateType().string());
     }
 
     @Test

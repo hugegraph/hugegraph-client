@@ -250,32 +250,26 @@ public class PropertyKeyApiTest extends BaseApiTest {
 
     @Test
     public void testListByNames() {
-        PropertyKey propertyKey1 = schema().propertyKey("name")
-                                           .asText()
-                                           .valueSingle()
-                                           .build();
-        propertyKey1 = propertyKeyAPI.create(propertyKey1);
+        PropertyKey name = schema().propertyKey("name").asText().build();
+        name = propertyKeyAPI.create(name);
 
-        PropertyKey propertyKey2 = schema().propertyKey("age")
-                                           .asInt()
-                                           .valueSingle()
-                                           .build();
-        propertyKey2 = propertyKeyAPI.create(propertyKey2);
+        PropertyKey age = schema().propertyKey("age").asInt().build();
+        age = propertyKeyAPI.create(age);
 
         List<PropertyKey> propertyKeys;
 
         propertyKeys = propertyKeyAPI.list(ImmutableList.of("name"));
         Assert.assertEquals(1, propertyKeys.size());
-        assertContains(propertyKeys, propertyKey1);
+        assertContains(propertyKeys, name);
 
         propertyKeys = propertyKeyAPI.list(ImmutableList.of("age"));
         Assert.assertEquals(1, propertyKeys.size());
-        assertContains(propertyKeys, propertyKey2);
+        assertContains(propertyKeys, age);
 
         propertyKeys = propertyKeyAPI.list(ImmutableList.of("name", "age"));
         Assert.assertEquals(2, propertyKeys.size());
-        assertContains(propertyKeys, propertyKey1);
-        assertContains(propertyKeys, propertyKey2);
+        assertContains(propertyKeys, name);
+        assertContains(propertyKeys, age);
     }
 
     @Test

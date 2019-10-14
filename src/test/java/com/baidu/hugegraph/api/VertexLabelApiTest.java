@@ -370,33 +370,33 @@ public class VertexLabelApiTest extends BaseApiTest {
 
     @Test
     public void testListByNames() {
-        VertexLabel vertexLabel1 = schema().vertexLabel("person")
-                                           .useAutomaticId()
-                                           .properties("name", "age", "city")
-                                           .build();
-        vertexLabel1 = vertexLabelAPI.create(vertexLabel1);
+        VertexLabel person = schema().vertexLabel("person")
+                                     .useAutomaticId()
+                                     .properties("name", "age", "city")
+                                     .build();
+        person = vertexLabelAPI.create(person);
 
-        VertexLabel vertexLabel2 = schema().vertexLabel("software")
-                                           .useCustomizeStringId()
-                                           .properties("name", "lang", "price")
-                                           .build();
-        vertexLabel2 = vertexLabelAPI.create(vertexLabel2);
+        VertexLabel software = schema().vertexLabel("software")
+                                       .useCustomizeStringId()
+                                       .properties("name", "lang", "price")
+                                       .build();
+        software = vertexLabelAPI.create(software);
 
         List<VertexLabel> vertexLabels;
 
         vertexLabels = vertexLabelAPI.list(ImmutableList.of("person"));
         Assert.assertEquals(1, vertexLabels.size());
-        assertContains(vertexLabels, vertexLabel1);
+        assertContains(vertexLabels, person);
 
         vertexLabels = vertexLabelAPI.list(ImmutableList.of("software"));
         Assert.assertEquals(1, vertexLabels.size());
-        assertContains(vertexLabels, vertexLabel2);
+        assertContains(vertexLabels, software);
 
         vertexLabels = vertexLabelAPI.list(ImmutableList.of("person",
                                                             "software"));
         Assert.assertEquals(2, vertexLabels.size());
-        assertContains(vertexLabels, vertexLabel1);
-        assertContains(vertexLabels, vertexLabel2);
+        assertContains(vertexLabels, person);
+        assertContains(vertexLabels, software);
     }
 
     @Test

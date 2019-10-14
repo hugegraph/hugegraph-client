@@ -397,36 +397,36 @@ public class EdgeLabelApiTest extends BaseApiTest {
 
     @Test
     public void testListByNames() {
-        EdgeLabel edgeLabel1 = schema().edgeLabel("created")
-                                       .sourceLabel("person")
-                                       .targetLabel("software")
-                                       .singleTime()
-                                       .properties("date", "city")
-                                       .build();
-        edgeLabel1 = edgeLabelAPI.create(edgeLabel1);
+        EdgeLabel created = schema().edgeLabel("created")
+                                    .sourceLabel("person")
+                                    .targetLabel("software")
+                                    .singleTime()
+                                    .properties("date", "city")
+                                    .build();
+        created = edgeLabelAPI.create(created);
 
-        EdgeLabel edgeLabel2 = schema().edgeLabel("knows")
-                                       .sourceLabel("person")
-                                       .targetLabel("person")
-                                       .singleTime()
-                                       .properties("date")
-                                       .build();
-        edgeLabel2 = edgeLabelAPI.create(edgeLabel2);
+        EdgeLabel knows = schema().edgeLabel("knows")
+                                  .sourceLabel("person")
+                                  .targetLabel("person")
+                                  .singleTime()
+                                  .properties("date")
+                                  .build();
+        knows = edgeLabelAPI.create(knows);
 
         List<EdgeLabel> edgeLabels;
 
         edgeLabels = edgeLabelAPI.list(ImmutableList.of("created"));
         Assert.assertEquals(1, edgeLabels.size());
-        assertContains(edgeLabels, edgeLabel1);
+        assertContains(edgeLabels, created);
 
         edgeLabels = edgeLabelAPI.list(ImmutableList.of("knows"));
         Assert.assertEquals(1, edgeLabels.size());
-        assertContains(edgeLabels, edgeLabel2);
+        assertContains(edgeLabels, knows);
 
         edgeLabels = edgeLabelAPI.list(ImmutableList.of("created", "knows"));
         Assert.assertEquals(2, edgeLabels.size());
-        assertContains(edgeLabels, edgeLabel1);
-        assertContains(edgeLabels, edgeLabel2);
+        assertContains(edgeLabels, created);
+        assertContains(edgeLabels, knows);
     }
 
     @Test

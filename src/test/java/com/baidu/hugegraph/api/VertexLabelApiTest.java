@@ -442,9 +442,4 @@ public class VertexLabelApiTest extends BaseApiTest {
         Assert.assertEquals(1, runner.userdata().size());
         Assert.assertEquals("player", runner.userdata().get("super_vl"));
     }
-
-    private static void assertContains(List<VertexLabel> vertexLabels,
-                                       VertexLabel vertexLabel) {
-        Assert.assertTrue(Utils.contains(vertexLabels, vertexLabel));
-    }
 }

@@ -102,17 +102,17 @@ public class IndexLabelTest extends BaseFuncTest {
 
         indexLabels = schema.getIndexLabels(ImmutableList.of("playerByName"));
         Assert.assertEquals(1, indexLabels.size());
-        Assert.assertEquals(playerByName, indexLabels.get(0));
+        assertContains(indexLabels, playerByName);
 
         indexLabels = schema.getIndexLabels(ImmutableList.of("playerByAge"));
         Assert.assertEquals(1, indexLabels.size());
-        Assert.assertEquals(playerByAge, indexLabels.get(0));
+        assertContains(indexLabels, playerByAge);
 
         indexLabels = schema.getIndexLabels(ImmutableList.of("playerByName",
                                                              "playerByAge"));
         Assert.assertEquals(2, indexLabels.size());
-        Assert.assertEquals(playerByName, indexLabels.get(0));
-        Assert.assertEquals(playerByAge, indexLabels.get(1));
+        assertContains(indexLabels, playerByName);
+        assertContains(indexLabels, playerByAge);
     }
 
     @Test

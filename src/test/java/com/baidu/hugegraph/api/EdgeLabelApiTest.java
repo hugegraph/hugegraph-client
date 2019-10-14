@@ -484,9 +484,4 @@ public class EdgeLabelApiTest extends BaseApiTest {
         Assert.assertEquals("many-to-many",
                             write.userdata().get("multiplicity"));
     }
-
-    private static void assertContains(List<EdgeLabel> edgeLabels,
-                                       EdgeLabel edgeLabel) {
-        Assert.assertTrue(Utils.contains(edgeLabels, edgeLabel));
-    }
 }

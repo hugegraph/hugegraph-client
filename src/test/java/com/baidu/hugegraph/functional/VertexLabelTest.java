@@ -135,17 +135,17 @@ public class VertexLabelTest extends BaseFuncTest {
 
         vertexLabels = schema.getVertexLabels(ImmutableList.of("player"));
         Assert.assertEquals(1, vertexLabels.size());
-        Assert.assertEquals(player, vertexLabels.get(0));
+        assertContains(vertexLabels, player);
 
         vertexLabels = schema.getVertexLabels(ImmutableList.of("runner"));
         Assert.assertEquals(1, vertexLabels.size());
-        Assert.assertEquals(runner, vertexLabels.get(0));
+        assertContains(vertexLabels, runner);
 
         vertexLabels = schema.getVertexLabels(ImmutableList.of("player",
                                                                "runner"));
         Assert.assertEquals(2, vertexLabels.size());
-        Assert.assertEquals(player, vertexLabels.get(0));
-        Assert.assertEquals(runner, vertexLabels.get(1));
+        assertContains(vertexLabels, player);
+        assertContains(vertexLabels, runner);
     }
 
     @Test

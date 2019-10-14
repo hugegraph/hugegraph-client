@@ -239,8 +239,8 @@ public class EdgeLabelTest extends BaseFuncTest {
     public void testListByNames() {
         SchemaManager schema = schema();
 
-        schema.vertexLabel("person").create();
-        schema.vertexLabel("book").create();
+        schema.vertexLabel("person").ifNotExist().create();
+        schema.vertexLabel("book").ifNotExist().create();
 
         EdgeLabel father = schema.edgeLabel("father").link("person", "person")
                                  .create();
@@ -252,16 +252,16 @@ public class EdgeLabelTest extends BaseFuncTest {
 
         edgeLabels = schema.getEdgeLabels(ImmutableList.of("father"));
         Assert.assertEquals(1, edgeLabels.size());
-        Assert.assertEquals(father, edgeLabels.get(0));
+        assertContains(edgeLabels, father);
 
         edgeLabels = schema.getEdgeLabels(ImmutableList.of("write"));
         Assert.assertEquals(1, edgeLabels.size());
-        Assert.assertEquals(write, edgeLabels.get(0));
+        assertContains(edgeLabels, write);
 
         edgeLabels = schema.getEdgeLabels(ImmutableList.of("father", "write"));
         Assert.assertEquals(2, edgeLabels.size());
-        Assert.assertEquals(father, edgeLabels.get(0));
-        Assert.assertEquals(write, edgeLabels.get(1));
+        assertContains(edgeLabels, father);
+        assertContains(edgeLabels, write);
     }
 
     @Test

@@ -118,16 +118,16 @@ public class PropertyKeyTest extends BaseFuncTest {
 
         propertyKeys = schema.getPropertyKeys(ImmutableList.of("age"));
         Assert.assertEquals(1, propertyKeys.size());
-        Assert.assertEquals(age, propertyKeys.get(0));
+        assertContains(propertyKeys, age);
 
         propertyKeys = schema.getPropertyKeys(ImmutableList.of("id"));
         Assert.assertEquals(1, propertyKeys.size());
-        Assert.assertEquals(id, propertyKeys.get(0));
+        assertContains(propertyKeys, id);
 
         propertyKeys = schema.getPropertyKeys(ImmutableList.of("age", "id"));
         Assert.assertEquals(2, propertyKeys.size());
-        Assert.assertEquals(age, propertyKeys.get(0));
-        Assert.assertEquals(id, propertyKeys.get(1));
+        assertContains(propertyKeys, age);
+        assertContains(propertyKeys, id);
     }
 
     @Test

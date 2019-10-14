@@ -328,9 +328,4 @@ public class PropertyKeyApiTest extends BaseApiTest {
         Assert.assertEquals(ImmutableList.of("male", "female"),
                             sex.userdata().get("range"));
     }
-
-    private static void assertContains(List<PropertyKey> propertyKeys,
-                                       PropertyKey propertyKey) {
-        Assert.assertTrue(Utils.contains(propertyKeys, propertyKey));
-    }
 }

@@ -288,32 +288,31 @@ public class IndexLabelApiTest extends BaseApiTest {
 
     @Test
     public void testListByNames() {
-        IndexLabel indexLabel1 = indexLabelAPI.create(
-                                 fillIndexLabel.apply("personByAge"))
-                                 .indexLabel();
+        IndexLabel personByAge = fillIndexLabel.apply("personByAge");
+        personByAge = indexLabelAPI.create(personByAge).indexLabel();
 
-        IndexLabel indexLabel2 = schema().indexLabel("personByCity")
-                                         .onV("person")
-                                         .by("city")
-                                         .secondary()
-                                         .build();
-        indexLabel2 = indexLabelAPI.create(indexLabel2).indexLabel();
+        IndexLabel personByCity = schema().indexLabel("personByCity")
+                                          .onV("person")
+                                          .by("city")
+                                          .secondary()
+                                          .build();
+        personByCity = indexLabelAPI.create(personByCity).indexLabel();
 
         List<IndexLabel> indexLabels;
 
         indexLabels = indexLabelAPI.list(ImmutableList.of("personByAge"));
         Assert.assertEquals(1, indexLabels.size());
-        assertContains(indexLabels, indexLabel1);
+        assertContains(indexLabels, personByAge);
 
         indexLabels = indexLabelAPI.list(ImmutableList.of("personByCity"));
         Assert.assertEquals(1, indexLabels.size());
-        assertContains(indexLabels, indexLabel2);
+        assertContains(indexLabels, personByCity);
 
         indexLabels = indexLabelAPI.list(ImmutableList.of("personByAge",
                                                           "personByCity"));
         Assert.assertEquals(2, indexLabels.size());
-        assertContains(indexLabels, indexLabel1);
-        assertContains(indexLabels, indexLabel2);
+        assertContains(indexLabels, personByAge);
+        assertContains(indexLabels, personByCity);
     }
 
     @Test

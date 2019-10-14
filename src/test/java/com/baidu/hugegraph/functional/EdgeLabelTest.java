@@ -45,7 +45,7 @@ public class EdgeLabelTest extends BaseFuncTest {
     }
 
     @Test
-    public void testIsLinkVertexLabel() {
+    public void testLinkedVertexLabel() {
         SchemaManager schema = schema();
 
         schema.vertexLabel("person")

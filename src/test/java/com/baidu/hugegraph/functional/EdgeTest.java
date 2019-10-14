@@ -51,7 +51,7 @@ public class EdgeTest extends BaseFuncTest {
     }
 
     @Test
-    public void testIsLinkVertex() {
+    public void testLinkedVertex() {
         Object peterId = getVertexId("person", "name", "peter");
         Object lopId = getVertexId("software", "name", "lop");
 

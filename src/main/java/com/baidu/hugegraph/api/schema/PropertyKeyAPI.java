@@ -80,6 +80,7 @@ public class PropertyKeyAPI extends SchemaAPI {
     }
 
     public List<PropertyKey> list(List<String> names) {
+        this.client.checkApiVersion("0.48", "getting schema by names");
         E.checkArgument(names != null && !names.isEmpty(),
                         "The property key names can't be null or empty");
         Map<String, Object> params = ImmutableMap.of("names", names);

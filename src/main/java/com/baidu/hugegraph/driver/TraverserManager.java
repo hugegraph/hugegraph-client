@@ -54,7 +54,11 @@ import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.graph.Vertices;
 import com.baidu.hugegraph.util.E;
 
-import static com.baidu.hugegraph.structure.constant.Traverser.*;
+import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_CAPACITY;
+import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_DEGREE;
+import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_ELEMENTS_LIMIT;
+import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_PAGE_LIMIT;
+import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_PATHS_LIMIT;
 
 public class TraverserManager {
 

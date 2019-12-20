@@ -19,6 +19,7 @@
 
 package com.baidu.hugegraph.functional;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterators;
 
 public class VertexTest extends BaseFuncTest {
 
@@ -407,6 +409,28 @@ public class VertexTest extends BaseFuncTest {
 
         vertices = graph().listVertices("person", properties2, true, 3);
         Assert.assertEquals(0, vertices.size());
+    }
+
+    @Test
+    public void testIterateVerticesByLabel() {
+        BaseClientTest.initVertex();
+
+        Iterator<Vertex> vertices = graph().iterateVertices("person", 1);
+        Assert.assertEquals(4, Iterators.size(vertices));
+
+        vertices = graph().iterateVertices("software", 1);
+        Assert.assertEquals(2, Iterators.size(vertices));
+    }
+
+    @Test
+    public void testIterateVerticesByLabelAndProperties() {
+        schema().indexLabel("personByCity").onV("person").by("city").create();
+        BaseClientTest.initVertex();
+
+        Map<String, Object> properties = ImmutableMap.of("city", "Beijing");
+        Iterator<Vertex> vertices = graph().iterateVertices("person",
+                                                            properties, 1);
+        Assert.assertEquals(2, Iterators.size(vertices));
     }
 
     private static void assertContains(List<Vertex> vertices,

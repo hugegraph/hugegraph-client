@@ -102,7 +102,7 @@ public class GraphManager {
     }
 
     public List<Vertex> listVertices(String label) {
-        return this.listVertices(label, null,false, 0, -1);
+        return this.listVertices(label, null, false, 0, -1);
     }
 
     public List<Vertex> listVertices(String label, int limit) {
@@ -158,12 +158,10 @@ public class GraphManager {
         return this.iterateVertices(null, null, sizePerPage);
     }
 
-    @UnimplementedFeature(desc = "Server doesn't support paging by label")
     public Iterator<Vertex> iterateVertices(String label, int sizePerPage) {
         return this.iterateVertices(label, null, sizePerPage);
     }
 
-    @UnimplementedFeature(desc = "Server doesn't support paging by label and properties")
     public Iterator<Vertex> iterateVertices(String label,
                                             Map<String, Object> properties,
                                             int sizePerPage) {
@@ -370,20 +368,17 @@ public class GraphManager {
         });
     }
 
-    @UnimplementedFeature(desc = "Server doesn't support paging by vertexId")
     public Iterator<Edge> iterateEdges(Object vertexId, int sizePerPage) {
         return this.iterateEdges(vertexId, Direction.BOTH, null, null,
                                  sizePerPage);
     }
 
-    @UnimplementedFeature(desc = "Server doesn't support paging by vertexId and direction")
     public Iterator<Edge> iterateEdges(Object vertexId,
                                        Direction direction,
                                        int sizePerPage) {
         return this.iterateEdges(vertexId, direction, null, null, sizePerPage);
     }
 
-    @UnimplementedFeature(desc = "Server doesn't support paging by vertexId, direction and label")
     public Iterator<Edge> iterateEdges(Object vertexId,
                                        Direction direction,
                                        String label,
@@ -391,8 +386,6 @@ public class GraphManager {
         return this.iterateEdges(vertexId, direction, label, null, sizePerPage);
     }
 
-    @UnimplementedFeature(desc = "Server doesn't support paging by vertexId, direction, label " +
-                                 "and properties")
     public Iterator<Edge> iterateEdges(Object vertexId,
                                        Direction direction,
                                        String label,

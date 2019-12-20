@@ -21,6 +21,7 @@ package com.baidu.hugegraph.functional;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,6 +39,7 @@ import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterators;
 
 public class EdgeTest extends BaseFuncTest {
 
@@ -599,6 +601,42 @@ public class EdgeTest extends BaseFuncTest {
 
         edges = graph().listEdges("created", properties2, true, 3);
         Assert.assertEquals(0, edges.size());
+    }
+
+    @Test
+    public void testIterateEdgesByLabel() {
+        BaseClientTest.initEdge();
+
+        Iterator<Edge> edges = graph().iterateEdges("created", 1);
+        Assert.assertEquals(4, Iterators.size(edges));
+
+        edges = graph().iterateEdges("knows", 1);
+        Assert.assertEquals(2, Iterators.size(edges));
+    }
+
+    @Test
+    public void testIterateEdgesByVertexId() {
+        BaseClientTest.initEdge();
+
+        Object markoId = getVertexId("person", "name", "marko");
+
+        Iterator<Edge> edges = graph().iterateEdges(markoId, 1);
+        Assert.assertEquals(3, Iterators.size(edges));
+
+        edges = graph().iterateEdges(markoId, Direction.OUT, 1);
+        Assert.assertEquals(3, Iterators.size(edges));
+
+        edges = graph().iterateEdges(markoId, Direction.OUT, "knows", 1);
+        Assert.assertEquals(2, Iterators.size(edges));
+
+        edges = graph().iterateEdges(markoId, Direction.OUT, "created", 1);
+        Assert.assertEquals(1, Iterators.size(edges));
+
+        Map<String, Object> properties = ImmutableMap.of("date",
+                                                         "P.gt(\"2012-1-1\")");
+        edges = graph().iterateEdges(markoId, Direction.OUT, "knows",
+                                     properties, 1);
+        Assert.assertEquals(2, Iterators.size(edges));
     }
 
     private static void assertContains(List<Edge> edges, Object source,

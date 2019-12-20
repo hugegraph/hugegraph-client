@@ -22,12 +22,14 @@ package com.baidu.hugegraph.functional;
 import java.util.List;
 import java.util.Map;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.baidu.hugegraph.BaseClientTest;
 import com.baidu.hugegraph.exception.InvalidOperationException;
+import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.testutil.Assert;
@@ -37,6 +39,7 @@ import com.google.common.collect.ImmutableMap;
 
 public class VertexTest extends BaseFuncTest {
 
+    @Override
     @Before
     public void setup() {
         BaseClientTest.initPropertyKey();
@@ -44,6 +47,7 @@ public class VertexTest extends BaseFuncTest {
         BaseClientTest.initEdgeLabel();
     }
 
+    @Override
     @After
     public void teardown() throws Exception {
         BaseFuncTest.clearData();
@@ -283,8 +287,7 @@ public class VertexTest extends BaseFuncTest {
 
     @Test
     public void testGetVerticesByLabelAndProperties() {
-        schema().indexLabel("PersonByAge").onV("person").by("age")
-                .secondary().create();
+        schema().indexLabel("PersonByAge").onV("person").by("age").create();
         BaseClientTest.initVertex();
 
         Map<String, Object> properties = ImmutableMap.of("age", 29);
@@ -298,14 +301,112 @@ public class VertexTest extends BaseFuncTest {
 
     @Test
     public void testGetVerticesByLabelAndPropertiesWithLimit1() {
-        schema().indexLabel("PersonByAge").onV("person").by("age")
-                .secondary().create();
+        schema().indexLabel("PersonByAge").onV("person").by("age").create();
         BaseClientTest.initVertex();
 
         Map<String, Object> properties = ImmutableMap.of("age", 29);
-        List<Vertex> vertices = graph().listVertices("person", properties, 0, 1);
+        List<Vertex> vertices = graph().listVertices("person", properties, 1);
         Assert.assertEquals(1, vertices.size());
         Assert.assertEquals("person", vertices.get(0).label());
+    }
+
+    @Test
+    public void testGetVerticesByLabelAndPropertiesWithRangeCondition() {
+        schema().indexLabel("personByAge").range()
+                .onV("person").by("age").create();
+        BaseClientTest.initVertex();
+
+        Map<String, Object> properties = ImmutableMap.of("age", "P.eq(29)");
+        List<Vertex> vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(2, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertEquals(29, v.property("age"));
+        }
+
+        properties = ImmutableMap.of("age", "P.gt(29)");
+        vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(1, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertGt(29, v.property("age"));
+        }
+
+        properties = ImmutableMap.of("age", "P.gte(29)");
+        vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(3, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertGte(29, v.property("age"));
+        }
+
+        properties = ImmutableMap.of("age", "P.lt(29)");
+        vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(1, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertLt(29, v.property("age"));
+        }
+
+        properties = ImmutableMap.of("age", "P.lte(29)");
+        vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(3, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertLte(29, v.property("age"));
+        }
+
+        properties = ImmutableMap.of("age", "P.between(29,32)");
+        vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(2, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertGte(29, v.property("age"));
+            Assert.assertLt(31, v.property("age"));
+        }
+
+        properties = ImmutableMap.of("age", "P.inside(27,32)");
+        vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(2, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertGt(27, v.property("age"));
+            Assert.assertLt(32, v.property("age"));
+        }
+
+        properties = ImmutableMap.of("age", "P.within(27,32)");
+        vertices = graph().listVertices("person", properties);
+        Assert.assertEquals(2, vertices.size());
+        for (Vertex v : vertices) {
+            Assert.assertEquals("person", v.label());
+            Assert.assertThat(v.property("age"), CoreMatchers.anyOf(
+                              CoreMatchers.is(27), CoreMatchers.is(32)));
+        }
+    }
+
+    @Test
+    public void testGetVerticesByLabelAndPropertiesWithKeepP() {
+        schema().indexLabel("personByAge").onV("person").by("age").create();
+        schema().indexLabel("personByCity").onV("person").by("city").create();
+        BaseClientTest.initVertex();
+
+        Map<String, Object> properties = ImmutableMap.of("age", "P.eq(29)");
+        List<Vertex> vertices = graph().listVertices("person", properties,
+                                                     false);
+        Assert.assertEquals(2, vertices.size());
+
+        Assert.assertThrows(ServerException.class, () -> {
+            graph().listVertices("person", properties, true);
+        }, e -> {
+            Assert.assertContains("expect INT for 'age'", e.getMessage());
+        });
+
+        Map<String, Object> properties2 = ImmutableMap.of("city", "P.gt(1)");
+        vertices = graph().listVertices("person", properties2, true);
+        Assert.assertEquals(0, vertices.size());
+
+        vertices = graph().listVertices("person", properties2, true, 3);
+        Assert.assertEquals(0, vertices.size());
     }
 
     private static void assertContains(List<Vertex> vertices,

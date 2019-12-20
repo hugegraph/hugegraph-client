@@ -94,31 +94,58 @@ public class GraphManager {
     }
 
     public List<Vertex> listVertices(int limit) {
-        return this.listVertices(null, null, 0, limit);
+        return this.listVertices(null, null, false, 0, limit);
     }
 
     public List<Vertex> listVertices(int offset, int limit) {
-        return this.listVertices(null, null, offset, limit);
+        return this.listVertices(null, null, false, offset, limit);
     }
 
     public List<Vertex> listVertices(String label) {
-        return this.listVertices(label, null, 0, -1);
+        return this.listVertices(label, null,false, 0, -1);
     }
 
     public List<Vertex> listVertices(String label, int limit) {
-        return this.listVertices(label, null, 0, limit);
+        return this.listVertices(label, null, false, 0, limit);
     }
 
     public List<Vertex> listVertices(String label,
                                      Map<String, Object> properties) {
-        return this.listVertices(label, properties, 0, -1);
+        return this.listVertices(label, properties, false, 0, -1);
+    }
+
+    public List<Vertex> listVertices(String label,
+                                     Map<String, Object> properties,
+                                     int limit) {
+        return this.listVertices(label, properties, false, 0, limit);
+    }
+
+    public List<Vertex> listVertices(String label,
+                                     Map<String, Object> properties,
+                                     boolean keepP) {
+        return this.listVertices(label, properties, keepP, 0, -1);
+    }
+
+    public List<Vertex> listVertices(String label,
+                                     Map<String, Object> properties,
+                                     boolean keepP,
+                                     int limit) {
+        return this.listVertices(label, properties, keepP, 0, limit);
     }
 
     public List<Vertex> listVertices(String label,
                                      Map<String, Object> properties,
                                      int offset,
                                      int limit) {
-        List<Vertex> vertices = this.vertexAPI.list(label, properties,
+        return this.listVertices(label, properties, false, offset, limit);
+    }
+
+    public List<Vertex> listVertices(String label,
+                                     Map<String, Object> properties,
+                                     boolean keepP,
+                                     int offset,
+                                     int limit) {
+        List<Vertex> vertices = this.vertexAPI.list(label, properties, keepP,
                                                     offset, null, limit)
                                               .results();
         for (Vertex vertex : vertices) {
@@ -246,6 +273,19 @@ public class GraphManager {
         return this.getEdges(null, null, label, properties, 0, limit);
     }
 
+    public List<Edge> listEdges(String label,
+                                Map<String, Object> properties,
+                                boolean keepP) {
+        return this.getEdges(null, null, label, properties, keepP, 0, -1);
+    }
+
+    public List<Edge> listEdges(String label,
+                                Map<String, Object> properties,
+                                boolean keepP,
+                                int limit) {
+        return this.getEdges(null, null, label, properties, keepP, 0, limit);
+    }
+
     public List<Edge> getEdges(Object vertexId) {
         return this.getEdges(vertexId, Direction.BOTH, null, null, 0, -1);
     }
@@ -290,8 +330,20 @@ public class GraphManager {
                                Map<String, Object> properties,
                                int offset,
                                int limit) {
+        return this.getEdges(vertexId, direction, label, properties, false,
+                             offset, limit);
+    }
+
+    public List<Edge> getEdges(Object vertexId,
+                               Direction direction,
+                               String label,
+                               Map<String, Object> properties,
+                               boolean keepP,
+                               int offset,
+                               int limit) {
         List<Edge> edges = this.edgeAPI.list(vertexId, direction, label,
-                                             properties, offset, null, limit)
+                                             properties, keepP,
+                                             offset, null, limit)
                                        .results();
         for (Edge edge : edges) {
             this.attachManager(edge);

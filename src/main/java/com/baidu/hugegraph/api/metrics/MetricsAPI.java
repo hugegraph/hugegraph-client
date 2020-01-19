@@ -17,54 +17,34 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.structure.constant;
+package com.baidu.hugegraph.api.metrics;
 
-public enum HugeType {
+import java.util.Map;
 
-    // Schema
-    VERTEX_LABEL(1, "vertexlabels"),
-    EDGE_LABEL(2, "edgelabels"),
-    PROPERTY_KEY(3, "propertykeys"),
-    INDEX_LABEL(4, "indexlabels"),
+import com.baidu.hugegraph.api.API;
+import com.baidu.hugegraph.client.RestClient;
+import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.constant.HugeType;
 
-    // Data
-    VERTEX(101, "vertices"),
-    EDGE(120, "edges"),
+public class MetricsAPI extends API {
 
-    // Variables
-    VARIABLES(130, "variables"),
-
-    // Task
-    TASK(140, "tasks"),
-
-    // Job
-    JOB(150, "jobs"),
-
-    // Gremlin
-    GREMLIN(201, "gremlin"),
-
-    GRAPHS(220, "graphs"),
-
-    // Version
-    VERSION(230, "versions"),
-
-    // Metrics
-    METRICS(240, "metrics");
-
-    private int code;
-    private String name = null;
-
-    HugeType(int code, String name) {
-        assert code < 256;
-        this.code = code;
-        this.name = name;
+    public MetricsAPI(RestClient client) {
+        super(client);
+        this.path(this.type());
     }
 
-    public int code() {
-        return this.code;
+    @Override
+    protected String type() {
+        return HugeType.METRICS.string();
     }
 
-    public String string() {
-        return this.name;
+    @SuppressWarnings("unchecked")
+    public Map<String, Map<String, Object>> backend() {
+        RestResult result = this.client.get(this.path(), "backend");
+        return result.readObject(Map.class);
+    }
+
+    public Map<String, Object> backend(String graph) {
+        return this.backend().get(graph);
     }
 }

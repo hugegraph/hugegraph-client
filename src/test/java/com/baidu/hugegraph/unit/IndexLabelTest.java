@@ -21,6 +21,7 @@ package com.baidu.hugegraph.unit;
 
 import org.junit.Test;
 
+import com.baidu.hugegraph.exception.NotSupportException;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.structure.schema.IndexLabel;
 import com.baidu.hugegraph.testutil.Assert;
@@ -35,13 +36,11 @@ public class IndexLabelTest {
         IndexLabel indexLabel = builder.onV("person")
                                        .secondary()
                                        .by("age")
-                                       .userdata("min", 1)
-                                       .userdata("max", 100)
                                        .build();
 
         String json = "{\"name\":\"personByAge\",\"id\":0," +
-                      "\"check_exist\":true,\"user_data\":{\"min\":1," +
-                      "\"max\":100},\"base_type\":\"VERTEX_LABEL\"," +
+                      "\"check_exist\":true,\"user_data\":{}," +
+                      "\"base_type\":\"VERTEX_LABEL\"," +
                       "\"base_value\":\"person\"," +
                       "\"index_type\":\"SECONDARY\",\"fields\":[\"age\"]}";
         Assert.assertEquals(json, JsonUtil.toJson(indexLabel));
@@ -55,8 +54,6 @@ public class IndexLabelTest {
         IndexLabel indexLabel = builder.onV("person")
                                        .secondary()
                                        .by("age")
-                                       .userdata("min", 1)
-                                       .userdata("max", 100)
                                        .build();
 
         IndexLabel.IndexLabelV49 indexLabelV49 = indexLabel.switchV49();
@@ -68,5 +65,9 @@ public class IndexLabelTest {
         Assert.assertEquals(json, JsonUtil.toJson(indexLabelV49));
         Assert.assertEquals(HugeType.INDEX_LABEL.string(),
                             indexLabelV49.type());
+
+        Assert.assertThrows(NotSupportException.class, () -> {
+            indexLabelV49.userdata();
+        });
     }
 }

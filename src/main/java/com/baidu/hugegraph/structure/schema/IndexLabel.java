@@ -253,6 +253,8 @@ public class IndexLabel extends SchemaElement {
 
         public IndexLabelV49(IndexLabel indexLabel) {
             super(indexLabel.name);
+            E.checkArgument(indexLabel.userdata.isEmpty(),
+                            "The userdata of indexlabel must be empty");
             this.baseType = indexLabel.baseType;
             this.baseValue = indexLabel.baseValue;
             this.indexType = indexLabel.indexType;

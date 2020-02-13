@@ -50,7 +50,7 @@ public class IndexLabelAPI extends SchemaAPI {
             this.client.checkApiVersion("0.44", "unique index");
         }
 
-        Object il = indexLabel;
+        IndexLabel il = indexLabel;
         if (this.client.apiVersionLt("0.50")) {
             E.checkArgument(indexLabel.userdata() == null ||
                             indexLabel.userdata().isEmpty(),
@@ -76,7 +76,7 @@ public class IndexLabelAPI extends SchemaAPI {
 
     public IndexLabel eliminate(IndexLabel indexLabel) {
         if (this.client.apiVersionLt("0.50")) {
-            throw new NotSupportException("action append on index label");
+            throw new NotSupportException("action eliminate on index label");
         }
 
         String id = indexLabel.name();

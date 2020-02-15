@@ -25,7 +25,7 @@ import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
-import com.baidu.hugegraph.util.E;
+import com.baidu.hugegraph.util.CommonUtil;
 
 public class MetricsAPI extends API {
 
@@ -43,9 +43,9 @@ public class MetricsAPI extends API {
     public Map<String, Map<String, Object>> system() {
         RestResult result = this.client.get(this.path(), "system");
         Map<?, ?> map = result.readObject(Map.class);
-        checkMapClass(map, String.class, Map.class);
+        CommonUtil.checkMapClass(map, String.class, Map.class);
         for (Object mapValue : map.values()) {
-            checkMapClass(mapValue, String.class, Object.class);
+            CommonUtil.checkMapClass(mapValue, String.class, Object.class);
         }
         return (Map<String, Map<String, Object>>) map;
     }
@@ -54,9 +54,9 @@ public class MetricsAPI extends API {
     public Map<String, Map<String, Object>> backend() {
         RestResult result = this.client.get(this.path(), "backend");
         Map<?, ?> map = result.readObject(Map.class);
-        checkMapClass(map, String.class, Map.class);
+        CommonUtil.checkMapClass(map, String.class, Map.class);
         for (Object mapValue : map.values()) {
-            checkMapClass(mapValue, String.class, Object.class);
+            CommonUtil.checkMapClass(mapValue, String.class, Object.class);
         }
         return (Map<String, Map<String, Object>>) map;
     }
@@ -69,28 +69,10 @@ public class MetricsAPI extends API {
     public Map<String, Map<String, Object>> all() {
         RestResult result = this.client.get(this.path());
         Map<?, ?> map = result.readObject(Map.class);
-        checkMapClass(map, String.class, Map.class);
+        CommonUtil.checkMapClass(map, String.class, Map.class);
         for (Object mapValue : map.values()) {
-            checkMapClass(mapValue, String.class, Object.class);
+            CommonUtil.checkMapClass(mapValue, String.class, Object.class);
         }
         return (Map<String, Map<String, Object>>) map;
-    }
-
-    public static void checkMapClass(Object object, Class<?> kClass,
-                                     Class<?> vClass) {
-        E.checkArgument(object instanceof Map,
-                        "The object must be instance of Map, but got '%s'(%s)",
-                        object, object.getClass());
-        Map<?, ?> map = (Map<?, ?>) object;
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            Object key = entry.getKey();
-            Object value = entry.getValue();
-            E.checkState(kClass.isAssignableFrom(key.getClass()),
-                         "The map key must be instance of %s, " +
-                         "but got '%s'(%s)", kClass, key, key.getClass());
-            E.checkState(vClass.isAssignableFrom(value.getClass()),
-                         "The map value must be instance of %s, " +
-                         "but got '%s'(%s)", vClass, value, value.getClass());
-        }
     }
 }

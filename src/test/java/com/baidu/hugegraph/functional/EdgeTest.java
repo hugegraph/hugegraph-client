@@ -579,8 +579,10 @@ public class EdgeTest extends BaseFuncTest {
     @Test
     public void testGetEdgesByLabelAndPropertiesWithKeepP()
                 throws ParseException {
-        schema().indexLabel("createdByCity").onE("created").by("city").create();
-        schema().indexLabel("createdByDate").onE("created").by("date").create();
+        schema().indexLabel("createdByCity").secondary()
+                .onE("created").by("city").create();
+        schema().indexLabel("createdByDate").secondary()
+                .onE("created").by("date").create();
 
         BaseClientTest.initEdge();
 

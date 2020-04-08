@@ -132,7 +132,7 @@ public class SingleSourceShortestPathApiTest extends BaseApiTest {
                                       -1, 0, -1, -1, false);
         Assert.assertEquals(18, weightedPaths.paths().size());
 
-        WeightedPath.WeightPath path = weightedPaths.paths().get("B");
+        WeightedPath.Path path = weightedPaths.paths().get("B");
         Assert.assertEquals(0.2D, path.weight(), Double.MIN_VALUE);
         Assert.assertEquals(ImmutableList.of("A", "B"), path.vertices());
 
@@ -222,7 +222,7 @@ public class SingleSourceShortestPathApiTest extends BaseApiTest {
                                       -1, 0, -1, -1, false);
         Assert.assertEquals(12, weightedPaths.paths().size());
 
-        WeightedPath.WeightPath path = weightedPaths.paths().get("B");
+        WeightedPath.Path path = weightedPaths.paths().get("B");
         Assert.assertEquals(0.2D, path.weight(), Double.MIN_VALUE);
         Assert.assertEquals(ImmutableList.of("A", "B"), path.vertices());
 
@@ -326,7 +326,7 @@ public class SingleSourceShortestPathApiTest extends BaseApiTest {
 
         Assert.assertEquals(17, weightedPaths.paths().size());
 
-        WeightedPath.WeightPath path = weightedPaths.paths().get("B");
+        WeightedPath.Path path = weightedPaths.paths().get("B");
         Assert.assertEquals(0.2D, path.weight(), Double.MIN_VALUE);
         Assert.assertEquals(ImmutableList.of("A", "B"), path.vertices());
 
@@ -417,7 +417,7 @@ public class SingleSourceShortestPathApiTest extends BaseApiTest {
                                       1, 0, -1, -1, false);
         Assert.assertEquals(4, weightedPaths.paths().size());
 
-        WeightedPath.WeightPath path = weightedPaths.paths().get("B");
+        WeightedPath.Path path = weightedPaths.paths().get("B");
         Assert.assertEquals(0.2D, path.weight(), Double.MIN_VALUE);
         Assert.assertEquals(ImmutableList.of("A", "B"), path.vertices());
 
@@ -445,7 +445,7 @@ public class SingleSourceShortestPathApiTest extends BaseApiTest {
                                       -1, 0, -1, 10, false);
         Assert.assertEquals(10, weightedPaths.paths().size());
 
-        WeightedPath.WeightPath path = weightedPaths.paths().get("B");
+        WeightedPath.Path path = weightedPaths.paths().get("B");
         Assert.assertEquals(0.2D, path.weight(), Double.MIN_VALUE);
         Assert.assertEquals(ImmutableList.of("A", "B"), path.vertices());
 

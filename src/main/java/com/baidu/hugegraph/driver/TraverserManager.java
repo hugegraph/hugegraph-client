@@ -100,8 +100,8 @@ public class TraverserManager {
         this.allShortestPathsAPI = new AllShortestPathsAPI(client, graph);
         this.singleSourceShortestPathAPI = new SingleSourceShortestPathAPI(
                                                client, graph);
-        this.weightedShortestPathAPI = new WeightedShortestPathAPI(client,
-                                                                   graph);
+        this.weightedShortestPathAPI = new WeightedShortestPathAPI(
+                                           client, graph);
         this.pathsAPI = new PathsAPI(client, graph);
         this.crosspointsAPI = new CrosspointsAPI(client, graph);
         this.koutAPI = new KoutAPI(client, graph);
@@ -109,8 +109,8 @@ public class TraverserManager {
         this.ringsAPI = new RingsAPI(client, graph);
         this.raysAPI = new RaysAPI(client, graph);
         this.customizedPathsAPI = new CustomizedPathsAPI(client, graph);
-        this.customizedCrosspointsAPI = new CustomizedCrosspointsAPI(client,
-                                                                     graph);
+        this.customizedCrosspointsAPI = new CustomizedCrosspointsAPI(
+                                            client, graph);
         this.fusiformSimilarityAPI = new FusiformSimilarityAPI(client, graph);
         this.neighborRankAPI = new NeighborRankAPI(client, graph);
         this.personalRankAPI = new PersonalRankAPI(client, graph);

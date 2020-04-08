@@ -28,11 +28,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class WeightedPath {
 
     @JsonProperty
-    private WeightPath path;
+    private Path path;
     @JsonProperty
     private Set<Vertex> vertices;
 
-    public WeightPath path() {
+    public Path path() {
         return this.path;
     }
 
@@ -40,7 +40,7 @@ public class WeightedPath {
         return this.vertices;
     }
 
-    public static class WeightPath {
+    public static class Path {
 
         @JsonProperty
         private double weight;

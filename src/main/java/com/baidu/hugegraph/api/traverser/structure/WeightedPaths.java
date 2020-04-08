@@ -28,11 +28,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class WeightedPaths {
 
     @JsonProperty
-    private Map<Object, WeightedPath.WeightPath> paths;
+    private Map<Object, WeightedPath.Path> paths;
     @JsonProperty
     private Set<Vertex> vertices;
 
-    public Map<Object, WeightedPath.WeightPath> paths() {
+    public Map<Object, WeightedPath.Path> paths() {
         return this.paths;
     }
 

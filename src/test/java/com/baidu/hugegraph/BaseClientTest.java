@@ -30,18 +30,15 @@ import com.google.common.collect.ImmutableMap;
 
 public class BaseClientTest {
 
-    protected static String BASE_URL = "http://127.0.0.1:8080";
-    protected static String GRAPH = "hugegraph";
+    protected static final String BASE_URL = "http://127.0.0.1:8080";
+    protected static final String GRAPH = "hugegraph";
+    protected static final String USERNAME = "admin";
+    protected static final String PASSWORD = "pa";
 
     private static HugeClient client;
 
     protected static HugeClient open() {
-        client = new HugeClient(BASE_URL, GRAPH);
-        return client;
-    }
-
-    protected static HugeClient open(String username, String password) {
-        client = new HugeClient(BASE_URL, GRAPH, username, password);
+        client = new HugeClient(BASE_URL, GRAPH, USERNAME, PASSWORD);
         return client;
     }
 

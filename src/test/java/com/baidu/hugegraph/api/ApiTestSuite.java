@@ -25,6 +25,7 @@ import org.junit.runners.Suite;
 import com.baidu.hugegraph.api.auth.AccessApiTest;
 import com.baidu.hugegraph.api.auth.BelongApiTest;
 import com.baidu.hugegraph.api.auth.GroupApiTest;
+import com.baidu.hugegraph.api.auth.TargetApiTest;
 import com.baidu.hugegraph.api.auth.UserApiTest;
 
 @RunWith(Suite.class)
@@ -33,13 +34,16 @@ import com.baidu.hugegraph.api.auth.UserApiTest;
     VertexLabelApiTest.class,
     EdgeLabelApiTest.class,
     IndexLabelApiTest.class,
+
     VertexApiTest.class,
     EdgeApiTest.class,
+
     GremlinApiTest.class,
     VariablesApiTest.class,
     TaskApiTest.class,
     JobApiTest.class,
     RestoreApiTest.class,
+
     TraverserApiTest.class,
     RingsRaysApiTest.class,
     SameNeighborsApiTest.class,
@@ -54,7 +58,7 @@ import com.baidu.hugegraph.api.auth.UserApiTest;
     PersonalRankApiTest.class,
     BatchUpdateElementApiTest.class,
 
-    TaskApiTest.class,
+    TargetApiTest.class,
     GroupApiTest.class,
     UserApiTest.class,
     AccessApiTest.class,

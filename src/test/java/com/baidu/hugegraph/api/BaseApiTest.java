@@ -96,12 +96,7 @@ public class BaseApiTest extends BaseClientTest {
     protected static GraphsAPI graphsAPI;
 
     protected static RestClient initClient() {
-        client = new RestClient(BASE_URL, 5);
-        return client;
-    }
-
-    protected static RestClient initClient(String username, String password) {
-        client = new RestClient(BASE_URL, username, password, 5);
+        client = new RestClient(BASE_URL, USERNAME, PASSWORD, 10);
         return client;
     }
 
@@ -153,6 +148,7 @@ public class BaseApiTest extends BaseClientTest {
 
         clearData();
         client.close();
+        client = null;
 
         BaseClientTest.clear();
     }

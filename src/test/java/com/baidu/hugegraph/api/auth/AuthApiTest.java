@@ -19,20 +19,7 @@
 
 package com.baidu.hugegraph.api.auth;
 
-import com.baidu.hugegraph.BaseClientTest;
 import com.baidu.hugegraph.api.BaseApiTest;
-import com.baidu.hugegraph.client.RestClient;
 
 public class AuthApiTest extends BaseApiTest {
-
-    protected static RestClient initClient() {
-        String username = "admin";
-        String password = "pa";
-
-        BaseClientTest.open(username, password);
-        RestClient client = BaseApiTest.initClient(username, password);
-        BaseApiTest.init();
-
-        return client;
-    }
 }

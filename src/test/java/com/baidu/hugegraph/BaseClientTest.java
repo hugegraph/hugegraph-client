@@ -36,12 +36,20 @@ public class BaseClientTest {
     private static HugeClient client;
 
     protected static HugeClient open() {
-        return new HugeClient(BASE_URL, GRAPH);
+        client = new HugeClient(BASE_URL, GRAPH);
+        return client;
+    }
+
+    protected static HugeClient open(String username, String password) {
+        client = new HugeClient(BASE_URL, GRAPH, username, password);
+        return client;
     }
 
     @BeforeClass
     public static void init() {
-        client = open();
+        if (client == null) {
+            open();
+        }
     }
 
     @AfterClass

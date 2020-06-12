@@ -17,31 +17,22 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.structure;
+package com.baidu.hugegraph.api.auth;
 
-import java.util.Objects;
+import com.baidu.hugegraph.BaseClientTest;
+import com.baidu.hugegraph.api.BaseApiTest;
+import com.baidu.hugegraph.client.RestClient;
 
-public abstract class Element {
+public class AuthApiTest extends BaseApiTest {
 
-    public abstract String type();
+    protected static RestClient initClient() {
+        String username = "admin";
+        String password = "pa";
 
-    public abstract Object id();
+        BaseClientTest.open(username, password);
+        RestClient client = BaseApiTest.initClient(username, password);
+        BaseApiTest.init();
 
-    @Override
-    public int hashCode() {
-        return this.id().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Element)) {
-            return false;
-        }
-        return Objects.equals(this.id(), ((Element) other).id());
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%s(type %s)", this.id(), this.type());
+        return client;
     }
 }

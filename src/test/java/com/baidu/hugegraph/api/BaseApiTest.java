@@ -95,11 +95,23 @@ public class BaseApiTest extends BaseClientTest {
     protected static RebuildAPI rebuildAPI;
     protected static GraphsAPI graphsAPI;
 
+    protected static RestClient initClient() {
+        client = new RestClient(BASE_URL, 5);
+        return client;
+    }
+
+    protected static RestClient initClient(String username, String password) {
+        client = new RestClient(BASE_URL, username, password, 5);
+        return client;
+    }
+
     @BeforeClass
     public static void init() {
         BaseClientTest.init();
+        if (client == null) {
+            initClient();
+        }
 
-        client = new RestClient(BASE_URL, 5);
         versionAPI = new VersionAPI(client);
         client.apiVersion(VersionUtil.Version.of(versionAPI.get().get("api")));
 

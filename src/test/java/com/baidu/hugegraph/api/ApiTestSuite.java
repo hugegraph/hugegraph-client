@@ -22,6 +22,11 @@ package com.baidu.hugegraph.api;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import com.baidu.hugegraph.api.auth.AccessApiTest;
+import com.baidu.hugegraph.api.auth.BelongApiTest;
+import com.baidu.hugegraph.api.auth.GroupApiTest;
+import com.baidu.hugegraph.api.auth.UserApiTest;
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     PropertyKeyApiTest.class,
@@ -47,7 +52,13 @@ import org.junit.runners.Suite;
     FusiformSimilarityApiTest.class,
     NeighborRankApiTest.class,
     PersonalRankApiTest.class,
-    BatchUpdateElementApiTest.class
+    BatchUpdateElementApiTest.class,
+
+    TaskApiTest.class,
+    GroupApiTest.class,
+    UserApiTest.class,
+    AccessApiTest.class,
+    BelongApiTest.class
 })
 public class ApiTestSuite {
 }

@@ -30,6 +30,7 @@ import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.structure.Task;
 import com.baidu.hugegraph.structure.schema.EdgeLabel;
 import com.baidu.hugegraph.testutil.Assert;
+import com.baidu.hugegraph.util.DateUtil;
 import com.google.common.collect.ImmutableList;
 
 public class EdgeLabelTest extends BaseFuncTest {
@@ -48,20 +49,6 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testLinkedVertexLabel() {
         SchemaManager schema = schema();
-
-        schema.vertexLabel("person")
-              .properties("name", "age", "city")
-              .primaryKeys("name")
-              .nullableKeys("city")
-              .ifNotExist()
-              .create();
-
-        schema.vertexLabel("book")
-              .properties("name")
-              .primaryKeys("name")
-              .ifNotExist()
-              .create();
-
         EdgeLabel father = schema.edgeLabel("father").link("person", "person")
                                  .properties("weight")
                                  .userdata("multiplicity", "one-to-many")
@@ -81,20 +68,6 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testAddEdgeLabelWithUserData() {
         SchemaManager schema = schema();
-
-        schema.vertexLabel("person")
-              .properties("name", "age", "city")
-              .primaryKeys("name")
-              .nullableKeys("city")
-              .ifNotExist()
-              .create();
-
-        schema.vertexLabel("book")
-              .properties("name")
-              .primaryKeys("name")
-              .ifNotExist()
-              .create();
-
         EdgeLabel father = schema.edgeLabel("father").link("person", "person")
                                  .properties("weight")
                                  .userdata("multiplicity", "one-to-many")
@@ -102,9 +75,9 @@ public class EdgeLabelTest extends BaseFuncTest {
         Assert.assertEquals(2, father.userdata().size());
         Assert.assertEquals("one-to-many",
                             father.userdata().get("multiplicity"));
-        long createTime = (long) father.userdata().get("~create_time");
-        long now = new Date().getTime();
-        Assert.assertTrue(createTime <= now);
+        String time = (String) father.userdata().get("~create_time");
+        Date createTime = DateUtil.parse(time);
+        Assert.assertTrue(createTime.before(DateUtil.now()));
 
         EdgeLabel write = schema.edgeLabel("write").link("person", "book")
                                 .properties("date", "weight")
@@ -115,15 +88,14 @@ public class EdgeLabelTest extends BaseFuncTest {
         Assert.assertEquals(2, write.userdata().size());
         Assert.assertEquals("many-to-many",
                             write.userdata().get("multiplicity"));
-        createTime = (long) write.userdata().get("~create_time");
-        now = new Date().getTime();
-        Assert.assertTrue(createTime <= now);
+        time = (String) write.userdata().get("~create_time");
+        createTime = DateUtil.parse(time);
+        Assert.assertTrue(createTime.before(DateUtil.now()));
     }
 
     @Test
     public void testAppendEdgeLabelWithUserData() {
         SchemaManager schema = schema();
-
         schema.vertexLabel("person")
               .properties("name", "age", "city")
               .primaryKeys("name")
@@ -135,9 +107,9 @@ public class EdgeLabelTest extends BaseFuncTest {
                                  .properties("weight")
                                  .create();
         Assert.assertEquals(1, father.userdata().size());
-        long createTime = (long) father.userdata().get("~create_time");
-        long now = new Date().getTime();
-        Assert.assertTrue(createTime <= now);
+        String time = (String) father.userdata().get("~create_time");
+        Date createTime = DateUtil.parse(time);
+        Assert.assertTrue(createTime.before(DateUtil.now()));
 
         father = schema.edgeLabel("father")
                        .userdata("multiplicity", "one-to-many")
@@ -145,24 +117,13 @@ public class EdgeLabelTest extends BaseFuncTest {
         Assert.assertEquals(2, father.userdata().size());
         Assert.assertEquals("one-to-many",
                             father.userdata().get("multiplicity"));
-        Assert.assertEquals(createTime, father.userdata().get("~create_time"));
+        time = (String) father.userdata().get("~create_time");
+        Assert.assertEquals(createTime, DateUtil.parse(time));
     }
 
     @Test
     public void testEliminateEdgeLabelWithUserData() {
         SchemaManager schema = schema();
-
-        schema.vertexLabel("person")
-              .properties("name", "age", "city")
-              .primaryKeys("name")
-              .nullableKeys("city")
-              .ifNotExist()
-              .create();
-        schema.vertexLabel("book")
-              .properties("name")
-              .primaryKeys("name")
-              .ifNotExist()
-              .create();
         EdgeLabel write = schema.edgeLabel("write").link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
@@ -172,9 +133,9 @@ public class EdgeLabelTest extends BaseFuncTest {
         Assert.assertEquals("one-to-many",
                             write.userdata().get("multiplicity"));
         Assert.assertEquals("picture2", write.userdata().get("icon"));
-        long createTime = (long) write.userdata().get("~create_time");
-        long now = new Date().getTime();
-        Assert.assertTrue(createTime <= now);
+        String time = (String) write.userdata().get("~create_time");
+        Date createTime = DateUtil.parse(time);
+        Assert.assertTrue(createTime.before(DateUtil.now()));
 
         write = schema.edgeLabel("write")
                       .userdata("icon", "")
@@ -182,24 +143,13 @@ public class EdgeLabelTest extends BaseFuncTest {
         Assert.assertEquals(2, write.userdata().size());
         Assert.assertEquals("one-to-many",
                             write.userdata().get("multiplicity"));
-        Assert.assertEquals(createTime, write.userdata().get("~create_time"));
+        time = (String) write.userdata().get("~create_time");
+        Assert.assertEquals(createTime, DateUtil.parse(time));
     }
 
     @Test
     public void testRemoveEdgeLabelSync() {
         SchemaManager schema = schema();
-
-        schema.vertexLabel("person")
-              .properties("name", "age", "city")
-              .primaryKeys("name")
-              .nullableKeys("city")
-              .ifNotExist()
-              .create();
-        schema.vertexLabel("book")
-              .properties("name")
-              .primaryKeys("name")
-              .ifNotExist()
-              .create();
         EdgeLabel write = schema.edgeLabel("write").link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
@@ -224,18 +174,6 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testRemoveEdgeLabelAsync() {
         SchemaManager schema = schema();
-
-        schema.vertexLabel("person")
-              .properties("name", "age", "city")
-              .primaryKeys("name")
-              .nullableKeys("city")
-              .ifNotExist()
-              .create();
-        schema.vertexLabel("book")
-              .properties("name")
-              .primaryKeys("name")
-              .ifNotExist()
-              .create();
         EdgeLabel write = schema.edgeLabel("write").link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
@@ -251,10 +189,6 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testListByNames() {
         SchemaManager schema = schema();
-
-        schema.vertexLabel("person").ifNotExist().create();
-        schema.vertexLabel("book").ifNotExist().create();
-
         EdgeLabel father = schema.edgeLabel("father").link("person", "person")
                                  .create();
 
@@ -280,17 +214,6 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testResetEdgeLabelId() {
         SchemaManager schema = schema();
-        schema.vertexLabel("person")
-              .properties("name", "age", "city")
-              .primaryKeys("name")
-              .nullableKeys("city")
-              .ifNotExist()
-              .create();
-        schema.vertexLabel("book")
-              .properties("name")
-              .primaryKeys("name")
-              .ifNotExist()
-              .create();
         EdgeLabel write = schema.edgeLabel("write").link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
@@ -304,17 +227,6 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testSetCheckExist() {
         SchemaManager schema = schema();
-        schema.vertexLabel("person")
-              .properties("name", "age", "city")
-              .primaryKeys("name")
-              .nullableKeys("city")
-              .ifNotExist()
-              .create();
-        schema.vertexLabel("book")
-              .properties("name")
-              .primaryKeys("name")
-              .ifNotExist()
-              .create();
         EdgeLabel write = schema.edgeLabel("write").link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")

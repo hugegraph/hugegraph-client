@@ -315,4 +315,8 @@ public final class Utils {
                       "Failed to parse date '%s'", date));
         }
     }
+
+    public static String formatDate(String date) {
+        return DATE_FORMAT.format(DateUtil.parse(date));
+    }
 }

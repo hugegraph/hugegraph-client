@@ -49,11 +49,13 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testLinkedVertexLabel() {
         SchemaManager schema = schema();
-        EdgeLabel father = schema.edgeLabel("father").link("person", "person")
+        EdgeLabel father = schema.edgeLabel("father")
+                                 .link("person", "person")
                                  .properties("weight")
                                  .userdata("multiplicity", "one-to-many")
                                  .create();
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
                                 .userdata("multiplicity", "many-to-many")
@@ -68,7 +70,8 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testAddEdgeLabelWithUserData() {
         SchemaManager schema = schema();
-        EdgeLabel father = schema.edgeLabel("father").link("person", "person")
+        EdgeLabel father = schema.edgeLabel("father")
+                                 .link("person", "person")
                                  .properties("weight")
                                  .userdata("multiplicity", "one-to-many")
                                  .create();
@@ -79,7 +82,8 @@ public class EdgeLabelTest extends BaseFuncTest {
         Date createTime = DateUtil.parse(time);
         Assert.assertTrue(createTime.before(DateUtil.now()));
 
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
                                 .userdata("multiplicity", "many-to-many")
@@ -103,7 +107,8 @@ public class EdgeLabelTest extends BaseFuncTest {
               .ifNotExist()
               .create();
 
-        EdgeLabel father = schema.edgeLabel("father").link("person", "person")
+        EdgeLabel father = schema.edgeLabel("father")
+                                 .link("person", "person")
                                  .properties("weight")
                                  .create();
         Assert.assertEquals(1, father.userdata().size());
@@ -124,7 +129,8 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testEliminateEdgeLabelWithUserData() {
         SchemaManager schema = schema();
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
                                 .userdata("icon", "picture2")
@@ -150,7 +156,8 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testRemoveEdgeLabelSync() {
         SchemaManager schema = schema();
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
                                 .userdata("icon", "picture2")
@@ -160,7 +167,8 @@ public class EdgeLabelTest extends BaseFuncTest {
         // Remove edge label sync
         schema.removeEdgeLabel("write");
 
-        write = schema.edgeLabel("write").link("person", "book")
+        write = schema.edgeLabel("write")
+                      .link("person", "book")
                       .properties("date", "weight")
                       .userdata("multiplicity", "one-to-many")
                       .userdata("icon", "picture2")
@@ -174,7 +182,8 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testRemoveEdgeLabelAsync() {
         SchemaManager schema = schema();
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
                                 .userdata("icon", "picture2")
@@ -189,10 +198,12 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testListByNames() {
         SchemaManager schema = schema();
-        EdgeLabel father = schema.edgeLabel("father").link("person", "person")
+        EdgeLabel father = schema.edgeLabel("father")
+                                 .link("person", "person")
                                  .create();
 
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .create();
 
         List<EdgeLabel> edgeLabels;
@@ -214,7 +225,8 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testResetEdgeLabelId() {
         SchemaManager schema = schema();
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
                                 .userdata("icon", "picture2")
@@ -227,7 +239,8 @@ public class EdgeLabelTest extends BaseFuncTest {
     @Test
     public void testSetCheckExist() {
         SchemaManager schema = schema();
-        EdgeLabel write = schema.edgeLabel("write").link("person", "book")
+        EdgeLabel write = schema.edgeLabel("write")
+                                .link("person", "book")
                                 .properties("date", "weight")
                                 .userdata("multiplicity", "one-to-many")
                                 .userdata("icon", "picture2")

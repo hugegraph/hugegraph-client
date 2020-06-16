@@ -22,9 +22,12 @@ package com.baidu.hugegraph.api.auth;
 import java.util.List;
 import java.util.Map;
 
+import org.glassfish.jersey.uri.UriComponent;
+
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.auth.User;
+import com.baidu.hugegraph.structure.auth.User.UserRole;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.google.common.collect.ImmutableMap;
 
@@ -47,6 +50,14 @@ public class UserAPI extends AuthAPI {
     public User get(Object id) {
         RestResult result = this.client.get(this.path(), formatEntityId(id));
         return result.readObject(User.class);
+    }
+
+    public UserRole getUserRole(Object id) {
+        String idEncoded = UriComponent.encode(formatEntityId(id),
+                                               UriComponent.Type.PATH_SEGMENT);
+        String path = String.join("/", this.path(), idEncoded, "role");
+        RestResult result = this.client.get(path);
+        return result.readObject(UserRole.class);
     }
 
     public List<User> list(int limit) {

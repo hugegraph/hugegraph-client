@@ -19,9 +19,13 @@
 
 package com.baidu.hugegraph.structure.auth;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
+import com.baidu.hugegraph.util.JsonUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -105,5 +109,20 @@ public class User extends AuthElement {
 
     public void avatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public static class UserRole {
+
+        @JsonProperty("roles")
+        private Map<String, Map<HugePermission, List<HugeResource>>> roles;
+
+        public Map<String, Map<HugePermission, List<HugeResource>>> roles() {
+            return Collections.unmodifiableMap(this.roles);
+        }
+
+        @Override
+        public String toString() {
+            return JsonUtil.toJson(this);
+        }
     }
 }

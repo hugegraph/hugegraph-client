@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
+import com.baidu.hugegraph.driver.AuthManager;
 import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.GraphsManager;
 import com.baidu.hugegraph.driver.GremlinManager;
@@ -78,6 +79,11 @@ public class BaseClientTest {
     public static TaskManager task() {
         Assert.assertNotNull("Not opened client", client);
         return client.task();
+    }
+
+    public static AuthManager auth() {
+        Assert.assertNotNull("Not opened client", client);
+        return client.auth();
     }
 
     public static GraphsManager graphs() {

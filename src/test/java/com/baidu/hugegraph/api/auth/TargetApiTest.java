@@ -92,6 +92,33 @@ public class TargetApiTest extends AuthApiTest {
             Assert.assertContains("Can't save target", e.getMessage());
             Assert.assertContains("that already exists", e.getMessage());
         });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Target target3 = new Target();
+            api.create(target3);
+        }, e -> {
+            Assert.assertContains("The name of target can't be null",
+                                  e.getMessage());
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Target target3 = new Target();
+            target3.name("test");
+            api.create(target3);
+        }, e -> {
+            Assert.assertContains("The graph of target can't be null",
+                                  e.getMessage());
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            Target target3 = new Target();
+            target3.name("test");
+            target3.graph("hugegraph3");
+            api.create(target3);
+        }, e -> {
+            Assert.assertContains("The url of target can't be null",
+                                  e.getMessage());
+        });
     }
 
     @Test

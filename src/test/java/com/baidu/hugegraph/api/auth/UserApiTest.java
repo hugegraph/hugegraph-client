@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.auth.User;
+import com.baidu.hugegraph.structure.auth.User.UserRole;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Whitebox;
 
@@ -89,6 +90,22 @@ public class UserApiTest extends AuthApiTest {
         Assert.assertEquals("image2.jpg", result2.avatar());
 
         Assert.assertThrows(ServerException.class, () -> {
+            api.create(new User());
+        }, e -> {
+            Assert.assertContains("The name of user can't be null",
+                                  e.getMessage());
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            User user3 = new User();
+            user3.name("test");
+            api.create(user3);
+        }, e -> {
+            Assert.assertContains("The password of user can't be null",
+                                  e.getMessage());
+        });
+
+        Assert.assertThrows(ServerException.class, () -> {
             api.create(user1);
         }, e -> {
             Assert.assertContains("Can't save user", e.getMessage());
@@ -116,6 +133,21 @@ public class UserApiTest extends AuthApiTest {
 
         Assert.assertEquals("test1", user1.name());
         Assert.assertEquals("test2", user2.name());
+    }
+
+    @Test
+    public void testGetUserRole() {
+        User user1 = createUser("test1", "psw1");
+        User user2 = createUser("test2", "psw2");
+
+        Assert.assertEquals("test1", user1.name());
+        Assert.assertEquals("test2", user2.name());
+
+        UserRole role1 = api.getUserRole(user1.id());
+        UserRole role2 = api.getUserRole(user2.id());
+
+        Assert.assertEquals("{\"roles\":{}}", role1.toString());
+        Assert.assertEquals("{\"roles\":{}}", role2.toString());
     }
 
     @Test

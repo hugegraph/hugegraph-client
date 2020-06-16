@@ -80,6 +80,13 @@ public class GroupApiTest extends AuthApiTest {
             Assert.assertContains("Can't save group", e.getMessage());
             Assert.assertContains("that already exists", e.getMessage());
         });
+
+        Assert.assertThrows(ServerException.class, () -> {
+            api.create(new Group());
+        }, e -> {
+            Assert.assertContains("The name of group can't be null",
+                                  e.getMessage());
+        });
     }
 
     @Test

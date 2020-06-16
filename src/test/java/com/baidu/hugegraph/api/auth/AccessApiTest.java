@@ -22,6 +22,7 @@ package com.baidu.hugegraph.api.auth;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -44,30 +45,34 @@ public class AccessApiTest extends AuthApiTest {
 
     @BeforeClass
     public static void init() {
-        AuthApiTest.init();
         api = new AccessAPI(initClient(), GRAPH);
 
         TargetApiTest.init();
         GroupApiTest.init();
     }
 
-    @Override
-    @Before
-    public void setup() {
-        gremlin = TargetApiTest.createTarget("gremlin",
-                                             HugeResourceType.GREMLIN);
-        group = GroupApiTest.createGroup("group-beijing", "group for beijing");
-    }
-
-    @Override
-    @After
-    public void teardown() {
+    @AfterClass
+    public static void clear() {
         List<Access> accesss = api.list(null, null, -1);
         for (Access access : accesss) {
             api.delete(access.id());
         }
+
         TargetApiTest.clear();
         GroupApiTest.clear();
+    }
+
+    @Before
+    @Override
+    public void setup() {
+        gremlin = TargetApiTest.createTarget("gremlin", HugeResourceType.GREMLIN);
+        group = GroupApiTest.createGroup("group-beijing", "group for beijing");
+    }
+
+    @After
+    @Override
+    public void teardown() {
+        clear();
     }
 
     @Test

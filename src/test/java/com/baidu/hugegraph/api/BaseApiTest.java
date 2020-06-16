@@ -96,7 +96,7 @@ public class BaseApiTest extends BaseClientTest {
     protected static GraphsAPI graphsAPI;
 
     protected static RestClient initClient() {
-        client = new RestClient(BASE_URL, USERNAME, PASSWORD, 10);
+        client = new RestClient(BASE_URL, USERNAME, PASSWORD, TIMEOUT);
         return client;
     }
 
@@ -197,7 +197,7 @@ public class BaseApiTest extends BaseClientTest {
     }
 
     protected static void waitUntilTaskCompleted(long taskId) {
-        taskAPI.waitUntilTaskSuccess(taskId, 5L);
+        taskAPI.waitUntilTaskSuccess(taskId, TIMEOUT);
     }
 
     protected static void waitUntilTaskCompleted(long taskId, long timeout) {

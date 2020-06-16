@@ -22,6 +22,7 @@ package com.baidu.hugegraph.api.auth;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -50,8 +51,19 @@ public class BelongApiTest extends AuthApiTest {
         GroupApiTest.init();
     }
 
-    @Override
+    @AfterClass
+    public static void clear() {
+        List<Belong> belongs = api.list(null, null, -1);
+        for (Belong belong : belongs) {
+            api.delete(belong.id());
+        }
+
+        UserApiTest.clear();
+        GroupApiTest.clear();
+    }
+
     @Before
+    @Override
     public void setup() {
         user1 = UserApiTest.createUser("user-1", "p1");
         user2 = UserApiTest.createUser("user-2", "p2");
@@ -59,15 +71,10 @@ public class BelongApiTest extends AuthApiTest {
         group2 = GroupApiTest.createGroup("group-2", "group 2");
     }
 
-    @Override
     @After
+    @Override
     public void teardown() {
-        List<Belong> belongs = api.list(null, null, -1);
-        for (Belong belong : belongs) {
-            api.delete(belong.id());
-        }
-        UserApiTest.clear();
-        GroupApiTest.clear();
+        clear();
     }
 
     @Test

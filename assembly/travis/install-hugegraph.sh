@@ -2,6 +2,8 @@
 
 set -ev
 
+TRAVIS_DIR=`dirname $0`
+
 if [ $# -ne 1 ]; then
     echo "Must pass base branch name of pull request"
     exit 1
@@ -30,8 +32,10 @@ tar -zxvf hugegraph-*.tar.gz
 
 cd hugegraph-*
 
-cp $TRAVIS_DIR/conf/* conf
+cp ../$TRAVIS_DIR/conf/* conf
 
-bin/init-store.sh
+echo -e "pa" | bin/init-store.sh
 
 bin/start-hugegraph.sh
+
+cd ../

@@ -50,7 +50,7 @@ public class Target extends AuthElement {
 
     @Override
     public String type() {
-        return HugeType.ACCESS.string();
+        return HugeType.TARGET.string();
     }
 
     @Override

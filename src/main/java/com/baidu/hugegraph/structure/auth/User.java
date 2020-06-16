@@ -53,7 +53,7 @@ public class User extends AuthElement {
 
     @Override
     public String type() {
-        return HugeType.ACCESS.string();
+        return HugeType.USER.string();
     }
 
     @Override

@@ -43,7 +43,7 @@ public class Group extends AuthElement {
 
     @Override
     public String type() {
-        return HugeType.ACCESS.string();
+        return HugeType.GROUP.string();
     }
 
     @Override

@@ -224,19 +224,25 @@ public class UserApiTest extends AuthApiTest {
         User user1 = createUser("test1", "psw1");
         User user2 = createUser("test2", "psw2");
 
-        Assert.assertEquals(3, api.list(-1).size());
+        List<User> users = api.list(-1);
+        Assert.assertEquals(3, users.size());
+        Assert.assertTrue(users.contains(user1));
+        Assert.assertTrue(users.contains(user2));
         api.delete(user1.id());
 
-        Assert.assertEquals(2, api.list(-1).size());
-        Assert.assertEquals(user2, api.list(-1).get(0));
+        users = api.list(-1);
+        Assert.assertEquals(2, users.size());
+        Assert.assertFalse(users.contains(user1));
+        Assert.assertTrue(users.contains(user2));
 
         api.delete(user2.id());
-        List<User> users = api.list(-1);
+        users = api.list(-1);
         Assert.assertEquals(1, users.size());
         Assert.assertEquals("admin", users.get(0).name());
 
+        User admin = users.get(0);
         Assert.assertThrows(ServerException.class, () -> {
-            api.delete(users.get(0).id());
+            api.delete(admin.id());
         }, e -> {
             Assert.assertContains("Can't delete user 'admin'", e.getMessage());
         });

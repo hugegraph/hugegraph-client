@@ -32,6 +32,7 @@ import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.auth.Group;
 import com.baidu.hugegraph.structure.auth.Target;
 import com.baidu.hugegraph.structure.auth.User;
+import com.baidu.hugegraph.structure.auth.User.UserRole;
 
 public class AuthManager {
 
@@ -61,12 +62,12 @@ public class AuthManager {
         return this.targetAPI.get(id);
     }
 
-    public void createTarget(Target target) {
-        this.targetAPI.create(target);
+    public Target createTarget(Target target) {
+        return this.targetAPI.create(target);
     }
 
-    public void updateTarget(Target target) {
-        this.targetAPI.update(target);
+    public Target updateTarget(Target target) {
+        return this.targetAPI.update(target);
     }
 
     public void deleteTarget(Object id) {
@@ -85,12 +86,12 @@ public class AuthManager {
         return this.groupAPI.get(id);
     }
 
-    public void createGroup(Group group) {
-        this.groupAPI.create(group);
+    public Group createGroup(Group group) {
+        return this.groupAPI.create(group);
     }
 
-    public void updateGroup(Group group) {
-        this.groupAPI.update(group);
+    public Group updateGroup(Group group) {
+        return this.groupAPI.update(group);
     }
 
     public void deleteGroup(Object id) {
@@ -109,12 +110,16 @@ public class AuthManager {
         return this.userAPI.get(id);
     }
 
-    public void createUser(User user) {
-        this.userAPI.create(user);
+    public UserRole getUserRole(Object id) {
+        return this.userAPI.getUserRole(id);
     }
 
-    public void updateUser(User user) {
-        this.userAPI.update(user);
+    public User createUser(User user) {
+        return this.userAPI.create(user);
+    }
+
+    public User updateUser(User user) {
+        return this.userAPI.update(user);
     }
 
     public void deleteUser(Object id) {
@@ -141,12 +146,12 @@ public class AuthManager {
         return this.accessAPI.get(id);
     }
 
-    public void createAccess(Access access) {
-        this.accessAPI.create(access);
+    public Access createAccess(Access access) {
+        return this.accessAPI.create(access);
     }
 
-    public void updateAccess(Access access) {
-        this.accessAPI.update(access);
+    public Access updateAccess(Access access) {
+        return this.accessAPI.update(access);
     }
 
     public void deleteAccess(Object id) {
@@ -173,15 +178,37 @@ public class AuthManager {
         return this.belongAPI.get(id);
     }
 
-    public void createBelong(Belong belong) {
-        this.belongAPI.create(belong);
+    public Belong createBelong(Belong belong) {
+        return this.belongAPI.create(belong);
     }
 
-    public void updateBelong(Belong belong) {
-        this.belongAPI.update(belong);
+    public Belong updateBelong(Belong belong) {
+        return this.belongAPI.update(belong);
     }
 
     public void deleteBelong(Object id) {
         this.belongAPI.delete(id);
+    }
+
+    public void deleteAll() {
+        for (Belong belong : this.listBelongs()) {
+            this.deleteBelong(belong.id());
+        }
+        for (Access access : this.listAccesses()) {
+            this.deleteAccess(access.id());
+        }
+
+        for (User user : this.listUsers()) {
+            if (user.name().equals("admin")) {
+                continue;
+            }
+            this.deleteUser(user.id());
+        }
+        for (Group group : this.listGroups()) {
+            this.deleteGroup(group.id());
+        }
+        for (Target target : this.listTargets()) {
+            this.deleteTarget(target.id());
+        }
     }
 }

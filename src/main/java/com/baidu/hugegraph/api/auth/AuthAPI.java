@@ -19,6 +19,10 @@
 
 package com.baidu.hugegraph.api.auth;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.auth.AuthElement;
@@ -48,5 +52,19 @@ public abstract class AuthAPI extends API {
             id = ((AuthElement) id).id();
         }
         return String.valueOf(id);
+    }
+
+    private static RestClient proxy(RestClient client) {
+        return (RestClient) Proxy.newProxyInstance(
+               client.getClass().getClassLoader(),
+               new Class[]{RestClient.class},
+               new InvocationHandler() {
+                   @Override
+                   public Object invoke(Object proxy, Method method,
+                                        Object[] args) throws Throwable {
+                       client.checkApiVersion("0.56", "auth");
+                       return method.invoke(client, args);
+                   }
+               });
     }
 }

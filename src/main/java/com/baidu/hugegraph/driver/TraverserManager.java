@@ -383,7 +383,7 @@ public class TraverserManager {
                                      degree, limit);
     }
 
-    public long kneighbor(CountRequest request) {
+    public long count(CountRequest request) {
         return this.countAPI.post(request);
     }
 

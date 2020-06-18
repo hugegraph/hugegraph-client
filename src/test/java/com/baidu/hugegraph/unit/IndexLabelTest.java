@@ -39,7 +39,7 @@ public class IndexLabelTest {
                                        .build();
 
         String json = "{\"name\":\"personByAge\",\"id\":0," +
-                      "\"check_exist\":true,\"user_data\":{},\"status\":null," +
+                      "\"check_exist\":true,\"user_data\":{}," +
                       "\"base_type\":\"VERTEX_LABEL\"," +
                       "\"base_value\":\"person\"," +
                       "\"index_type\":\"SECONDARY\",\"fields\":[\"age\"]}";
@@ -59,8 +59,7 @@ public class IndexLabelTest {
         IndexLabel.IndexLabelV49 indexLabelV49 = indexLabel.switchV49();
         // Without userdata
         String json = "{\"id\":0,\"name\":\"personByAge\"," +
-                      "\"check_exist\":true,\"status\":null," +
-                      "\"base_type\":\"VERTEX_LABEL\"," +
+                      "\"check_exist\":true,\"base_type\":\"VERTEX_LABEL\"," +
                       "\"base_value\":\"person\"," +
                       "\"index_type\":\"SECONDARY\",\"fields\":[\"age\"]}";
         Assert.assertEquals(json, JsonUtil.toJson(indexLabelV49));

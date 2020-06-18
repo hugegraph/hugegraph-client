@@ -323,8 +323,8 @@ public class EdgeApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             graph().getEdge(edge.id());
         }, e -> {
-            Assert.assertTrue(e.getMessage().contains("edge with id"));
-            Assert.assertTrue(e.getMessage().contains("does not exist"));
+            Assert.assertContains("edge with id", e.getMessage());
+            Assert.assertContains("does not exist", e.getMessage());
         });
     }
 
@@ -384,8 +384,8 @@ public class EdgeApiTest extends BaseApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             graph().getEdge(edge.id());
         }, e -> {
-            Assert.assertTrue(e.getMessage().contains("edge with id"));
-            Assert.assertTrue(e.getMessage().contains("does not exist"));
+            Assert.assertContains("edge with id", e.getMessage());
+            Assert.assertContains("does not exist", e.getMessage());
         });
     }
 

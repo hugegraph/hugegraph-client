@@ -17,13 +17,14 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.api;
+package com.baidu.hugegraph.api.traverser;
 
 import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.baidu.hugegraph.api.BaseApiTest;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.constant.T;
@@ -32,7 +33,7 @@ import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
 
-public class ShortestPathApiTest extends BaseApiTest {
+public class AllShortestPathsApiTest extends BaseApiTest {
 
     @BeforeClass
     public static void initShortestPathGraph() {
@@ -64,6 +65,16 @@ public class ShortestPathApiTest extends BaseApiTest {
         Vertex v16 = graph().addVertex(T.label, "node", T.id, 16);
         Vertex v17 = graph().addVertex(T.label, "node", T.id, 17);
         Vertex v18 = graph().addVertex(T.label, "node", T.id, 18);
+        Vertex v19 = graph().addVertex(T.label, "node", T.id, 19);
+        Vertex v20 = graph().addVertex(T.label, "node", T.id, 20);
+        Vertex v21 = graph().addVertex(T.label, "node", T.id, 21);
+        Vertex v22 = graph().addVertex(T.label, "node", T.id, 22);
+        Vertex v23 = graph().addVertex(T.label, "node", T.id, 23);
+        Vertex v24 = graph().addVertex(T.label, "node", T.id, 24);
+        Vertex v25 = graph().addVertex(T.label, "node", T.id, 25);
+        Vertex v26 = graph().addVertex(T.label, "node", T.id, 26);
+        Vertex v27 = graph().addVertex(T.label, "node", T.id, 27);
+        Vertex v28 = graph().addVertex(T.label, "node", T.id, 28);
 
         // Path length 5
         v1.addEdge("link", v2);
@@ -71,6 +82,12 @@ public class ShortestPathApiTest extends BaseApiTest {
         v3.addEdge("link", v4);
         v4.addEdge("link", v5);
         v5.addEdge("link", v6);
+
+        v1.addEdge("link", v25);
+        v25.addEdge("link", v26);
+        v26.addEdge("link", v27);
+        v27.addEdge("link", v28);
+        v28.addEdge("link", v6);
 
         // Path length 4
         v1.addEdge("link", v7);
@@ -82,6 +99,18 @@ public class ShortestPathApiTest extends BaseApiTest {
         v1.addEdge("link", v10);
         v10.addEdge("link", v11);
         v11.addEdge("link", v6);
+
+        v1.addEdge("link", v19);
+        v19.addEdge("link", v20);
+        v20.addEdge("link", v6);
+
+        v1.addEdge("link", v21);
+        v21.addEdge("link", v22);
+        v22.addEdge("link", v6);
+
+        v1.addEdge("link", v23);
+        v23.addEdge("link", v24);
+        v24.addEdge("link", v6);
 
         // Add other 3 neighbor for v7
         v7.addEdge("link", v12);
@@ -96,121 +125,93 @@ public class ShortestPathApiTest extends BaseApiTest {
     }
 
     @Test
-    public void testShortestPath() {
-        Path path = shortestPathAPI.get(1, 6, Direction.BOTH,
-                                        null, 6, -1L, 0L, -1L);
-        Assert.assertEquals(4, path.size());
-        Assert.assertEquals(ImmutableList.of(1, 10, 11, 6), path.objects());
+    public void testAllShortestPath() {
+        List<Path> paths = allShortestPathsAPI.get(1, 6, Direction.BOTH,
+                                                   null, 6, -1L, 0L, -1L);
+        Assert.assertEquals(4, paths.size());
+        List<List<Object>> expected = ImmutableList.of(
+                ImmutableList.of(1, 10, 11, 6),
+                ImmutableList.of(1, 19, 20, 6),
+                ImmutableList.of(1, 21, 22, 6),
+                ImmutableList.of(1, 23, 24, 6)
+        );
+        for (Path path : paths){
+            Assert.assertTrue(expected.contains(path.objects()));
+        }
     }
 
     @Test
-    public void testShortestPathWithLabel() {
-        Path path = shortestPathAPI.get(1, 6, Direction.BOTH,
-                                        "link", 6, -1L, 0L, -1L);
-        Assert.assertEquals(4, path.size());
-        Assert.assertEquals(ImmutableList.of(1, 10, 11, 6), path.objects());
+    public void testAllShortestPathWithLabel() {
+        List<Path> paths = allShortestPathsAPI.get(1, 6, Direction.BOTH,
+                                                   "link", 6, -1L, 0L,
+                                                   -1L);
+        Assert.assertEquals(4, paths.size());
+        List<List<Object>> expected = ImmutableList.of(
+                ImmutableList.of(1, 10, 11, 6),
+                ImmutableList.of(1, 19, 20, 6),
+                ImmutableList.of(1, 21, 22, 6),
+                ImmutableList.of(1, 23, 24, 6)
+        );
+        for (Path path : paths){
+            Assert.assertTrue(expected.contains(path.objects()));
+        }
     }
 
     @Test
-    public void testShortestPathWithDegree() {
-        Path path = shortestPathAPI.get(1, 6, Direction.BOTH,
-                                        null, 6, 1L, 0L, -1L);
+    public void testAllShortestPathWithDegree() {
+        List<Path> paths = allShortestPathsAPI.get(1, 6, Direction.BOTH,
+                                                   null, 6, 1L, 0L, -1L);
         /*
          * Following results can be guaranteed in RocksDB backend,
          * but different results exist in table type backend(like Cassandra).
          */
-        Assert.assertEquals(6, path.size());
-        Assert.assertEquals(ImmutableList.of(1, 2, 3, 4, 5, 6), path.objects());
+        Assert.assertEquals(1, paths.size());
+        List<Object> expected = ImmutableList.of(1, 2, 3, 4, 5, 6);
+        Assert.assertEquals(expected, paths.iterator().next().objects());
     }
 
     @Test
     public void testShortestPathWithCapacity() {
-        Path path = shortestPathAPI.get(14, 6, Direction.BOTH,
-                                        null, 6, 5L, 0L, 19L);
-        Assert.assertEquals(5, path.size());
-        Assert.assertEquals(ImmutableList.of(14, 7, 8, 9, 6), path.objects());
-
+        List<Path> paths = allShortestPathsAPI.get(1, 6, Direction.BOTH,
+                                                   null, 6, -1L, 0L, -1L);
+        Assert.assertEquals(4, paths.size());
+        List<List<Object>> expected = ImmutableList.of(
+                ImmutableList.of(1, 10, 11, 6),
+                ImmutableList.of(1, 19, 20, 6),
+                ImmutableList.of(1, 21, 22, 6),
+                ImmutableList.of(1, 23, 24, 6)
+        );
+        for (Path path : paths){
+            Assert.assertTrue(expected.contains(path.objects()));
+        }
         Assert.assertThrows(ServerException.class, () -> {
-            shortestPathAPI.get(14, 6, Direction.BOTH, null, 6, 1L, 0L, 2L);
+            allShortestPathsAPI.get(1, 6, Direction.BOTH, null, 6, 6,
+                                    0L, 10L);
         }, e -> {
-            String expect = "Exceed capacity '2' while finding shortest path";
+            String expect = "Exceed capacity '10' while finding shortest path";
             Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
         });
     }
 
     @Test
     public void testShortestPathWithMaxDepth() {
-        Path path = shortestPathAPI.get(14, 6, Direction.BOTH,
-                                        null, 4, 5L, 0L, 19L);
-        Assert.assertEquals(5, path.size());
+        List<Path> paths = allShortestPathsAPI.get(14, 6, Direction.BOTH,
+                                                   null, 4, 5L, 0L, 19L);
+        Assert.assertEquals(1, paths.size());
+        Path path = paths.get(0);
         Assert.assertEquals(ImmutableList.of(14, 7, 8, 9, 6), path.objects());
 
-        path = shortestPathAPI.get(14, 6, Direction.BOTH,
-                                   null, 3, 5L, 0L, 19L);
-        Assert.assertEquals(0, path.size());
-    }
-
-    @Test
-    public void testShortestPathWithSkipDegree() {
-        // Path length 5 with min degree 3(v1 degree is 3)
-        List<Object> path1 = ImmutableList.of(1, 2, 3, 4, 5, 6);
-        // Path length 4 with middle degree 4(v7 degree is 4)
-        List<Object> path2 = ImmutableList.of(1, 7, 8, 9, 6);
-        // Path length 3 with max degree 5(v10 degree is 5)
-        List<Object> path3 = ImmutableList.of(1, 10, 11, 6);
-
-        // (skipped degree == degree) > max degree
-        Path path = shortestPathAPI.get(1, 6, Direction.OUT,
-                                        null, 5, 6L, 6L, -1L);
-        Assert.assertEquals(4, path.size());
-        Assert.assertEquals(path3, path.objects());
-
-        // (skipped degree == degree) == max degree
-        path = shortestPathAPI.get(1, 6, Direction.OUT,
-                                   null, 5, 5L, 5L, -1L);
-        Assert.assertEquals(5, path.size());
-        Assert.assertEquals(path2, path.objects());
-
-        // min degree < (skipped degree == degree) == middle degree < max degree
-        path = shortestPathAPI.get(1, 6, Direction.OUT,
-                                   null, 5, 4L, 4L, -1L);
-        Assert.assertEquals(6, path.size());
-        Assert.assertEquals(path1, path.objects());
-
-        // (skipped degree == degree) <= min degree
-        path = shortestPathAPI.get(1, 6, Direction.OUT,
-                                   null, 5, 3L, 3L, -1L);
-        Assert.assertEquals(0, path.size());
-
-        // Skipped degree > max degree, degree <= min degree
-        path = shortestPathAPI.get(1, 6, Direction.OUT,
-                                   null, 5, 3L, 6L, -1L);
-        Assert.assertTrue(path.size() == 4 ||
-                          path.size() == 5 ||
-                          path.size() == 6);
-        List<List<Object>> paths = ImmutableList.of(path1, path2, path3);
-        Assert.assertTrue(paths.contains(path.objects()));
-
-        // Skipped degree > max degree, min degree < degree < max degree
-        path = shortestPathAPI.get(1, 6, Direction.OUT,
-                                   null, 5, 4L, 6L, -1L);
-        Assert.assertTrue(path.size() == 4 || path.size() == 5);
-        Assert.assertTrue(path2.equals(path.objects()) ||
-                          path3.equals(path.objects()));
-
-        // Skipped degree > max degree, degree >= max degree
-        path = shortestPathAPI.get(1, 6, Direction.OUT,
-                                   null, 5, 5L, 6L, -1L);
-        Assert.assertEquals(4, path.size());
-        Assert.assertEquals(path3, path.objects());
+        paths = allShortestPathsAPI.get(14, 6, Direction.BOTH,
+                                        null, 3, 5L, 0L, 19L);
+        Assert.assertEquals(0, paths.size());
     }
 
     @Test
     public void testShortestPathWithIllegalArgs() {
         // The max depth shouldn't be 0 or negative
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            shortestPathAPI.get("a", "b", Direction.BOTH,
-                                null, -1, 1L, 0L, 2L);
+            allShortestPathsAPI.get("a", "b", Direction.BOTH,
+                                    null, -1, 1L, 0L, 2L);
         });
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
@@ -220,36 +221,36 @@ public class ShortestPathApiTest extends BaseApiTest {
 
         // The degree shouldn't be 0 or negative but NO_LIMIT(-1)
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            shortestPathAPI.get("a", "b", Direction.BOTH,
-                                null, 5, 0L, 0L, 2L);
+            allShortestPathsAPI.get("a", "b", Direction.BOTH,
+                                    null, 5, 0L, 0L, 2L);
         });
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            shortestPathAPI.get("a", "b", Direction.BOTH,
-                                null, 5, -3L, 0L, 2L);
+            allShortestPathsAPI.get("a", "b", Direction.BOTH,
+                                    null, 5, -3L, 0L, 2L);
         });
 
         // The skipped degree shouldn't be negative
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            shortestPathAPI.get("a", "b", Direction.BOTH,
-                                null, 5, 1L, -1L, 2L);
+            allShortestPathsAPI.get("a", "b", Direction.BOTH,
+                                    null, 5, 1L, -1L, 2L);
         });
 
         // The skipped degree shouldn't be >= capacity
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            shortestPathAPI.get("a", "b", Direction.BOTH,
-                                null, 5, 1L, 2L, 2L);
+            allShortestPathsAPI.get("a", "b", Direction.BOTH,
+                                    null, 5, 1L, 2L, 2L);
         });
 
         // The skipped degree shouldn't be < degree
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            shortestPathAPI.get("a", "b", Direction.BOTH,
-                                null, 5, 3L, 2L, 10L);
+            allShortestPathsAPI.get("a", "b", Direction.BOTH,
+                                    null, 5, 3L, 2L, 10L);
         });
 
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            shortestPathAPI.get("a", "b", Direction.BOTH,
-                                null, 5, -1L, 2L, 10L);
+            allShortestPathsAPI.get("a", "b", Direction.BOTH,
+                                    null, 5, -1L, 2L, 10L);
         });
     }
 }

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.api;
+package com.baidu.hugegraph.api.traverser;
 
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.baidu.hugegraph.api.BaseApiTest;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.constant.T;

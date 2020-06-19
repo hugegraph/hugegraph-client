@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.api;
+package com.baidu.hugegraph.api.traverser;
 
 import static com.baidu.hugegraph.structure.constant.Traverser.DEFAULT_PAGE_LIMIT;
 
@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.baidu.hugegraph.api.BaseApiTest;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Edge;

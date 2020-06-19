@@ -46,7 +46,7 @@ import com.baidu.hugegraph.testutil.Utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-public class TraverserApiTest extends BaseApiTest {
+public class CommonTraverserApiTest extends TraverserApiTest {
 
     @BeforeClass
     public static void prepareSchemaAndGraph() {

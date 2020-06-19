@@ -22,7 +22,6 @@ package com.baidu.hugegraph.api.traverser;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.baidu.hugegraph.api.BaseApiTest;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
@@ -31,7 +30,7 @@ import com.baidu.hugegraph.structure.traverser.WeightedPaths;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
 
-public class SingleSourceShortestPathApiTest extends BaseApiTest {
+public class SingleSourceShortestPathApiTest extends TraverserApiTest {
 
     @BeforeClass
     public static void initShortestPathGraph() {

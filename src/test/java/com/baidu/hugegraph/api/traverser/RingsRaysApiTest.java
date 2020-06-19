@@ -33,7 +33,7 @@ import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
 
-public class RingsRaysApiTest extends BaseApiTest {
+public class RingsRaysApiTest extends TraverserApiTest {
 
     @BeforeClass
     public static void prepareSchemaAndGraph() {

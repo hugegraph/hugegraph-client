@@ -41,7 +41,7 @@ import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
-public class CustomizedPathsApiTest extends BaseApiTest {
+public class CustomizedPathsApiTest extends TraverserApiTest {
 
     @BeforeClass
     public static void prepareSchemaAndGraph() {
@@ -50,11 +50,13 @@ public class CustomizedPathsApiTest extends BaseApiTest {
         BaseApiTest.initVertex();
     }
 
+    @Override
     @Before
     public void setup() {
         initEdgesWithWeights();
     }
 
+    @Override
     @After
     public void teardown() {
         removeEdgesWithWeights();

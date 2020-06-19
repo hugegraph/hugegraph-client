@@ -22,11 +22,11 @@ package com.baidu.hugegraph.api;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.baidu.hugegraph.api.traverser.structure.CountRequest;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
+import com.baidu.hugegraph.structure.traverser.CountRequest;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

@@ -30,8 +30,6 @@ import java.util.stream.Collectors;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.baidu.hugegraph.api.traverser.structure.CrosspointsRequest;
-import com.baidu.hugegraph.api.traverser.structure.CustomizedCrosspoints;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Edge;
@@ -40,6 +38,8 @@ import com.baidu.hugegraph.structure.graph.Path;
 import com.baidu.hugegraph.structure.graph.Shard;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.graph.Vertices;
+import com.baidu.hugegraph.structure.traverser.CrosspointsRequest;
+import com.baidu.hugegraph.structure.traverser.CustomizedCrosspoints;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
 import com.google.common.collect.ImmutableList;

@@ -29,13 +29,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.baidu.hugegraph.api.traverser.structure.CustomizedPaths;
-import com.baidu.hugegraph.api.traverser.structure.PathsRequest;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.schema.EdgeLabel;
+import com.baidu.hugegraph.structure.traverser.CustomizedPaths;
+import com.baidu.hugegraph.structure.traverser.PathsRequest;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;

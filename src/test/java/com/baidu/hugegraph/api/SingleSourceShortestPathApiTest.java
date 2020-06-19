@@ -22,11 +22,11 @@ package com.baidu.hugegraph.api;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.baidu.hugegraph.api.traverser.structure.WeightedPath;
-import com.baidu.hugegraph.api.traverser.structure.WeightedPaths;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
+import com.baidu.hugegraph.structure.traverser.WeightedPath;
+import com.baidu.hugegraph.structure.traverser.WeightedPaths;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
 

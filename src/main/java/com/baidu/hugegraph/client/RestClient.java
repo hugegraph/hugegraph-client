@@ -64,6 +64,13 @@ public class RestClient extends AbstractRestClient {
               maxConns, maxConnsPerRoute);
     }
 
+    public RestClient(String url, String username, String password, int timeout,
+                      int maxConns, int maxConnsPerRoute, String protocol,
+                      String trustStoreFile, String trustStorePassword) {
+        super(url, username, password, timeout * SECOND,
+              maxConns, maxConnsPerRoute, protocol, trustStoreFile, trustStorePassword);
+    }
+
     public void apiVersion(Version version) {
         E.checkNotNull(version, "api version");
         this.apiVersion = version;

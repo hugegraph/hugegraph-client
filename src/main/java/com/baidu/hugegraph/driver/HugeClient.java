@@ -103,6 +103,38 @@ public class HugeClient implements Closeable {
         this.initManagers(this.client, graph);
     }
 
+    public HugeClient(String url, String graph, String username, String password,
+                      int timeout, String protocol, int maxConns, int maxConnsPerRoute,
+                      String trustStoreFile, String trustStorePassword) {
+        try {
+            if (timeout == 0) {
+                timeout = DEFAULT_TIMEOUT;
+            }
+            this.client = new RestClient(url, username, password, timeout, maxConns,
+                                         maxConnsPerRoute, protocol, trustStoreFile,
+                                         trustStorePassword);
+        } catch (ProcessingException e) {
+            throw new ServerException("Failed to connect url '%s'", url);
+        }
+        this.initManagers(this.client, graph);
+    }
+
+    public HugeClient(String url, String graph, String username, String password,
+                      int timeout, String protocol, String trustStoreFile,
+                      String trustStorePassword) {
+        try {
+            if (timeout == 0) {
+                timeout = DEFAULT_TIMEOUT;
+            }
+            this.client = new RestClient(url, username, password, timeout, DEFAULT_MAX_CONNS,
+                                         DEFAULT_MAX_CONNS_PER_ROUTE, protocol,
+                                         trustStoreFile, trustStorePassword);
+        } catch (ProcessingException e) {
+            throw new ServerException("Failed to connect url '%s'", url);
+        }
+        this.initManagers(this.client, graph);
+    }
+
     @Override
     public void close() {
         this.client.close();

@@ -106,10 +106,10 @@ public class HugeClient implements Closeable {
     public HugeClient(String url, String graph, String username, String password,
                       int timeout, String protocol, int maxConns, int maxConnsPerRoute,
                       String trustStoreFile, String trustStorePassword) {
+        if (timeout == 0) {
+            timeout = DEFAULT_TIMEOUT;
+        }
         try {
-            if (timeout == 0) {
-                timeout = DEFAULT_TIMEOUT;
-            }
             this.client = new RestClient(url, username, password, timeout, maxConns,
                                          maxConnsPerRoute, protocol, trustStoreFile,
                                          trustStorePassword);
@@ -122,10 +122,10 @@ public class HugeClient implements Closeable {
     public HugeClient(String url, String graph, String username, String password,
                       int timeout, String protocol, String trustStoreFile,
                       String trustStorePassword) {
+        if (timeout == 0) {
+            timeout = DEFAULT_TIMEOUT;
+        }
         try {
-            if (timeout == 0) {
-                timeout = DEFAULT_TIMEOUT;
-            }
             this.client = new RestClient(url, username, password, timeout, DEFAULT_MAX_CONNS,
                                          DEFAULT_MAX_CONNS_PER_ROUTE, protocol,
                                          trustStoreFile, trustStorePassword);

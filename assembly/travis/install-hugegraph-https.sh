@@ -36,9 +36,17 @@ tar -zxvf hugegraph-*.tar.gz
 
 cd hugegraph-*
 
-cp ../../conf/https/rest-server.properties conf/
+rest_server_path="conf/rest-server.properties"
 
-cp ../../conf/https/server.keystore conf/
+sed -i "_bak" "s/http:\/\/127.0.0.1:8080/https:\/\/127.0.0.1:8443/g" "$rest_server_path"
+
+cp ../../conf/server.keystore conf/
+
+echo "server.protocol=https" >> $rest_server_path
+
+echo "ssl.server_keystore_password=123456" >> $rest_server_path
+
+echo "ssl.server_keystore_file=conf/server.keystore" >> $rest_server_path
 
 bin/init-store.sh || exit 1
 

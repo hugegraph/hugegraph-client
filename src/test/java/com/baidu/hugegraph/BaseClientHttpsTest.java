@@ -70,15 +70,15 @@ public class BaseClientHttpsTest {
         schema.propertyKey("age").asInt().ifNotExist().create();
         schema.propertyKey("city").asText().ifNotExist().create();
         schema.vertexLabel("person")
-                .properties("name", "age", "city")
-                .primaryKeys("name")
-                .ifNotExist()
-                .create();
+              .properties("name", "age", "city")
+              .primaryKeys("name")
+              .ifNotExist()
+              .create();
         GraphManager graph = client.graph();
         Vertex marko = graph.addVertex(T.label, "person", "name", "marko",
-                "age", 29, "city", "Beijing");
+                                       "age", 29, "city", "Beijing");
         Map<String, Object> props = ImmutableMap.of("name", "marko",
-                "age", 29, "city", "Beijing");
+                                                    "age", 29, "city", "Beijing");
         Assert.assertEquals(props, marko.properties());
     }
 }

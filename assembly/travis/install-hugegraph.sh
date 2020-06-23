@@ -26,6 +26,10 @@ mv hugegraph-*.tar.gz ../
 
 cd ../
 
+mkdir https
+
+cp hugegraph-*.tar.gz https
+
 rm -rf hugegraph
 
 tar -zxvf hugegraph-*.tar.gz
@@ -39,3 +43,31 @@ echo -e "pa" | bin/init-store.sh
 bin/start-hugegraph.sh
 
 cd ../
+
+cd  https
+
+tar -zxvf hugegraph-*.tar.gz
+
+cd hugegraph-*
+
+rest_server_path="conf/rest-server.properties"
+
+gremlin_server_path="conf/gremlin-server.yaml"
+
+sed -i "_bak" "s/http:\/\/127.0.0.1:8080/https:\/\/127.0.0.1:8443/g" "$rest_server_path"
+
+sed -i "_bak" "s/#port: 8182/port: 8282/g" "$gremlin_server_path"
+
+cp ../../conf/server.keystore conf/
+
+echo "server.protocol=https" >> $rest_server_path
+
+echo "ssl.server_keystore_password=123456" >> $rest_server_path
+
+echo "ssl.server_keystore_file=conf/server.keystore" >> $rest_server_path
+
+echo "gremlinserver.url=http://127.0.0.1:8282" >> $rest_server_path
+
+bin/init-store.sh || exit 1
+
+bin/start-hugegraph.sh || exit 1

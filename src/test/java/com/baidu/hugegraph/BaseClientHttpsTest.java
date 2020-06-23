@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.HugeClient;
+import com.baidu.hugegraph.driver.HugeClientBuilder;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
@@ -59,6 +60,55 @@ public class BaseClientHttpsTest {
     public void testHttpsClientWithConnectionPoolNoConnsParam() {
         client = new HugeClient(BASE_URL, GRAPH, USERNAME, PASSWORD, TIMEOUT,
                                 PROTOCOL, TRUST_STORE_FILE, TRUST_STORE_PASSWORD);
+        Assert.assertNotNull("Not openend client", client);
+        Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
+        testHttpsAddVertexPropertyValue();
+    }
+
+    @Test
+    public void testHttpsClientBuilderWithConnectionPool() {
+        HugeClientBuilder clientBuilder = new HugeClientBuilder.Builder()
+                                                               .setUrl(BASE_URL)
+                                                               .setGraph(GRAPH)
+                                                               .setUsername(USERNAME)
+                                                               .setPassword(PASSWORD)
+                                                               .setTimeout(TIMEOUT)
+                                                               .setMaxConns(MAX_CONNS)
+                                                               .setMaxConnsPerRoute(MAX_CONNS_PER_ROUTE)
+                                                               .setProtocol(PROTOCOL)
+                                                               .setTrustStoreFile(TRUST_STORE_FILE)
+                                                               .setTrustStorePassword(TRUST_STORE_PASSWORD)
+                                                               .build();
+        client =  new HugeClient(clientBuilder);
+        Assert.assertNotNull("Not openend client", client);
+        Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
+        testHttpsAddVertexPropertyValue();
+    }
+
+    @Test
+    public void testHttpsClientNewBuilderWithConnectionPool() {
+        HugeClientBuilder clientBuilder = new HugeClientBuilder().newBuilder()
+                                                                 .setUrl(BASE_URL)
+                                                                 .setGraph(GRAPH)
+                                                                 .setUsername(USERNAME)
+                                                                 .setPassword(PASSWORD)
+                                                                 .setTimeout(TIMEOUT)
+                                                                 .setMaxConns(MAX_CONNS)
+                                                                 .setMaxConnsPerRoute(MAX_CONNS_PER_ROUTE)
+                                                                 .setProtocol(PROTOCOL)
+                                                                 .setTrustStoreFile(TRUST_STORE_FILE)
+                                                                 .setTrustStorePassword(TRUST_STORE_PASSWORD)
+                                                                 .build();
+        client =  new HugeClient(clientBuilder);
+        Assert.assertNotNull("Not openend client", client);
+        Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
+        testHttpsAddVertexPropertyValue();
+    }
+
+    @Test
+    public void testHttpsClientBuilderWithConnectionPoolNoParam() {
+        HugeClientBuilder clientBuilder = new HugeClientBuilder.Builder().build();
+        client =  new HugeClient(clientBuilder);
         Assert.assertNotNull("Not openend client", client);
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
         testHttpsAddVertexPropertyValue();

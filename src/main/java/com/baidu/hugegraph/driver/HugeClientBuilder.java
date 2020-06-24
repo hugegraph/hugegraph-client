@@ -57,10 +57,10 @@ public class HugeClientBuilder {
     public HugeClientBuilder(String url, String graph) {
         E.checkArgument(url != null && !url.isEmpty(),
                         "Expect a string value as the url " +
-                                "parameter argument, but got: %s", url);
+                        "parameter argument, but got: %s", url);
         E.checkArgument(graph != null && !graph.isEmpty(),
                         "Expect a string value as the graph name " +
-                                "parameter argument, but got: %s", graph);
+                        "parameter argument, but got: %s", graph);
         this.url = url;
         this.graph = graph;
         this.username = "";

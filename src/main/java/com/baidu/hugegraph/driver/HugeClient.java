@@ -50,20 +50,20 @@ public class HugeClient implements Closeable {
 
     public HugeClient create(HugeClientBuilder hugeClientBuilder) {
         try {
-            this.client = new RestClient(hugeClientBuilder.getUrl(),
-                                         hugeClientBuilder.getUsername(),
-                                         hugeClientBuilder.getPassword(),
-                                         hugeClientBuilder.getTimeout(),
-                                         hugeClientBuilder.getMaxConns(),
-                                         hugeClientBuilder.getMaxConnsPerRoute(),
-                                         hugeClientBuilder.getProtocol(),
-                                         hugeClientBuilder.getTrustStoreFile(),
-                                         hugeClientBuilder.getTrustStorePassword());
+            this.client = new RestClient(hugeClientBuilder.url(),
+                                         hugeClientBuilder.username(),
+                                         hugeClientBuilder.password(),
+                                         hugeClientBuilder.timeout(),
+                                         hugeClientBuilder.maxConns(),
+                                         hugeClientBuilder.maxConnsPerRoute(),
+                                         hugeClientBuilder.protocol(),
+                                         hugeClientBuilder.trustStoreFile(),
+                                         hugeClientBuilder.trustStorePassword());
         } catch (ProcessingException e) {
-            throw new ServerException("Failed to connect url '%s'", hugeClientBuilder.getUrl());
+            throw new ServerException("Failed to connect url '%s'", hugeClientBuilder.url());
         }
         try {
-            this.initManagers(this.client, hugeClientBuilder.getGraph());
+            this.initManagers(this.client, hugeClientBuilder.graph());
         } catch (Throwable e) {
             this.client.close();
             throw e;

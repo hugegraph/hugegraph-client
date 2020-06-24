@@ -19,6 +19,8 @@
 
 package com.baidu.hugegraph.driver;
 
+import com.baidu.hugegraph.util.E;
+
 public class HugeClientBuilder {
 
     private static final int CPUS = Runtime.getRuntime().availableProcessors();
@@ -53,14 +55,12 @@ public class HugeClientBuilder {
     }
 
     public HugeClientBuilder(String url, String graph) {
-        if (url == null || url.isEmpty()) {
-            throw new IllegalArgumentException(String.format("Expect a string value" +
-                      " as the url parameter argument, but got: %s", url));
-        }
-        if (graph == null || graph.isEmpty()) {
-            throw new IllegalArgumentException(String.format("Expect a string value" +
-                    " as the graph name parameter argument, but got: %s", graph));
-        }
+        E.checkArgument((url != null && !url.isEmpty()),
+                       String.format("Expect a string value as the url parameter " +
+                                     "argument, but got: %s", url));
+        E.checkArgument((graph != null && !graph.isEmpty()),
+                       String.format("Expect a string value as the graph name parameter " +
+                                     "argument, but got: %s", graph));
         this.url = url;
         this.graph = graph;
         this.username = "";
@@ -76,12 +76,12 @@ public class HugeClientBuilder {
 
     public HugeClient build() {
         if (this.url == null) {
-            throw new IllegalArgumentException("The url parameter is invalid and" +
-                                               " cannot be null");
+            throw new IllegalArgumentException("The url parameter is invalid and " +
+                                               "cannot be null");
         }
         if (this.graph == null) {
-            throw new IllegalArgumentException("The graph name parameter is invalid" +
-                                               " and cannot be null");
+            throw new IllegalArgumentException("The graph name parameter is invalid " +
+                                               "and cannot be null");
         }
         return new HugeClient().create(this);
     }
@@ -145,47 +145,47 @@ public class HugeClientBuilder {
         return this;
     }
 
-    public String getGraph() {
+    public String graph() {
         return graph;
     }
 
-    public int getIdleTime() {
+    public int idleTime() {
         return idleTime;
     }
 
-    public int getMaxConns() {
+    public int maxConns() {
         return maxConns;
     }
 
-    public int getMaxConnsPerRoute() {
+    public int maxConnsPerRoute() {
         return maxConnsPerRoute;
     }
 
-    public String getPassword() {
+    public String password() {
         return password;
     }
 
-    public String getProtocol() {
+    public String protocol() {
         return protocol;
     }
 
-    public int getTimeout() {
+    public int timeout() {
         return timeout;
     }
 
-    public String getTrustStoreFile() {
+    public String trustStoreFile() {
         return trustStoreFile;
     }
 
-    public String getTrustStorePassword() {
+    public String trustStorePassword() {
         return trustStorePassword;
     }
 
-    public String getUrl() {
+    public String url() {
         return url;
     }
 
-    public String getUsername() {
+    public String username() {
         return username;
     }
 }

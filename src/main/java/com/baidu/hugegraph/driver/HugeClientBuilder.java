@@ -24,11 +24,11 @@ import com.baidu.hugegraph.util.E;
 public class HugeClientBuilder {
 
     private static final int CPUS = Runtime.getRuntime().availableProcessors();
-    private static final String DEFAULT_HTTP_PREFIX = "http";
-    private static final int DEFAULT_IDLE_TIME = 30;
+    private static final int DEFAULT_TIMEOUT = 20;
     private static final int DEFAULT_MAX_CONNS = 4 * CPUS;
     private static final int DEFAULT_MAX_CONNS_PER_ROUTE = 2 * CPUS;
-    private static final int DEFAULT_TIMEOUT = 20;
+    private static final String DEFAULT_HTTP_PREFIX = "http";
+    private static final int DEFAULT_IDLE_TIME = 30;
 
     private String graph;
     private int idleTime;

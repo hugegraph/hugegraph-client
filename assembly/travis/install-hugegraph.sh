@@ -71,3 +71,5 @@ echo "gremlinserver.url=http://127.0.0.1:8282" >> $rest_server_path
 bin/init-store.sh
 
 bin/start-hugegraph.sh
+
+cd ../

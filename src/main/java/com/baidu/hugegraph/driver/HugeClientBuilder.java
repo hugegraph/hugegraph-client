@@ -27,32 +27,20 @@ public class HugeClientBuilder {
     private static final int DEFAULT_TIMEOUT = 20;
     private static final int DEFAULT_MAX_CONNS = 4 * CPUS;
     private static final int DEFAULT_MAX_CONNS_PER_ROUTE = 2 * CPUS;
-    private static final String DEFAULT_HTTP_PREFIX = "http";
+    private static final String DEFAULT_PROTOCOL = "http";
     private static final int DEFAULT_IDLE_TIME = 30;
 
+    private String url;
     private String graph;
-    private int idleTime;
+    private String username;
+    private String password;
+    private int timeout;
     private int maxConns;
     private int maxConnsPerRoute;
-    private String password;
     private String protocol;
-    private int timeout;
     private String trustStoreFile;
     private String trustStorePassword;
-    private String url;
-    private String username;
-
-    public HugeClientBuilder() {
-        this.username = "";
-        this.password = "";
-        this.timeout = DEFAULT_TIMEOUT;
-        this.maxConns = DEFAULT_MAX_CONNS;
-        this.maxConnsPerRoute = DEFAULT_MAX_CONNS_PER_ROUTE;
-        this.protocol = DEFAULT_HTTP_PREFIX;
-        this.trustStoreFile = "";
-        this.trustStorePassword = "";
-        this.idleTime = DEFAULT_IDLE_TIME;
-    }
+    private int idleTime;
 
     public HugeClientBuilder(String url, String graph) {
         E.checkArgument(url != null && !url.isEmpty(),
@@ -68,19 +56,18 @@ public class HugeClientBuilder {
         this.timeout = DEFAULT_TIMEOUT;
         this.maxConns = DEFAULT_MAX_CONNS;
         this.maxConnsPerRoute = DEFAULT_MAX_CONNS_PER_ROUTE;
-        this.protocol = DEFAULT_HTTP_PREFIX;
+        this.protocol = DEFAULT_PROTOCOL;
         this.trustStoreFile = "";
         this.trustStorePassword = "";
         this.idleTime = DEFAULT_IDLE_TIME;
     }
 
     public HugeClient build() {
-        E.checkArgument(this.url == null,
+        E.checkArgument(this.url != null,
                         "The url parameter is invalid and cannot be null");
-        E.checkArgument(this.graph == null,
+        E.checkArgument(this.graph != null,
                         "The graph name parameter is invalid and cannot be null");
-
-        return new HugeClient().create(this);
+        return new HugeClient(this);
     }
 
     public HugeClientBuilder configGraph(String graph) {
@@ -108,7 +95,7 @@ public class HugeClientBuilder {
     public HugeClientBuilder configSSL(String protocol, String trustStoreFile,
                                        String trustStorePassword) {
         if (protocol == null) {
-            protocol = DEFAULT_HTTP_PREFIX;
+            protocol = DEFAULT_PROTOCOL;
         }
         this.protocol = protocol;
         this.trustStoreFile = trustStoreFile;
@@ -143,11 +130,11 @@ public class HugeClientBuilder {
     }
 
     public String graph() {
-        return graph;
+        return this.graph;
     }
 
     public int idleTime() {
-        return idleTime;
+        return this.idleTime;
     }
 
     public int maxConns() {
@@ -155,34 +142,34 @@ public class HugeClientBuilder {
     }
 
     public int maxConnsPerRoute() {
-        return maxConnsPerRoute;
+        return this.maxConnsPerRoute;
     }
 
     public String password() {
-        return password;
+        return this.password;
     }
 
     public String protocol() {
-        return protocol;
+        return this.protocol;
     }
 
     public int timeout() {
-        return timeout;
+        return this.timeout;
     }
 
     public String trustStoreFile() {
-        return trustStoreFile;
+        return this.trustStoreFile;
     }
 
     public String trustStorePassword() {
-        return trustStorePassword;
+        return this.trustStorePassword;
     }
 
     public String url() {
-        return url;
+        return this.url;
     }
 
     public String username() {
-        return username;
+        return this.username;
     }
 }

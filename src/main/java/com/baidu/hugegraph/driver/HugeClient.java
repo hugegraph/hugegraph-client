@@ -33,9 +33,7 @@ public class HugeClient implements Closeable {
     static {
         ClientVersion.check();
     }
-
-    private  RestClient client;
-
+    private final RestClient client;
     private VersionManager version;
     private GraphsManager graphs;
     private SchemaManager schema;
@@ -48,27 +46,30 @@ public class HugeClient implements Closeable {
     private AuthManager auth;
     private MetricsManager metrics;
 
-    public HugeClient create(HugeClientBuilder hugeClientBuilder) {
+    public  HugeClient(HugeClientBuilder builder) {
         try {
-            this.client = new RestClient(hugeClientBuilder.url(),
-                                         hugeClientBuilder.username(),
-                                         hugeClientBuilder.password(),
-                                         hugeClientBuilder.timeout(),
-                                         hugeClientBuilder.maxConns(),
-                                         hugeClientBuilder.maxConnsPerRoute(),
-                                         hugeClientBuilder.protocol(),
-                                         hugeClientBuilder.trustStoreFile(),
-                                         hugeClientBuilder.trustStorePassword());
+            this.client = new RestClient(builder.url(),
+                                         builder.username(),
+                                         builder.password(),
+                                         builder.timeout(),
+                                         builder.maxConns(),
+                                         builder.maxConnsPerRoute(),
+                                         builder.protocol(),
+                                         builder.trustStoreFile(),
+                                         builder.trustStorePassword());
         } catch (ProcessingException e) {
-            throw new ServerException("Failed to connect url '%s'", hugeClientBuilder.url());
+            throw new ServerException("Failed to connect url '%s'", builder.url());
         }
         try {
-            this.initManagers(this.client, hugeClientBuilder.graph());
+            this.initManagers(this.client, builder.graph());
         } catch (Throwable e) {
             this.client.close();
             throw e;
         }
-        return this;
+    }
+
+    public static HugeClientBuilder builder(String url, String graph) {
+        return new HugeClientBuilder(url, graph);
     }
 
     @Override

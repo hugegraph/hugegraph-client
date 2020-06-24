@@ -25,6 +25,7 @@ import javax.ws.rs.ProcessingException;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.exception.ServerException;
+import com.baidu.hugegraph.rest.ClientException;
 import com.baidu.hugegraph.util.VersionUtil;
 import com.baidu.hugegraph.version.ClientVersion;
 
@@ -46,7 +47,7 @@ public class HugeClient implements Closeable {
     private AuthManager auth;
     private MetricsManager metrics;
 
-    public  HugeClient(HugeClientBuilder builder) {
+    public HugeClient(HugeClientBuilder builder) {
         try {
             this.client = new RestClient(builder.url(),
                                          builder.username(),
@@ -58,7 +59,7 @@ public class HugeClient implements Closeable {
                                          builder.trustStoreFile(),
                                          builder.trustStorePassword());
         } catch (ProcessingException e) {
-            throw new ServerException("Failed to connect url '%s'", builder.url());
+            throw new ClientException("Failed to connect url '%s'", builder.url());
         }
         try {
             this.initManagers(this.client, builder.graph());

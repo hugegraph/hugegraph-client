@@ -14,6 +14,7 @@ import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.GraphsManager;
 import com.baidu.hugegraph.driver.GremlinManager;
 import com.baidu.hugegraph.driver.HugeClient;
+import com.baidu.hugegraph.driver.HugeClientBuilder;
 import com.baidu.hugegraph.driver.MetricsManager;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.driver.TaskManager;
@@ -40,7 +41,10 @@ public class BaseClientTest {
     private static HugeClient client;
 
     protected static HugeClient open() {
-        client = new HugeClient(BASE_URL, GRAPH, USERNAME, PASSWORD);
+         client = new HugeClientBuilder().configUrl(BASE_URL)
+                                         .configGraph(GRAPH)
+                                         .configUser(USERNAME, PASSWORD)
+                                         .build();
         return client;
     }
 

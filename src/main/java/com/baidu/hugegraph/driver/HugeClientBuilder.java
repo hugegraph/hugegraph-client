@@ -20,36 +20,136 @@
 package com.baidu.hugegraph.driver;
 
 public class HugeClientBuilder {
-    private final String graph;
-    private final int maxConns;
-    private final int maxConnsPerRoute;
-    private final String password;
-    private final String protocol;
-    private final int timeout;
-    private final String trustStoreFile;
-    private final String trustStorePassword;
-    private final String url;
-    private final String username;
+
+    private static final int CPUS = Runtime.getRuntime().availableProcessors();
+    private static final String DEFAULT_HTTP_PREFIX = "http";
+    private static final int DEFAULT_IDLE_TIME = 30;
+    private static final int DEFAULT_MAX_CONNS = 4 * CPUS;
+    private static final int DEFAULT_MAX_CONNS_PER_ROUTE = 2 * CPUS;
+    private static final int DEFAULT_TIMEOUT = 20;
+
+    private String graph;
+    private int idleTime;
+    private int maxConns;
+    private int maxConnsPerRoute;
+    private String password;
+    private String protocol;
+    private int timeout;
+    private String trustStoreFile;
+    private String trustStorePassword;
+    private String url;
+    private String username;
 
     public HugeClientBuilder() {
-        this(new Builder());
+        this.username = "";
+        this.password = "";
+        this.timeout = DEFAULT_TIMEOUT;
+        this.maxConns = DEFAULT_MAX_CONNS;
+        this.maxConnsPerRoute = DEFAULT_MAX_CONNS_PER_ROUTE;
+        this.protocol = DEFAULT_HTTP_PREFIX;
+        this.trustStoreFile = "";
+        this.trustStorePassword = "";
+        this.idleTime = DEFAULT_IDLE_TIME;
     }
 
-    private HugeClientBuilder(Builder builder) {
-        this.graph = builder.graph;
-        this.maxConns = builder.maxConns;
-        this.maxConnsPerRoute = builder.maxConnsPerRoute;
-        this.password = builder.password;
-        this.protocol = builder.protocol;
-        this.timeout = builder.timeout;
-        this.trustStoreFile = builder.trustStoreFile;
-        this.trustStorePassword = builder.trustStorePassword;
-        this.url = builder.url;
-        this.username = builder.username;
+    public HugeClientBuilder(String url, String graph) {
+        if (url == null || url.isEmpty()) {
+            throw new IllegalArgumentException(String.format("Expect a string value" +
+                      " as the url parameter argument, but got: %s", url));
+        }
+        if (graph == null || graph.isEmpty()) {
+            throw new IllegalArgumentException(String.format("Expect a string value" +
+                    " as the graph name parameter argument, but got: %s", graph));
+        }
+        this.url = url;
+        this.graph = graph;
+        this.username = "";
+        this.password = "";
+        this.timeout = DEFAULT_TIMEOUT;
+        this.maxConns = DEFAULT_MAX_CONNS;
+        this.maxConnsPerRoute = DEFAULT_MAX_CONNS_PER_ROUTE;
+        this.protocol = DEFAULT_HTTP_PREFIX;
+        this.trustStoreFile = "";
+        this.trustStorePassword = "";
+        this.idleTime = DEFAULT_IDLE_TIME;
+    }
+
+    public HugeClient build() {
+        if (this.url == null) {
+            throw new IllegalArgumentException("The url parameter is invalid and" +
+                                               " cannot be null");
+        }
+        if (this.graph == null) {
+            throw new IllegalArgumentException("The graph name parameter is invalid" +
+                                               " and cannot be null");
+        }
+        return new HugeClient().create(this);
+    }
+
+    public HugeClientBuilder configGraph(String graph) {
+        this.graph = graph;
+        return this;
+    }
+
+    public HugeClientBuilder configIdleTime(int idleTime) {
+        this.idleTime = idleTime;
+        return this;
+    }
+
+    public HugeClientBuilder configPool(int maxConns, int maxConnsPerRoute) {
+        if (maxConns == 0) {
+            maxConns = DEFAULT_MAX_CONNS;
+        }
+        if (maxConnsPerRoute == 0) {
+            maxConnsPerRoute = DEFAULT_MAX_CONNS_PER_ROUTE;
+        }
+        this.maxConns = maxConns;
+        this.maxConnsPerRoute = maxConnsPerRoute;
+        return this;
+    }
+
+    public HugeClientBuilder configSSL(String protocol, String trustStoreFile, String trustStorePassword) {
+        if (protocol == null) {
+            protocol = DEFAULT_HTTP_PREFIX;
+        }
+        this.protocol = protocol;
+        this.trustStoreFile = trustStoreFile;
+        this.trustStorePassword = trustStorePassword;
+        return this;
+    }
+
+    public HugeClientBuilder configTimeout(int timeout) {
+        if (timeout == 0) {
+            timeout = DEFAULT_TIMEOUT;
+        }
+        this.timeout = timeout;
+        return this;
+    }
+
+    public HugeClientBuilder configUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public HugeClientBuilder configUser(String username, String password) {
+        if (username == null) {
+            username = "";
+        }
+        if (password == null) {
+            password = "";
+        }
+        this.username = username;
+        this.password = password;
+
+        return this;
     }
 
     public String getGraph() {
         return graph;
+    }
+
+    public int getIdleTime() {
+        return idleTime;
     }
 
     public int getMaxConns() {
@@ -86,98 +186,5 @@ public class HugeClientBuilder {
 
     public String getUsername() {
         return username;
-    }
-
-    public Builder newBuilder() {
-        return new Builder(this);
-    }
-
-    public static final class Builder {
-        private String graph;
-        private int maxConns;
-        private int maxConnsPerRoute;
-        private String password;
-        private String protocol;
-        private int timeout;
-        private String trustStoreFile;
-        private String trustStorePassword;
-        private String url;
-        private String username;
-
-        public Builder() {
-            graph = "hugegraph";
-            protocol = "http";
-            url = "http://127.0.0.1:8080";
-            username = "";
-            password = "";
-        }
-
-        Builder(HugeClientBuilder hugeClientBuilder) {
-            this.graph = hugeClientBuilder.graph;
-            this.maxConns = hugeClientBuilder.maxConns;
-            this.maxConnsPerRoute = hugeClientBuilder.maxConnsPerRoute;
-            this.password = hugeClientBuilder.password;
-            this.protocol = hugeClientBuilder.protocol;
-            this.timeout = hugeClientBuilder.timeout;
-            this.trustStoreFile = hugeClientBuilder.trustStoreFile;
-            this.trustStorePassword = hugeClientBuilder.trustStorePassword;
-            this.url = hugeClientBuilder.url;
-            this.username = hugeClientBuilder.username;
-
-        }
-
-        public Builder setGraph(String graph) {
-            this.graph = graph;
-            return this;
-        }
-
-        public Builder setMaxConns(int maxConns) {
-            this.maxConns = maxConns;
-            return this;
-        }
-
-        public Builder setMaxConnsPerRoute(int maxConnsPerRoute) {
-            this.maxConnsPerRoute = maxConnsPerRoute;
-            return this;
-        }
-
-        public Builder setPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder setProtocol(String protocol) {
-            this.protocol = protocol;
-            return this;
-        }
-
-        public Builder setTimeout(int timeout) {
-            this.timeout = timeout;
-            return this;
-        }
-
-        public Builder setTrustStoreFile(String trustStoreFile) {
-            this.trustStoreFile = trustStoreFile;
-            return this;
-        }
-
-        public Builder setTrustStorePassword(String trustStorePassword) {
-            this.trustStorePassword = trustStorePassword;
-            return this;
-        }
-
-        public Builder setUrl(String url) {
-            this.url = url;
-            return this;
-        }
-
-        public Builder setUsername(String username) {
-            this.username = username;
-            return this;
-        }
-
-        public HugeClientBuilder build() {
-            return new HugeClientBuilder(this);
-        }
     }
 }

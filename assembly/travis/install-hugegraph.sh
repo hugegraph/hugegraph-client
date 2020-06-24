@@ -44,7 +44,7 @@ bin/start-hugegraph.sh
 
 cd ../
 
-cd  https
+cd https
 
 tar -zxvf hugegraph-*.tar.gz
 
@@ -68,6 +68,6 @@ echo "ssl.server_keystore_file=conf/server.keystore" >> $rest_server_path
 
 echo "gremlinserver.url=http://127.0.0.1:8282" >> $rest_server_path
 
-bin/init-store.sh || exit 1
+bin/init-store.sh
 
-bin/start-hugegraph.sh || exit 1
+bin/start-hugegraph.sh

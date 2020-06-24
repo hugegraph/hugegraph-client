@@ -41,6 +41,7 @@ public class SingleExample {
         // If connect failed will throw a exception.
         HugeClient hugeClient = HugeClient.builder("http://localhost:8080",
                                                    "hugegraph").build();
+
         SchemaManager schema = hugeClient.schema();
 
         schema.propertyKey("name").asText().ifNotExist().create();

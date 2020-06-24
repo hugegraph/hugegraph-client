@@ -64,9 +64,9 @@ public class HugeClientBuilder {
 
     public HugeClient build() {
         E.checkArgument(this.url != null,
-                        "The url parameter is invalid and cannot be null");
+                        "The url parameter can't be null");
         E.checkArgument(this.graph != null,
-                        "The graph name parameter is invalid and cannot be null");
+                        "The graph parameter can't be null");
         return new HugeClient(this);
     }
 

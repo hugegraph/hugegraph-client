@@ -63,9 +63,9 @@ public class HugeClient implements Closeable {
             throw new ServerException("Failed to connect url '%s'", hugeClientBuilder.getUrl());
         }
         try {
-            this.initManagers(client, hugeClientBuilder.getGraph());
+            this.initManagers(this.client, hugeClientBuilder.getGraph());
         } catch (Throwable e) {
-            client.close();
+            this.client.close();
             throw e;
         }
         return this;

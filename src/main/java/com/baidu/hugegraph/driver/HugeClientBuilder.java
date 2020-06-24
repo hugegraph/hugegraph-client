@@ -108,7 +108,8 @@ public class HugeClientBuilder {
         return this;
     }
 
-    public HugeClientBuilder configSSL(String protocol, String trustStoreFile, String trustStorePassword) {
+    public HugeClientBuilder configSSL(String protocol, String trustStoreFile,
+                                       String trustStorePassword) {
         if (protocol == null) {
             protocol = DEFAULT_HTTP_PREFIX;
         }

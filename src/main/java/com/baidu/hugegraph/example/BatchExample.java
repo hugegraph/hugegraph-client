@@ -33,8 +33,8 @@ public class BatchExample {
 
     public static void main(String[] args) {
         // If connect failed will throw a exception.
-        HugeClient hugeClient = new HugeClientBuilder("http://localhost:8080",
-                                                      "hugegraph").build();
+        HugeClient hugeClient = HugeClient.builder("http://localhost:8080",
+                                                   "hugegraph").build();
 
         SchemaManager schema = hugeClient.schema();
 

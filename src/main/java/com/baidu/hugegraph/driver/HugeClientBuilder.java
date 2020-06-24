@@ -55,12 +55,12 @@ public class HugeClientBuilder {
     }
 
     public HugeClientBuilder(String url, String graph) {
-        E.checkArgument((url != null && !url.isEmpty()),
-                        String.format("Expect a string value as the url parameter " +
-                                      "argument, but got: %s", url));
-        E.checkArgument((graph != null && !graph.isEmpty()),
-                        String.format("Expect a string value as the graph name parameter " +
-                                      "argument, but got: %s", graph));
+        E.checkArgument(url != null && !url.isEmpty(),
+                        "Expect a string value as the url " +
+                                "parameter argument, but got: %s", url);
+        E.checkArgument(graph != null && !graph.isEmpty(),
+                        "Expect a string value as the graph name " +
+                                "parameter argument, but got: %s", graph);
         this.url = url;
         this.graph = graph;
         this.username = "";
@@ -75,14 +75,11 @@ public class HugeClientBuilder {
     }
 
     public HugeClient build() {
-        if (this.url == null) {
-            throw new IllegalArgumentException("The url parameter is invalid and " +
-                                               "cannot be null");
-        }
-        if (this.graph == null) {
-            throw new IllegalArgumentException("The graph name parameter is invalid " +
-                                               "and cannot be null");
-        }
+        E.checkArgument(this.url == null,
+                        "The url parameter is invalid and cannot be null");
+        E.checkArgument(this.graph == null,
+                        "The graph name parameter is invalid and cannot be null");
+
         return new HugeClient().create(this);
     }
 

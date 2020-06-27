@@ -104,10 +104,22 @@ public class HugeClientHttpsTest extends BaseFuncTest {
         client = HugeClient.builder(BASE_URL, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .configTimeout(TIMEOUT)
+                           .configPool(MAX_CONNS, MAX_CONNS_PER_ROUTE)
+                           .configSSL(PROTOCOL, TRUST_STORE_FILE,
+                                      TRUST_STORE_PASSWORD)
+                           .build();
+        Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
+        testHttpsAddVertexPropertyValue();
+    }
+
+    @Test
+    public void testHttpsClientNewBuilderZeroPoolParam() {
+        client = HugeClient.builder(BASE_URL, GRAPH)
+                           .configUser(USERNAME, PASSWORD)
+                           .configTimeout(TIMEOUT)
                            .configPool(0, 0)
                            .configSSL(PROTOCOL, TRUST_STORE_FILE,
                                       TRUST_STORE_PASSWORD)
-                           .configIdleTime(0)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
         testHttpsAddVertexPropertyValue();
@@ -127,7 +139,32 @@ public class HugeClientHttpsTest extends BaseFuncTest {
         });
     }
 
-    public void testHttpsAddVertexPropertyValue() {
+    @Test
+    public void testHttpsClientBuilderWithConnectionPoolNoGraphParam() {
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            HugeClient.builder(BASE_URL, GRAPH)
+                      .configGraph(null)
+                      .configSSL(null,"","")
+                      .build();
+        }, e -> {
+            Assert.assertContains("The graph parameter can't be null",
+                                  e.getMessage());
+        });
+    }
+
+    @Test
+    public void testHttpsClientBuilderWithConnectionPoolZeroIdleTimeParam() {
+        Assert.assertThrows(IllegalArgumentException.class, () -> {
+            HugeClient.builder(BASE_URL, GRAPH)
+                      .configIdleTime(0)
+                      .build();
+        }, e -> {
+            Assert.assertContains("The idleTime parameter must be >0,but got",
+                                  e.getMessage());
+        });
+    }
+
+    private void testHttpsAddVertexPropertyValue() {
         SchemaManager schema = client.schema();
         schema.propertyKey("name").asText().ifNotExist().create();
         schema.propertyKey("age").asInt().ifNotExist().create();

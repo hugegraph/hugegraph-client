@@ -28,11 +28,11 @@ cd ../
 
 mkdir https
 
-cp hugegraph-*.tar.gz https
-
 rm -rf hugegraph
 
 tar -zxvf hugegraph-*.tar.gz
+
+cp -r hugegraph-*/. https
 
 cd hugegraph-*
 
@@ -46,11 +46,7 @@ cd ../
 
 cd https
 
-tar -zxvf hugegraph-*.tar.gz
-
-cd hugegraph-*
-
-cp ../../$TRAVIS_DIR/conf/server.keystore conf
+cp ../$TRAVIS_DIR/conf/server.keystore conf
 
 rest_server_path="conf/rest-server.properties"
 
@@ -72,4 +68,4 @@ bin/init-store.sh
 
 bin/start-hugegraph.sh
 
-cd ../../
+cd ../

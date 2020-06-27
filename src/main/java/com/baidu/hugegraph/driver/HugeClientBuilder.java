@@ -76,6 +76,9 @@ public class HugeClientBuilder {
     }
 
     public HugeClientBuilder configIdleTime(int idleTime) {
+        E.checkArgument(this.idleTime == 0,
+                        "The idleTime parameter must be >0," +
+                        "but got '%s'", idleTime);
         this.idleTime = idleTime;
         return this;
     }

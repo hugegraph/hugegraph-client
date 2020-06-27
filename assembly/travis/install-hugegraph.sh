@@ -50,6 +50,8 @@ tar -zxvf hugegraph-*.tar.gz
 
 cd hugegraph-*
 
+cp ../../$TRAVIS_DIR/conf/server.keystore conf
+
 rest_server_path="conf/rest-server.properties"
 
 gremlin_server_path="conf/gremlin-server.yaml"
@@ -57,8 +59,6 @@ gremlin_server_path="conf/gremlin-server.yaml"
 sed -i "s/http:\/\/127.0.0.1:8080/https:\/\/127.0.0.1:8443/g" "$rest_server_path"
 
 sed -i "s/#port: 8182/port: 8282/g" "$gremlin_server_path"
-
-cp ../../conf/server.keystore conf/
 
 echo "server.protocol=https" >> $rest_server_path
 
@@ -72,4 +72,4 @@ bin/init-store.sh
 
 bin/start-hugegraph.sh
 
-cd ../
+cd ../../

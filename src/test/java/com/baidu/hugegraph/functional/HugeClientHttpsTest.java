@@ -24,10 +24,8 @@ import java.util.Map;
 import org.junit.After;
 import org.junit.Test;
 
-import com.baidu.hugegraph.BaseClientTest;
 import com.baidu.hugegraph.driver.GraphManager;
 import com.baidu.hugegraph.driver.HugeClient;
-import com.baidu.hugegraph.driver.HugeClientBuilder;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
@@ -116,9 +114,10 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @Test
     public void testHttpsClientBuilderWithConnectionPoolNoParam() {
-        HugeClientBuilder builder = new HugeClientBuilder(BASE_URL, GRAPH);
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            builder.configUrl(null);
+            HugeClient.builder(BASE_URL, GRAPH)
+                      .configUrl(null)
+                      .build();
         }, e -> {
             Assert.assertContains("The url parameter can't be null",
                                   e.getMessage());

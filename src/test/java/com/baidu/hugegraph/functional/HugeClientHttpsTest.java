@@ -104,9 +104,10 @@ public class HugeClientHttpsTest extends BaseFuncTest {
         client = HugeClient.builder(BASE_URL, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .configTimeout(TIMEOUT)
-                           .configPool(MAX_CONNS, MAX_CONNS_PER_ROUTE)
+                           .configPool(0, 0)
                            .configSSL(PROTOCOL, TRUST_STORE_FILE,
                                       TRUST_STORE_PASSWORD)
+                           .configIdleTime(0)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
         testHttpsAddVertexPropertyValue();
@@ -117,6 +118,8 @@ public class HugeClientHttpsTest extends BaseFuncTest {
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             HugeClient.builder(BASE_URL, GRAPH)
                       .configUrl(null)
+                      .configGraph(null)
+                      .configSSL(null,"","")
                       .build();
         }, e -> {
             Assert.assertContains("The url parameter can't be null",

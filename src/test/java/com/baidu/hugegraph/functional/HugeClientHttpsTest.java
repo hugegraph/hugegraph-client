@@ -144,7 +144,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             HugeClient.builder(BASE_URL, GRAPH)
                       .configGraph(null)
-                      .configSSL(null,"","")
+                      .configSSL(null, "", "")
                       .build();
         }, e -> {
             Assert.assertContains("The graph parameter can't be null",
@@ -159,7 +159,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                       .configIdleTime(0)
                       .build();
         }, e -> {
-            Assert.assertContains("The idleTime parameter must be >0,but got",
+            Assert.assertContains("The idleTime parameter must be > 0,but got",
                                   e.getMessage());
         });
     }

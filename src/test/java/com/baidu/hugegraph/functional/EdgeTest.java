@@ -679,7 +679,6 @@ public class EdgeTest extends BaseFuncTest {
             Assert.assertEquals("Can't query by paging and filtering",
                                 e.getMessage());
         });
-
     }
 
     private static void assertContains(List<Edge> edges, Object source,

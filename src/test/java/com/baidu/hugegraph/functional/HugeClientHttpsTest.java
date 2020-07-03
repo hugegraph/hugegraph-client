@@ -36,14 +36,15 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     private static final String BASE_URL = "https://127.0.0.1:8443";
     private static final String GRAPH = "hugegraph";
-    private static final String PASSWORD = "";
-    private static final String PROTOCOL = "https";
-    private static final int TIMEOUT = 10;
-    private static final String TRUST_STORE_FILE = "src/test/resources/cacerts.jks";
-    private static final String TRUST_STORE_PASSWORD = "changeit";
     private static final String USERNAME = "";
+    private static final String PASSWORD = "";
+    private static final int TIMEOUT = 10;
     private static final int MAX_CONNS_PER_ROUTE = 10;
     private static final int MAX_CONNS = 10;
+    private static final int IDLE_TIME = 30;
+    private static final String PROTOCOL = "https";
+    private static final String TRUST_STORE_FILE = "src/test/resources/cacerts.jks";
+    private static final String TRUST_STORE_PASSWORD = "changeit";
 
     private static HugeClient client;
 
@@ -107,6 +108,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                            .configPool(MAX_CONNS, MAX_CONNS_PER_ROUTE)
                            .configSSL(PROTOCOL, TRUST_STORE_FILE,
                                       TRUST_STORE_PASSWORD)
+                           .configIdleTime(IDLE_TIME)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
         testHttpsAddVertexPropertyValue();

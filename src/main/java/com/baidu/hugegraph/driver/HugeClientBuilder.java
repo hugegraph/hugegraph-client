@@ -37,10 +37,10 @@ public class HugeClientBuilder {
     private int timeout;
     private int maxConns;
     private int maxConnsPerRoute;
+    private int idleTime;
     private String protocol;
     private String trustStoreFile;
     private String trustStorePassword;
-    private int idleTime;
 
     public HugeClientBuilder(String url, String graph) {
         E.checkArgument(url != null && !url.isEmpty(),
@@ -132,12 +132,24 @@ public class HugeClientBuilder {
         return this;
     }
 
+    public String url() {
+        return this.url;
+    }
+
     public String graph() {
         return this.graph;
     }
 
-    public int idleTime() {
-        return this.idleTime;
+    public String username() {
+        return this.username;
+    }
+
+    public String password() {
+        return this.password;
+    }
+
+    public int timeout() {
+        return this.timeout;
     }
 
     public int maxConns() {
@@ -148,16 +160,10 @@ public class HugeClientBuilder {
         return this.maxConnsPerRoute;
     }
 
-    public String password() {
-        return this.password;
-    }
+    public int idleTime() { return this.idleTime; }
 
     public String protocol() {
         return this.protocol;
-    }
-
-    public int timeout() {
-        return this.timeout;
     }
 
     public String trustStoreFile() {
@@ -168,11 +174,4 @@ public class HugeClientBuilder {
         return this.trustStorePassword;
     }
 
-    public String url() {
-        return this.url;
-    }
-
-    public String username() {
-        return this.username;
-    }
 }

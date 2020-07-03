@@ -61,7 +61,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                                       TRUST_STORE_PASSWORD)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
-        testHttpsAddVertexPropertyValue();
+        this.addVertexAndCheckPropertyValue();
     }
 
     @Test
@@ -73,7 +73,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                                       TRUST_STORE_PASSWORD)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
-        testHttpsAddVertexPropertyValue();
+        this.addVertexAndCheckPropertyValue();
     }
 
     @Test
@@ -85,7 +85,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                                       TRUST_STORE_PASSWORD)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
-        testHttpsAddVertexPropertyValue();
+        this.addVertexAndCheckPropertyValue();
     }
 
     @Test
@@ -97,7 +97,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                                       TRUST_STORE_PASSWORD)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
-        testHttpsAddVertexPropertyValue();
+        this.addVertexAndCheckPropertyValue();
     }
 
     @Test
@@ -111,7 +111,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                            .configIdleTime(IDLE_TIME)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
-        testHttpsAddVertexPropertyValue();
+        this.addVertexAndCheckPropertyValue();
     }
 
     @Test
@@ -124,7 +124,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                                       TRUST_STORE_PASSWORD)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
-        testHttpsAddVertexPropertyValue();
+        this.addVertexAndCheckPropertyValue();
     }
 
     @Test
@@ -161,12 +161,12 @@ public class HugeClientHttpsTest extends BaseFuncTest {
                       .configIdleTime(0)
                       .build();
         }, e -> {
-            Assert.assertContains("The idleTime parameter must be > 0,but got",
+            Assert.assertContains("The idleTime parameter must be > 0, but got",
                                   e.getMessage());
         });
     }
 
-    private void testHttpsAddVertexPropertyValue() {
+    private void addVertexAndCheckPropertyValue() {
         SchemaManager schema = client.schema();
         schema.propertyKey("name").asText().ifNotExist().create();
         schema.propertyKey("age").asInt().ifNotExist().create();

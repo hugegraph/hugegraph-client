@@ -77,7 +77,7 @@ public class HugeClientBuilder {
 
     public HugeClientBuilder configIdleTime(int idleTime) {
         E.checkArgument(idleTime > 0,
-                        "The idleTime parameter must be > 0," +
+                        "The idleTime parameter must be > 0, " +
                         "but got %s", idleTime);
         this.idleTime = idleTime;
         return this;
@@ -160,7 +160,9 @@ public class HugeClientBuilder {
         return this.maxConnsPerRoute;
     }
 
-    public int idleTime() { return this.idleTime; }
+    public int idleTime() {
+        return this.idleTime;
+    }
 
     public String protocol() {
         return this.protocol;
@@ -173,5 +175,4 @@ public class HugeClientBuilder {
     public String trustStorePassword() {
         return this.trustStorePassword;
     }
-
 }

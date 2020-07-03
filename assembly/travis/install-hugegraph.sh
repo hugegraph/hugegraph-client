@@ -26,11 +26,11 @@ mv hugegraph-*.tar.gz ../
 
 cd ../
 
-mkdir https
-
 rm -rf hugegraph
 
 tar -zxvf hugegraph-*.tar.gz
+
+mkdir https
 
 cp -r hugegraph-*/. https
 
@@ -48,21 +48,21 @@ cd https
 
 cp ../$TRAVIS_DIR/conf/server.keystore conf
 
-rest_server_path="conf/rest-server.properties"
+REST_SERVER_CONFIG="conf/rest-server.properties"
 
-gremlin_server_path="conf/gremlin-server.yaml"
+GREMLIN_SERVER_CONFIG="conf/gremlin-server.yaml"
 
-sed -i "s/http:\/\/127.0.0.1:8080/https:\/\/127.0.0.1:8443/g" "$rest_server_path"
+sed -i "s?http://127.0.0.1:8080?https://127.0.0.1:8443?g" "$REST_SERVER_CONFIG"
 
-sed -i "s/#port: 8182/port: 8282/g" "$gremlin_server_path"
+sed -i "s/#port: 8182/port: 8282/g" "$GREMLIN_SERVER_CONFIG"
 
-echo "server.protocol=https" >> $rest_server_path
+echo "server.protocol=https" >> $REST_SERVER_CONFIG
 
-echo "ssl.server_keystore_password=123456" >> $rest_server_path
+echo "ssl.server_keystore_password=123456" >> $REST_SERVER_CONFIG
 
-echo "ssl.server_keystore_file=conf/server.keystore" >> $rest_server_path
+echo "ssl.server_keystore_file=conf/server.keystore" >> $REST_SERVER_CONFIG
 
-echo "gremlinserver.url=http://127.0.0.1:8282" >> $rest_server_path
+echo "gremlinserver.url=http://127.0.0.1:8282" >> $REST_SERVER_CONFIG
 
 bin/init-store.sh
 

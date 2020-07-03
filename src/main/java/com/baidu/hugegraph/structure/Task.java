@@ -68,6 +68,9 @@ public class Task {
     @JsonProperty(P.DEPENDENCIES)
     private Set<Long> dependencies;
 
+    @JsonProperty(P.SERVER)
+    private String server;
+
     public long id() {
         return this.id;
     }
@@ -120,6 +123,10 @@ public class Task {
         return this.dependencies;
     }
 
+    public String server() {
+        return this.server;
+    }
+
     public boolean completed() {
         return ImmutableSet.of("success", "failed", "cancelled")
                            .contains(this.status);
@@ -127,6 +134,10 @@ public class Task {
 
     public boolean cancelled() {
         return "cancelled".equals(this.status);
+    }
+
+    public boolean cancelling() {
+        return "cancelling".equals(this.status);
     }
 
     public boolean success() {
@@ -161,6 +172,9 @@ public class Task {
         if (this.dependencies != null) {
             map.put(P.DEPENDENCIES, this.dependencies);
         }
+        if (this.server != null) {
+            map.put(P.SERVER, this.server);
+        }
 
         return map;
     }
@@ -185,5 +199,6 @@ public class Task {
         public static final String INPUT = "task_input";
         public static final String RESULT = "task_result";
         public static final String DEPENDENCIES = "task_dependencies";
+        public static final String SERVER = "task_server";
     }
 }

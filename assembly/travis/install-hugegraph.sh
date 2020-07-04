@@ -30,9 +30,11 @@ rm -rf hugegraph
 
 tar -zxvf hugegraph-*.tar.gz
 
-mkdir https
+HTTPS_SERVER_DIR="hugegraph_https"
 
-cp -r hugegraph-*/. https
+mkdir $HTTPS_SERVER_DIR
+
+cp -r hugegraph-*/. $HTTPS_SERVER_DIR
 
 cd hugegraph-*
 
@@ -44,7 +46,7 @@ bin/start-hugegraph.sh
 
 cd ../
 
-cd https
+cd $HTTPS_SERVER_DIR
 
 cp ../$TRAVIS_DIR/conf/server.keystore conf
 

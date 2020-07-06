@@ -243,7 +243,7 @@ public class EdgeTest extends BaseFuncTest {
                                                          "city", "HongKong");
         Edge created = graph().addEdge(peter, "created", lop, properties);
         Map<String, Object> props = ImmutableMap.of(
-                                    "date", Utils.date("2017-03-24"),
+                                    "date", Utils.formatDate("2017-03-24"),
                                     "city", "HongKong");
         Assert.assertEquals(props, created.properties());
     }

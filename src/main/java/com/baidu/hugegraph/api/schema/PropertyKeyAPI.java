@@ -95,6 +95,11 @@ public class PropertyKeyAPI extends SchemaAPI {
                             "Not support aggregate property until " +
                             "api version 0.47");
             pkey = propertyKey.switchV46();
+        } else if (this.client.apiVersionLt("0.59")) {
+            E.checkArgument(!propertyKey.olap(),
+                            "Not support olap property key until " +
+                            "api version 0.59");
+            pkey = propertyKey.switchV58();
         }
         return pkey;
     }

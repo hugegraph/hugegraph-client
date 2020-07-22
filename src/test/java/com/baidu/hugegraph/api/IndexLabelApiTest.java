@@ -445,4 +445,21 @@ public class IndexLabelApiTest extends BaseApiTest {
 
         client().apiVersion(originApiVersion);
     }
+
+    @Test
+    public void testAddIndexLabelWithRebuildFalse() {
+        IndexLabel personByAge = schema().indexLabel("personByAge")
+                                         .onV("person")
+                                         .by("age")
+                                         .range()
+                                         .rebuild(false)
+                                         .build();
+        IndexLabel.CreatedIndexLabel il = indexLabelAPI.create(personByAge);
+        IndexLabel created = il.indexLabel();
+        Assert.assertEquals(personByAge.name(), created.name());
+        Assert.assertEquals(personByAge.baseType(), created.baseType());
+        Assert.assertEquals(personByAge.baseValue(), created.baseValue());
+        Assert.assertEquals(personByAge.indexType(), created.indexType());
+        Assert.assertEquals(0, il.taskId());
+    }
 }

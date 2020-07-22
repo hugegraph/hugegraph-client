@@ -22,6 +22,7 @@ package com.baidu.hugegraph.api;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import org.junit.After;
@@ -32,12 +33,14 @@ import com.baidu.hugegraph.exception.NotSupportException;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.structure.constant.IndexType;
+import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.schema.IndexLabel;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
 import com.baidu.hugegraph.util.DateUtil;
 import com.baidu.hugegraph.util.VersionUtil;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 public class IndexLabelApiTest extends BaseApiTest {
 
@@ -448,10 +451,17 @@ public class IndexLabelApiTest extends BaseApiTest {
 
     @Test
     public void testAddIndexLabelWithRebuildFalse() {
+        Vertex vertex = new Vertex("person");
+        vertex.property("name", "James");
+        vertex.property("city", "Beijing");
+        vertex.property("age", 19);
+
+        vertex = vertexAPI.create(vertex);
+
         IndexLabel personByAge = schema().indexLabel("personByAge")
                                          .onV("person")
-                                         .by("age")
-                                         .range()
+                                         .by("city")
+                                         .secondary()
                                          .rebuild(false)
                                          .build();
         IndexLabel.CreatedIndexLabel il = indexLabelAPI.create(personByAge);
@@ -461,5 +471,17 @@ public class IndexLabelApiTest extends BaseApiTest {
         Assert.assertEquals(personByAge.baseValue(), created.baseValue());
         Assert.assertEquals(personByAge.indexType(), created.indexType());
         Assert.assertEquals(0, il.taskId());
+
+        Map<String, Object> properties = ImmutableMap.of("city", "Beijing");
+        List<Vertex> vertices = vertexAPI.list("person", properties, 0,
+                                               null, 10).results();
+        Assert.assertEquals(0, vertices.size());
+
+        rebuildAPI.rebuild(personByAge);
+
+        vertices = vertexAPI.list("person", properties, 0, null, 10)
+                            .results();
+        Assert.assertEquals(1, vertices.size());
+        Assert.assertEquals(vertex, vertices.get(0));
     }
 }

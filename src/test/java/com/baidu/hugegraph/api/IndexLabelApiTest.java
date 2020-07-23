@@ -31,6 +31,7 @@ import org.junit.Test;
 
 import com.baidu.hugegraph.exception.NotSupportException;
 import com.baidu.hugegraph.exception.ServerException;
+import com.baidu.hugegraph.structure.Task;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.structure.constant.IndexType;
 import com.baidu.hugegraph.structure.graph.Vertex;
@@ -470,7 +471,7 @@ public class IndexLabelApiTest extends BaseApiTest {
         Assert.assertEquals(personByAge.baseType(), created.baseType());
         Assert.assertEquals(personByAge.baseValue(), created.baseValue());
         Assert.assertEquals(personByAge.indexType(), created.indexType());
-        Assert.assertEquals(0, il.taskId());
+        Assert.assertEquals(Task.TASK_ID_NULL, il.taskId());
 
         Map<String, Object> properties = ImmutableMap.of("city", "Beijing");
         List<Vertex> vertices = vertexAPI.list("person", properties, 0,

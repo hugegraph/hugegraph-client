@@ -26,6 +26,8 @@ import com.google.common.collect.ImmutableSet;
 
 public class Task {
 
+    public static final long TASK_ID_NULL = 0L;
+
     @JsonProperty
     private long id;
 

@@ -287,8 +287,6 @@ public class TaskApiTest extends BaseApiTest {
 
         task = taskAPI.get(taskId);
         Map<String, Object> taskMap = task.asMap();
-        Assert.assertEquals("INDEX_LABEL:1:personByCity",
-                            taskMap.get(Task.P.NAME));
         Assert.assertEquals("rebuild_index", taskMap.get(Task.P.TYPE));
         Assert.assertEquals("success", taskMap.get(Task.P.STATUS));
     }

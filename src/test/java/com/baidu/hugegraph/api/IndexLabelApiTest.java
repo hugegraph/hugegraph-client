@@ -171,7 +171,8 @@ public class IndexLabelApiTest extends BaseApiTest {
         }, e -> {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCityAndAge);
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
         schema().indexLabel(personByCityAndAge)
                 .onV("person")
@@ -183,7 +184,8 @@ public class IndexLabelApiTest extends BaseApiTest {
         }, e -> {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCity);
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
         indexLabelAPI.get(personByCityAndAge);
     }
@@ -203,7 +205,8 @@ public class IndexLabelApiTest extends BaseApiTest {
         }, e -> {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCityAndAge);
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
         schema().indexLabel(personByCityAndAge)
                 .onV("person")
@@ -215,7 +218,8 @@ public class IndexLabelApiTest extends BaseApiTest {
         }, e -> {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCity);
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
         indexLabelAPI.get(personByCityAndAge);
     }
@@ -336,7 +340,8 @@ public class IndexLabelApiTest extends BaseApiTest {
         }, e -> {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", name);
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
     }
 
@@ -479,7 +484,8 @@ public class IndexLabelApiTest extends BaseApiTest {
                                                null, 10).results();
         Assert.assertEquals(0, vertices.size());
 
-        rebuildAPI.rebuild(personByAge);
+        long taskId = rebuildAPI.rebuild(personByAge);
+        waitUntilTaskCompleted(taskId);
 
         vertices = vertexAPI.list("person", properties, 0, null, 10)
                             .results();

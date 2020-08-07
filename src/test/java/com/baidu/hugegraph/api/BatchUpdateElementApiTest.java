@@ -238,7 +238,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             vertexAPI.update(req2);
         }, e -> {
             String expect = "Parameter 'vertices' can't be null";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req3 = batchVertexRequest("list", "old", "old",
@@ -248,7 +249,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             vertexAPI.update(req3);
         }, e -> {
             String expect = "The number of vertices can't be 0";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req4 = batchVertexRequest("list", "old", "old",
@@ -259,7 +261,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Parameter 'create_if_not_exist' " +
                             "dose not support false now";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req5 = batchVertexRequest("list", "old", "old",
@@ -269,7 +272,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             vertexAPI.update(req5);
         }, e -> {
             String expect = "Parameter 'update_strategies' can't be empty";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req6 = batchVertexRequest("list", "old", "old",
@@ -280,7 +284,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             vertexAPI.update(req6);
         }, e -> {
             String expect = "Parameter 'update_strategies' can't be empty";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
     }
 
@@ -293,7 +298,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Number for strategy SUM, " +
                             "but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req2 = batchVertexRequest("name", "old", "new",
@@ -303,7 +309,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Date or Number " +
                             "for strategy BIGGER, but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req3 = batchVertexRequest("name", "old", "new",
@@ -313,7 +320,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Date or Number " +
                             "for strategy SMALLER, but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req4 = batchVertexRequest("price", 1, -1,
@@ -323,7 +331,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List " +
                             "for strategy UNION, but got type Integer, Integer";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req5 = batchVertexRequest("date", "old", "new",
@@ -333,7 +342,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List for " +
                             "strategy INTERSECTION, but got type Date, Long";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req6 = batchVertexRequest("price", 1, -1,
@@ -343,7 +353,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List for " +
                             "strategy APPEND, but got type Integer, Integer";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchVertexRequest req7 = batchVertexRequest("name", "old", "new",
@@ -353,7 +364,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List for " +
                             "strategy ELIMINATE, but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
     }
 
@@ -508,7 +520,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             edgeAPI.update(req1);
         }, e -> {
             String expect = "The batch body can't contain null record";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req2 = batchEdgeRequest("list", "old", "old",
@@ -518,7 +531,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             edgeAPI.update(req2);
         }, e -> {
             String expect = "Parameter 'edges' can't be null";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req3 = batchEdgeRequest("list", "old", "old",
@@ -528,7 +542,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             edgeAPI.update(req3);
         }, e -> {
             String expect = "The number of edges can't be 0";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req4 = batchEdgeRequest("list", "old", "old",
@@ -539,7 +554,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Parameter 'create_if_not_exist' " +
                             "dose not support false now";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req5 = batchEdgeRequest("list", "old", "old",
@@ -549,7 +565,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             edgeAPI.update(req5);
         }, e -> {
             String expect = "Parameter 'update_strategies' can't be empty";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req6 = batchEdgeRequest("list", "old", "old",
@@ -560,7 +577,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             edgeAPI.update(req6);
         }, e -> {
             String expect = "Parameter 'update_strategies' can't be empty";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req7 = batchEdgeRequest("list", "old", "old",
@@ -572,7 +590,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
             edgeAPI.update(req7);
         }, e -> {
             String expect = "Too many edges for one time post";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
     }
 
@@ -585,7 +604,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Number for strategy SUM, " +
                             "but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req2 = batchEdgeRequest("name", "old", "new",
@@ -595,7 +615,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Date or Number " +
                             "for strategy BIGGER, but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req3 = batchEdgeRequest("name", "old", "new",
@@ -605,7 +626,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Date or Number " +
                             "for strategy SMALLER, but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req4 = batchEdgeRequest("price", 1, -1,
@@ -615,7 +637,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List " +
                             "for strategy UNION, but got type Integer, Integer";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req5 = batchEdgeRequest("date", "old", "new",
@@ -625,7 +648,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List for " +
                             "strategy INTERSECTION, but got type Date, Long";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req6 = batchEdgeRequest("price", 1, -1,
@@ -635,7 +659,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List for " +
                             "strategy APPEND, but got type Integer, Integer";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
 
         BatchEdgeRequest req7 = batchEdgeRequest("name", "old", "new",
@@ -645,7 +670,8 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
         }, e -> {
             String expect = "Property type must be Set or List for " +
                             "strategy ELIMINATE, but got type String, String";
-            Assert.assertTrue(e.toString(), e.getMessage().contains(expect));
+            Assert.assertContains(expect, e.getMessage());
+
         });
     }
 

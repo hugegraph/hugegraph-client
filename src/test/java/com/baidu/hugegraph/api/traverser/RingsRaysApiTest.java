@@ -121,7 +121,6 @@ public class RingsRaysApiTest extends TraverserApiTest {
         }, e -> {
             String expect = "Exceed capacity '1' while finding rings";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 
@@ -270,7 +269,6 @@ public class RingsRaysApiTest extends TraverserApiTest {
         }, e -> {
             String expect = "Exceed capacity '1' while finding rays";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 

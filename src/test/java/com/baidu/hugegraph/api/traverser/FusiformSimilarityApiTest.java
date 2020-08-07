@@ -410,7 +410,6 @@ public class FusiformSimilarityApiTest extends TraverserApiTest {
             String expect = "Exceed capacity '10' while " +
                             "finding fusiform similarity";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 

@@ -135,7 +135,6 @@ public class ShortestPathApiTest extends TraverserApiTest {
         }, e -> {
             String expect = "Exceed capacity '2' while finding shortest path";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 

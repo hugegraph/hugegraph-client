@@ -133,7 +133,6 @@ public class CommonTraverserApiTest extends TraverserApiTest {
         }, e -> {
             String expect = "Exceed capacity '2' while finding paths";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 
@@ -204,7 +203,6 @@ public class CommonTraverserApiTest extends TraverserApiTest {
             String expect = "Capacity can't be less than limit, " +
                             "but got capacity '1' and limit '-1'";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 
@@ -364,7 +362,6 @@ public class CommonTraverserApiTest extends TraverserApiTest {
             String expect = "The split-size must be >= 1048576 bytes, " +
                             "but got 1048575";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 
@@ -405,7 +402,6 @@ public class CommonTraverserApiTest extends TraverserApiTest {
             }, e -> {
                 String expect = "Invalid limit -1";
                 Assert.assertContains(expect, e.getMessage());
-
             });
         }
     }

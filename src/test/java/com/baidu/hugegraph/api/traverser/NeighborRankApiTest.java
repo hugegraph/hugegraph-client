@@ -334,7 +334,6 @@ public class NeighborRankApiTest extends TraverserApiTest {
         }, e -> {
             String expect = "Exceed capacity '1' while finding neighbor rank";
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 

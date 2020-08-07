@@ -172,7 +172,6 @@ public class IndexLabelApiTest extends BaseApiTest {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCityAndAge);
             Assert.assertContains(expect, e.getMessage());
-
         });
         schema().indexLabel(personByCityAndAge)
                 .onV("person")
@@ -185,7 +184,6 @@ public class IndexLabelApiTest extends BaseApiTest {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCity);
             Assert.assertContains(expect, e.getMessage());
-
         });
         indexLabelAPI.get(personByCityAndAge);
     }
@@ -206,7 +204,6 @@ public class IndexLabelApiTest extends BaseApiTest {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCityAndAge);
             Assert.assertContains(expect, e.getMessage());
-
         });
         schema().indexLabel(personByCityAndAge)
                 .onV("person")
@@ -219,7 +216,6 @@ public class IndexLabelApiTest extends BaseApiTest {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", personByCity);
             Assert.assertContains(expect, e.getMessage());
-
         });
         indexLabelAPI.get(personByCityAndAge);
     }
@@ -341,7 +337,6 @@ public class IndexLabelApiTest extends BaseApiTest {
             String expect = String.format("index label with name '%s' does " +
                                           "not exist", name);
             Assert.assertContains(expect, e.getMessage());
-
         });
     }
 

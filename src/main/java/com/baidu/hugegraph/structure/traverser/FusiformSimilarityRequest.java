@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class FusiformSimilarityRequest {
 
     @JsonProperty("sources")
-    private SourceVertices sources;
+    private VerticesArgs sources;
     @JsonProperty("label")
     public String label;
     @JsonProperty("direction")
@@ -91,14 +91,14 @@ public class FusiformSimilarityRequest {
     public static class Builder {
 
         private FusiformSimilarityRequest request;
-        private SourceVertices.Builder sourcesBuilder;
+        private VerticesArgs.Builder sourcesBuilder;
 
         public Builder() {
             this.request = new FusiformSimilarityRequest();
-            this.sourcesBuilder = new SourceVertices.Builder();
+            this.sourcesBuilder = new VerticesArgs.Builder();
         }
 
-        public SourceVertices.Builder sources() {
+        public VerticesArgs.Builder sources() {
             return this.sourcesBuilder;
         }
 

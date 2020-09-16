@@ -17,26 +17,26 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.api.traverser;
+package com.baidu.hugegraph.structure.traverser;
 
-import com.baidu.hugegraph.client.RestClient;
-import com.baidu.hugegraph.rest.RestResult;
-import com.baidu.hugegraph.structure.traverser.CustomizedPaths;
-import com.baidu.hugegraph.structure.traverser.CustomizedPathsRequest;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CustomizedPathsAPI extends TraversersAPI {
+public class RepeatEdgeStep extends EdgeStep {
 
-    public CustomizedPathsAPI(RestClient client, String graph) {
-        super(client, graph);
+    @JsonProperty("max_times")
+    public int maxTimes = 1;
+
+    private RepeatEdgeStep() {
+        super();
+        this.maxTimes = 1;
     }
 
     @Override
-    protected String type() {
-        return "customizedpaths";
-    }
-
-    public CustomizedPaths post(CustomizedPathsRequest request) {
-        RestResult result = this.client.post(this.path(), request);
-        return result.readObject(CustomizedPaths.class);
+    public String toString() {
+        return String.format("RepeatEdgeStep{direction=%s,labels=%s," +
+                             "properties=%s,degree=%s,skipDegree=%s," +
+                             "maxTimes=%s}",
+                             this.direction, this.labels, this.properties,
+                             this.degree, this.skipDegree, this.maxTimes);
     }
 }

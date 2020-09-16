@@ -27,13 +27,13 @@ import java.util.Set;
 
 import com.baidu.hugegraph.util.E;
 
-public class SourceVertices {
+public class VerticesArgs {
 
     public Set<Object> ids;
     public String label;
     public Map<String, Object> properties;
 
-    private SourceVertices() {
+    private VerticesArgs() {
         this.ids = new HashSet<>();
         this.label = null;
         this.properties = new HashMap<>();
@@ -41,16 +41,16 @@ public class SourceVertices {
 
     @Override
     public String toString() {
-        return String.format("SourceVertices{ids=%s,label=%s,properties=%s}",
+        return String.format("VerticesArgs{ids=%s,label=%s,properties=%s}",
                              this.ids, this.label, this.properties);
     }
 
     public static class Builder {
 
-        private SourceVertices sources;
+        private VerticesArgs sources;
 
         protected Builder() {
-            this.sources = new SourceVertices();
+            this.sources = new VerticesArgs();
         }
 
         public Builder ids(Set<Object> ids) {
@@ -78,7 +78,7 @@ public class SourceVertices {
             return this;
         }
 
-        protected SourceVertices build() {
+        protected VerticesArgs build() {
             E.checkArgument(!((this.sources.ids == null ||
                                this.sources.ids.isEmpty()) &&
                               (this.sources.properties == null ||

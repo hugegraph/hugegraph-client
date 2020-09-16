@@ -19,24 +19,27 @@
 
 package com.baidu.hugegraph.api.traverser;
 
+import java.util.List;
+
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
-import com.baidu.hugegraph.structure.traverser.CustomizedPaths;
-import com.baidu.hugegraph.structure.traverser.CustomizedPathsRequest;
+import com.baidu.hugegraph.structure.graph.Path;
+import com.baidu.hugegraph.structure.traverser.TemplatePathsRequest;
 
-public class CustomizedPathsAPI extends TraversersAPI {
+public class TemplatePathsAPI extends TraversersAPI {
 
-    public CustomizedPathsAPI(RestClient client, String graph) {
+    public TemplatePathsAPI(RestClient client, String graph) {
         super(client, graph);
     }
 
     @Override
     protected String type() {
-        return "customizedpaths";
+        return "templatepaths";
     }
 
-    public CustomizedPaths post(CustomizedPathsRequest request) {
+    public List<Path> post(TemplatePathsRequest request) {
+        this.client.checkApiVersion("0.58", "template paths");
         RestResult result = this.client.post(this.path(), request);
-        return result.readObject(CustomizedPaths.class);
+        return result.readList("paths", Path.class);
     }
 }

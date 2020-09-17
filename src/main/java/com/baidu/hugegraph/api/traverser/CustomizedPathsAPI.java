@@ -21,7 +21,7 @@ package com.baidu.hugegraph.api.traverser;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
-import com.baidu.hugegraph.structure.traverser.CustomizedPaths;
+import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 import com.baidu.hugegraph.structure.traverser.CustomizedPathsRequest;
 
 public class CustomizedPathsAPI extends TraversersAPI {
@@ -35,8 +35,8 @@ public class CustomizedPathsAPI extends TraversersAPI {
         return "customizedpaths";
     }
 
-    public CustomizedPaths post(CustomizedPathsRequest request) {
+    public PathsWithVertices post(CustomizedPathsRequest request) {
         RestResult result = this.client.post(this.path(), request);
-        return result.readObject(CustomizedPaths.class);
+        return result.readObject(PathsWithVertices.class);
     }
 }

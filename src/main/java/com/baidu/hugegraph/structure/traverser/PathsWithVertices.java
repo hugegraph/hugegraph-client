@@ -25,7 +25,7 @@ import java.util.Set;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CustomizedPaths {
+public class PathsWithVertices {
 
     @JsonProperty
     private List<Paths> paths;

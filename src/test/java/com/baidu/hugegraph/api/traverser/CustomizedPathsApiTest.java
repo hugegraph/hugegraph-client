@@ -35,7 +35,7 @@ import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.schema.EdgeLabel;
-import com.baidu.hugegraph.structure.traverser.CustomizedPaths;
+import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 import com.baidu.hugegraph.structure.traverser.CustomizedPathsRequest;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableList;
@@ -79,8 +79,8 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
                .capacity(-1).limit(-1);
         CustomizedPathsRequest request = builder.build();
 
-        CustomizedPaths customizedPaths = customizedPathsAPI.post(request);
-        List<CustomizedPaths.Paths> paths = customizedPaths.paths();
+        PathsWithVertices customizedPaths = customizedPathsAPI.post(request);
+        List<PathsWithVertices.Paths> paths = customizedPaths.paths();
 
         Assert.assertEquals(2, paths.size());
 
@@ -117,8 +117,8 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
                .capacity(-1).limit(-1);
         CustomizedPathsRequest request = builder.build();
 
-        CustomizedPaths customizedPaths = customizedPathsAPI.post(request);
-        List<CustomizedPaths.Paths> paths = customizedPaths.paths();
+        PathsWithVertices customizedPaths = customizedPathsAPI.post(request);
+        List<PathsWithVertices.Paths> paths = customizedPaths.paths();
 
         Assert.assertEquals(2, paths.size());
 
@@ -158,8 +158,8 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
                .capacity(-1).limit(-1);
         CustomizedPathsRequest request = builder.build();
 
-        CustomizedPaths customizedPaths = customizedPathsAPI.post(request);
-        List<CustomizedPaths.Paths> paths = customizedPaths.paths();
+        PathsWithVertices customizedPaths = customizedPathsAPI.post(request);
+        List<PathsWithVertices.Paths> paths = customizedPaths.paths();
 
         Assert.assertEquals(2, paths.size());
 
@@ -201,8 +201,8 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
                .capacity(-1).limit(-1);
         CustomizedPathsRequest request = builder.build();
 
-        CustomizedPaths customizedPaths = customizedPathsAPI.post(request);
-        List<CustomizedPaths.Paths> paths = customizedPaths.paths();
+        PathsWithVertices customizedPaths = customizedPathsAPI.post(request);
+        List<PathsWithVertices.Paths> paths = customizedPaths.paths();
 
         Assert.assertEquals(1, paths.size());
 
@@ -242,8 +242,8 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
                .capacity(-1).limit(-1);
         CustomizedPathsRequest request = builder.build();
 
-        CustomizedPaths customizedPaths = customizedPathsAPI.post(request);
-        List<CustomizedPaths.Paths> paths = customizedPaths.paths();
+        PathsWithVertices customizedPaths = customizedPathsAPI.post(request);
+        List<PathsWithVertices.Paths> paths = customizedPaths.paths();
 
         Assert.assertEquals(2, paths.size());
 
@@ -283,8 +283,8 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
                .capacity(-1).limit(1);
         CustomizedPathsRequest request = builder.build();
 
-        CustomizedPaths customizedPaths = customizedPathsAPI.post(request);
-        List<CustomizedPaths.Paths> paths = customizedPaths.paths();
+        PathsWithVertices customizedPaths = customizedPathsAPI.post(request);
+        List<PathsWithVertices.Paths> paths = customizedPaths.paths();
 
         Assert.assertEquals(1, paths.size());
 

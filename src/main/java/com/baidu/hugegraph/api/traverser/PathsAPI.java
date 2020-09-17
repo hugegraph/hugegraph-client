@@ -29,6 +29,7 @@ import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.graph.Path;
 import com.baidu.hugegraph.structure.traverser.PathsRequest;
+import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 
 public class PathsAPI extends TraversersAPI {
 
@@ -66,9 +67,9 @@ public class PathsAPI extends TraversersAPI {
         return result.readList("paths", Path.class);
     }
 
-    public List<Path> post(PathsRequest request) {
+    public PathsWithVertices post(PathsRequest request) {
         this.client.checkApiVersion("0.58", "paths with property filter");
         RestResult result = this.client.post(this.path(), request);
-        return result.readList("paths", Path.class);
+        return result.readObject(PathsWithVertices.class);
     }
 }

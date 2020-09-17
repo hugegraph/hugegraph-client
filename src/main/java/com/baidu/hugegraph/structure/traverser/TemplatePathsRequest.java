@@ -85,8 +85,8 @@ public class TemplatePathsRequest {
             return this.targetsBuilder;
         }
 
-        public EdgeStep.Builder steps() {
-            EdgeStep.Builder builder = new EdgeStep.Builder();
+        public RepeatEdgeStep.Builder steps() {
+            RepeatEdgeStep.Builder builder = new RepeatEdgeStep.Builder();
             this.stepBuilders.add(builder);
             return builder;
         }
@@ -121,7 +121,7 @@ public class TemplatePathsRequest {
             E.checkArgument(this.request.targets != null,
                             "Target vertices can't be null");
             for (RepeatEdgeStep.Builder builder : this.stepBuilders) {
-                this.request.steps.add((RepeatEdgeStep) builder.build());
+                this.request.steps.add(builder.build());
             }
             E.checkArgument(this.request.steps != null &&
                             !this.request.steps.isEmpty(),

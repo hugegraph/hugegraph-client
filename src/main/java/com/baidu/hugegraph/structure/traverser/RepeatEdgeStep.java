@@ -19,6 +19,12 @@
 
 package com.baidu.hugegraph.structure.traverser;
 
+import java.util.List;
+import java.util.Map;
+
+import com.baidu.hugegraph.api.API;
+import com.baidu.hugegraph.api.traverser.TraversersAPI;
+import com.baidu.hugegraph.structure.constant.Direction;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RepeatEdgeStep extends EdgeStep {
@@ -38,5 +44,65 @@ public class RepeatEdgeStep extends EdgeStep {
                              "maxTimes=%s}",
                              this.direction, this.labels, this.properties,
                              this.degree, this.skipDegree, this.maxTimes);
+    }
+
+    public static class Builder {
+
+        protected RepeatEdgeStep step;
+
+        public Builder() {
+            this.step = new RepeatEdgeStep();
+        }
+
+        public Builder direction(Direction direction) {
+            this.step.direction = direction.toString();
+            return this;
+        }
+
+        public Builder labels(List<String> labels) {
+            this.step.labels = labels;
+            return this;
+        }
+
+        public Builder labels(String label) {
+            this.step.labels.add(label);
+            return this;
+        }
+
+        public Builder properties(Map<String, Object> properties) {
+            this.step.properties = properties;
+            return this;
+        }
+
+        public Builder properties(String key, Object value) {
+            this.step.properties.put(key, value);
+            return this;
+        }
+
+        public Builder maxTimes(int maxTimes) {
+            this.step.maxTimes = maxTimes;
+            return this;
+        }
+
+        public Builder degree(long degree) {
+            TraversersAPI.checkDegree(degree);
+            this.step.degree = degree;
+            return this;
+        }
+
+        public Builder skipDegree(long skipDegree) {
+            TraversersAPI.checkSkipDegree(skipDegree, this.step.degree,
+                                          API.NO_LIMIT);
+            this.step.skipDegree = skipDegree;
+            return this;
+        }
+
+        public RepeatEdgeStep build() {
+            TraversersAPI.checkDegree(this.step.degree);
+            TraversersAPI.checkSkipDegree(this.step.skipDegree,
+                                          this.step.degree, API.NO_LIMIT);
+            TraversersAPI.checkPositive(this.step.maxTimes, "max times");
+            return this.step;
+        }
     }
 }

@@ -84,7 +84,7 @@ public class VerticesArgs {
                               (this.sources.properties == null ||
                                this.sources.properties.isEmpty()) &&
                               this.sources.label == null),
-                            "No source vertices provided");
+                            "No vertices provided");
             return this.sources;
         }
     }

@@ -56,7 +56,7 @@ import com.baidu.hugegraph.structure.graph.Vertices;
 import com.baidu.hugegraph.structure.traverser.CountRequest;
 import com.baidu.hugegraph.structure.traverser.CrosspointsRequest;
 import com.baidu.hugegraph.structure.traverser.CustomizedCrosspoints;
-import com.baidu.hugegraph.structure.traverser.CustomizedPaths;
+import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 import com.baidu.hugegraph.structure.traverser.FusiformSimilarity;
 import com.baidu.hugegraph.structure.traverser.FusiformSimilarityRequest;
 import com.baidu.hugegraph.structure.traverser.JaccardSimilarityRequest;
@@ -326,7 +326,7 @@ public class TraverserManager {
                                  maxDepth, degree, capacity, limit);
     }
 
-    public List<Path> paths(PathsRequest request) {
+    public PathsWithVertices paths(PathsRequest request) {
         return this.pathsAPI.post(request);
     }
 
@@ -438,7 +438,7 @@ public class TraverserManager {
                                 capacity, limit);
     }
 
-    public CustomizedPaths customizedPaths(CustomizedPathsRequest request) {
+    public PathsWithVertices customizedPaths(CustomizedPathsRequest request) {
         return this.customizedPathsAPI.post(request);
     }
 
@@ -447,7 +447,7 @@ public class TraverserManager {
         return this.customizedCrosspointsAPI.post(request);
     }
 
-    public List<Path> count(TemplatePathsRequest request) {
+    public PathsWithVertices count(TemplatePathsRequest request) {
         return this.templatePathsAPI.post(request);
     }
 

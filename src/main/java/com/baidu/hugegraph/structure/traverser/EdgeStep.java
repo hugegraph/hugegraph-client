@@ -61,7 +61,7 @@ public class EdgeStep {
 
     public static class Builder {
 
-        private EdgeStep step;
+        protected EdgeStep step;
 
         public Builder() {
             this.step = new EdgeStep();

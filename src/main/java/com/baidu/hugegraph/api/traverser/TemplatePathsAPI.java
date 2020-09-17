@@ -19,11 +19,9 @@
 
 package com.baidu.hugegraph.api.traverser;
 
-import java.util.List;
-
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
-import com.baidu.hugegraph.structure.graph.Path;
+import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 import com.baidu.hugegraph.structure.traverser.TemplatePathsRequest;
 
 public class TemplatePathsAPI extends TraversersAPI {
@@ -37,9 +35,9 @@ public class TemplatePathsAPI extends TraversersAPI {
         return "templatepaths";
     }
 
-    public List<Path> post(TemplatePathsRequest request) {
+    public PathsWithVertices post(TemplatePathsRequest request) {
         this.client.checkApiVersion("0.58", "template paths");
         RestResult result = this.client.post(this.path(), request);
-        return result.readList("paths", Path.class);
+        return result.readObject(PathsWithVertices.class);
     }
 }

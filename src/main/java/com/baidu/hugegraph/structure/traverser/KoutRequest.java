@@ -50,7 +50,7 @@ public class KoutRequest {
         this.step = null;
         this.maxDepth = Traverser.DEFAULT_MAX_DEPTH;
         this.nearest = true;
-        this.countOnly = true;
+        this.countOnly = false;
         this.capacity = Traverser.DEFAULT_CAPACITY;
         this.limit = Traverser.DEFAULT_PATHS_LIMIT;
         this.withVertex = false;
@@ -134,6 +134,11 @@ public class KoutRequest {
             TraversersAPI.checkPositive(this.request.maxDepth, "max depth");
             TraversersAPI.checkCapacity(this.request.capacity);
             TraversersAPI.checkLimit(this.request.limit);
+            if (this.request.countOnly) {
+                E.checkArgument(!this.request.withVertex &&
+                                !this.request.withPath,
+                                "Can't return vertex or path when count only");
+            }
             return this.request;
         }
     }

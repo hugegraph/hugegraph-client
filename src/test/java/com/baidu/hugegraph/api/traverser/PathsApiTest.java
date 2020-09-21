@@ -307,7 +307,7 @@ public class PathsApiTest extends TraverserApiTest {
     }
 
     @Test
-    public void testTemplatePathsWithLimit() {
+    public void testPathsWithLimit() {
         Object markoId = getVertexId("person", "name", "marko");
         Object rippleId = getVertexId("software", "name", "ripple");
         Object joshId = getVertexId("person", "name", "josh");

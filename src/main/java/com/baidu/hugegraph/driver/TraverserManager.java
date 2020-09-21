@@ -149,7 +149,7 @@ public class TraverserManager {
                                              label, degree);
     }
 
-    public Map<String, Number> jaccardSimilarity(
+    public Map<Object, Double> jaccardSimilarity(
                                JaccardSimilarityRequest request) {
         return this.jaccardSimilarityAPI.post(request);
     }

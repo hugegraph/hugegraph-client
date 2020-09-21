@@ -45,7 +45,7 @@ public class KneighborRequest {
         this.source = null;
         this.step = null;
         this.maxDepth = Traverser.DEFAULT_MAX_DEPTH;
-        this.countOnly = true;
+        this.countOnly = false;
         this.limit = Traverser.DEFAULT_PATHS_LIMIT;
         this.withVertex = false;
         this.withPath = false;
@@ -115,6 +115,11 @@ public class KneighborRequest {
             E.checkNotNull(this.request.step, "step");
             TraversersAPI.checkPositive(this.request.maxDepth, "max depth");
             TraversersAPI.checkLimit(this.request.limit);
+            if (this.request.countOnly) {
+                E.checkArgument(!this.request.withVertex &&
+                                !this.request.withPath,
+                                "Can't return vertex or path when count only");
+            }
             return this.request;
         }
     }

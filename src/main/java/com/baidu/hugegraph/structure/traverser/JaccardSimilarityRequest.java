@@ -59,7 +59,7 @@ public class JaccardSimilarityRequest {
             this.stepBuilder = new EdgeStep.Builder();
         }
 
-        public Builder verteex(Object vertex) {
+        public Builder vertex(Object vertex) {
             E.checkNotNull(vertex, "vertex");
             this.request.vertex = vertex;
             return this;

@@ -66,7 +66,7 @@ public class FusiformSimilarityRequest {
         this.minSimilars = 1;
         this.top = 0;
         this.groupProperty = null;
-        this.minGroups = 1;
+        this.minGroups = 0;
         this.capacity = Traverser.DEFAULT_CAPACITY;
         this.limit = Traverser.DEFAULT_PATHS_LIMIT;
         this.withIntermediary = false;
@@ -185,8 +185,10 @@ public class FusiformSimilarityRequest {
                                         "min neighbor count");
             TraversersAPI.checkPositive(request.minSimilars,
                                         "min similar count");
-            TraversersAPI.checkPositive(request.minGroups,
-                                        "min group count");
+            if (request.groupProperty != null) {
+                TraversersAPI.checkPositive(request.minGroups,
+                                            "min group count");
+            }
             TraversersAPI.checkAlpha(request.alpha);
             TraversersAPI.checkDegree(request.degree);
             TraversersAPI.checkCapacity(this.request.capacity);

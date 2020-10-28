@@ -128,7 +128,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -140,7 +140,7 @@ public class KoutApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(vadasId, lopId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -162,7 +162,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -175,7 +175,7 @@ public class KoutApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(vadasId, lopId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -198,7 +198,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -220,7 +220,7 @@ public class KoutApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedPaths.contains(path.objects()));
         }
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -251,7 +251,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -270,7 +270,7 @@ public class KoutApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -289,7 +289,7 @@ public class KoutApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -317,7 +317,7 @@ public class KoutApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -355,7 +355,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("created");
         builder.maxDepth(1);
@@ -367,7 +367,7 @@ public class KoutApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(lopId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("created");
         builder.maxDepth(2);
@@ -379,7 +379,7 @@ public class KoutApiTest extends TraverserApiTest {
         expected = ImmutableSet.of(peterId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("knows");
         builder.maxDepth(1);
@@ -391,7 +391,7 @@ public class KoutApiTest extends TraverserApiTest {
         expected = ImmutableSet.of(vadasId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("knows");
         builder.maxDepth(2);
@@ -411,7 +411,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.OUT);
         builder.maxDepth(1);
@@ -423,7 +423,7 @@ public class KoutApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(vadasId, lopId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.OUT);
         builder.maxDepth(2);
@@ -445,7 +445,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)
                .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
@@ -458,7 +458,7 @@ public class KoutApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(lopId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)
                .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
@@ -471,7 +471,7 @@ public class KoutApiTest extends TraverserApiTest {
         expected = ImmutableSet.of(peterId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)
                .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
@@ -494,7 +494,7 @@ public class KoutApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -507,7 +507,7 @@ public class KoutApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(vadasId, lopId, joshId);
         Assert.assertTrue(expected.containsAll(koutResult.ids()));
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -525,7 +525,7 @@ public class KoutApiTest extends TraverserApiTest {
     public void testKoutPostWithCountOnly() {
         Object markoId = getVertexId("person", "name", "marko");
 
-        KoutRequest.Builder builder = new KoutRequest.Builder();
+        KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -539,7 +539,7 @@ public class KoutApiTest extends TraverserApiTest {
         Assert.assertTrue(koutResult.paths().isEmpty());
         Assert.assertTrue(koutResult.vertices().isEmpty());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -553,7 +553,7 @@ public class KoutApiTest extends TraverserApiTest {
         Assert.assertTrue(koutResult.paths().isEmpty());
         Assert.assertTrue(koutResult.vertices().isEmpty());
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -565,7 +565,7 @@ public class KoutApiTest extends TraverserApiTest {
             finalBuilder.build();
         });
 
-        builder = new KoutRequest.Builder();
+        builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);

@@ -51,6 +51,10 @@ public class KneighborRequest {
         this.withPath = false;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("KneighborRequest{source=%s,step=%s,maxDepth=%s" +
@@ -65,9 +69,9 @@ public class KneighborRequest {
         private KneighborRequest request;
         private EdgeStep.Builder stepBuilder;
 
-        public Builder() {
+        private Builder() {
             this.request = new KneighborRequest();
-            this.stepBuilder = new EdgeStep.Builder();
+            this.stepBuilder = EdgeStep.builder();
         }
 
         public Builder source(Object source) {
@@ -77,7 +81,7 @@ public class KneighborRequest {
         }
 
         public EdgeStep.Builder step() {
-            EdgeStep.Builder builder = new EdgeStep.Builder();
+            EdgeStep.Builder builder = EdgeStep.builder();
             this.stepBuilder = builder;
             return builder;
         }
@@ -118,7 +122,8 @@ public class KneighborRequest {
             if (this.request.countOnly) {
                 E.checkArgument(!this.request.withVertex &&
                                 !this.request.withPath,
-                                "Can't return vertex or path when count only");
+                                "Can't return vertex or path " +
+                                "when count only is true");
             }
             return this.request;
         }

@@ -69,7 +69,7 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
         Object rippleId = getVertexId("software", "name", "ripple");
         Object lopId = getVertexId("software", "name", "lop");
 
-        CustomizedPathsRequest.Builder builder = new CustomizedPathsRequest.Builder();
+        CustomizedPathsRequest.Builder builder = CustomizedPathsRequest.builder();
         builder.sources().label("person").property("name", "marko");
         builder.steps().direction(Direction.OUT).labels("knows1")
                .weightBy("weight").degree(-1);
@@ -109,7 +109,7 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
         Object lopId = getVertexId("software", "name", "lop");
         Object peterId = getVertexId("person", "name", "peter");
 
-        CustomizedPathsRequest.Builder builder = new CustomizedPathsRequest.Builder();
+        CustomizedPathsRequest.Builder builder = CustomizedPathsRequest.builder();
         builder.sources().ids(markoId, peterId);
         builder.steps().direction(Direction.OUT).labels("created1")
                .weightBy("weight").degree(-1);
@@ -149,7 +149,7 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
         Object lopId = getVertexId("software", "name", "lop");
         Object peterId = getVertexId("person", "name", "peter");
 
-        CustomizedPathsRequest.Builder builder = new CustomizedPathsRequest.Builder();
+        CustomizedPathsRequest.Builder builder = CustomizedPathsRequest.builder();
         List<String> names = ImmutableList.of("marko", "peter");
         builder.sources().label("person").property("name", names);
         builder.steps().direction(Direction.OUT).labels("created1")
@@ -191,7 +191,7 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
         Object rippleId = getVertexId("software", "name", "ripple");
         Object lopId = getVertexId("software", "name", "lop");
 
-        CustomizedPathsRequest.Builder builder = new CustomizedPathsRequest.Builder();
+        CustomizedPathsRequest.Builder builder = CustomizedPathsRequest.builder();
         builder.sources().label("person").property("name", "marko");
         builder.steps().direction(Direction.OUT).labels("knows1")
                .weightBy("weight").degree(-1);
@@ -232,7 +232,7 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
         Object rippleId = getVertexId("software", "name", "ripple");
         Object lopId = getVertexId("software", "name", "lop");
 
-        CustomizedPathsRequest.Builder builder = new CustomizedPathsRequest.Builder();
+        CustomizedPathsRequest.Builder builder = CustomizedPathsRequest.builder();
         builder.sources().label("person").property("name", "marko");
         builder.steps().direction(Direction.OUT).labels("knows1")
                .weightBy("weight").degree(-1);
@@ -273,7 +273,7 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
         Object rippleId = getVertexId("software", "name", "ripple");
         Object lopId = getVertexId("software", "name", "lop");
 
-        CustomizedPathsRequest.Builder builder = new CustomizedPathsRequest.Builder();
+        CustomizedPathsRequest.Builder builder = CustomizedPathsRequest.builder();
         builder.sources().label("person").property("name", "marko");
         builder.steps().direction(Direction.OUT).labels("knows1")
                .weightBy("weight").degree(-1);
@@ -311,7 +311,7 @@ public class CustomizedPathsApiTest extends TraverserApiTest {
 
     @Test
     public void testCustomizedPathsWithCapacity() {
-        CustomizedPathsRequest.Builder builder = new CustomizedPathsRequest.Builder();
+        CustomizedPathsRequest.Builder builder = CustomizedPathsRequest.builder();
         builder.sources().label("person").property("name", "marko");
         builder.steps().direction(Direction.OUT).labels("knows1")
                .weightBy("weight").degree(-1);

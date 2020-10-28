@@ -73,7 +73,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -85,7 +85,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(markoId, vadasId, lopId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -108,7 +108,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -131,7 +131,7 @@ public class KneighborApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedPaths.contains(path.objects()));
         }
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -167,7 +167,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -187,7 +187,7 @@ public class KneighborApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -208,7 +208,7 @@ public class KneighborApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -237,7 +237,7 @@ public class KneighborApiTest extends TraverserApiTest {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -280,7 +280,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("created");
         builder.maxDepth(1);
@@ -292,7 +292,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(markoId, lopId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("created");
         builder.maxDepth(2);
@@ -304,7 +304,7 @@ public class KneighborApiTest extends TraverserApiTest {
         expected = ImmutableSet.of(markoId, lopId, peterId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("knows");
         builder.maxDepth(1);
@@ -316,7 +316,7 @@ public class KneighborApiTest extends TraverserApiTest {
         expected = ImmutableSet.of(markoId, vadasId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH).labels("knows");
         builder.maxDepth(2);
@@ -338,7 +338,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.OUT);
         builder.maxDepth(1);
@@ -350,7 +350,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(markoId, vadasId, lopId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.OUT);
         builder.maxDepth(2);
@@ -372,7 +372,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)
                .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
@@ -385,7 +385,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(markoId, lopId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)
                .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
@@ -398,7 +398,7 @@ public class KneighborApiTest extends TraverserApiTest {
         expected = ImmutableSet.of(markoId, lopId, peterId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)
                .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
@@ -421,7 +421,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Object vadasId = getVertexId("person", "name", "vadas");
         Object peterId = getVertexId("person", "name", "peter");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -434,7 +434,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(markoId, vadasId, lopId, joshId);
         Assert.assertTrue(expected.containsAll(kneighborResult.ids()));
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -453,7 +453,7 @@ public class KneighborApiTest extends TraverserApiTest {
     public void testKneighborPostWithCountOnly() {
         Object markoId = getVertexId("person", "name", "marko");
 
-        KneighborRequest.Builder builder = new KneighborRequest.Builder();
+        KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -467,7 +467,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Assert.assertTrue(kneighborResult.paths().isEmpty());
         Assert.assertTrue(kneighborResult.vertices().isEmpty());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(2);
@@ -481,7 +481,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Assert.assertTrue(kneighborResult.paths().isEmpty());
         Assert.assertTrue(kneighborResult.vertices().isEmpty());
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);
@@ -493,7 +493,7 @@ public class KneighborApiTest extends TraverserApiTest {
             finalBuilder.build();
         });
 
-        builder = new KneighborRequest.Builder();
+        builder = KneighborRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH);
         builder.maxDepth(1);

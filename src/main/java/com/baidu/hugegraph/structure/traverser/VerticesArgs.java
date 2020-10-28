@@ -39,6 +39,10 @@ public class VerticesArgs {
         this.properties = new HashMap<>();
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("VerticesArgs{ids=%s,label=%s,properties=%s}",
@@ -49,7 +53,7 @@ public class VerticesArgs {
 
         private VerticesArgs vertices;
 
-        protected Builder() {
+        private Builder() {
             this.vertices = new VerticesArgs();
         }
 

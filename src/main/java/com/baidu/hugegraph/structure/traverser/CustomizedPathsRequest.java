@@ -57,6 +57,10 @@ public class CustomizedPathsRequest {
         this.withVertex = false;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("CustomizedPathsRequest{sourceVertex=%s,steps=%s," +
@@ -72,9 +76,9 @@ public class CustomizedPathsRequest {
         private VerticesArgs.Builder sourcesBuilder;
         private List<Step.Builder> stepBuilders;
 
-        public Builder() {
+        private Builder() {
             this.request = new CustomizedPathsRequest();
-            this.sourcesBuilder = new VerticesArgs.Builder();
+            this.sourcesBuilder = VerticesArgs.builder();
             this.stepBuilders = new ArrayList<>();
         }
 

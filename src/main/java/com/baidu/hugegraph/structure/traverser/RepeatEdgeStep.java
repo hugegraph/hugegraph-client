@@ -37,6 +37,10 @@ public class RepeatEdgeStep extends EdgeStep {
         this.maxTimes = 1;
     }
 
+    public static Builder repeatStepBuilder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("RepeatEdgeStep{direction=%s,labels=%s," +
@@ -50,12 +54,12 @@ public class RepeatEdgeStep extends EdgeStep {
 
         protected RepeatEdgeStep step;
 
-        public Builder() {
+        private Builder() {
             this.step = new RepeatEdgeStep();
         }
 
         public Builder direction(Direction direction) {
-            this.step.direction = direction.toString();
+            this.step.direction = direction;
             return this;
         }
 

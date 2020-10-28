@@ -57,6 +57,10 @@ public class KoutRequest {
         this.withPath = false;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("KoutRequest{source=%s,step=%s,maxDepth=%s" +
@@ -72,10 +76,10 @@ public class KoutRequest {
         private KoutRequest request;
         private EdgeStep.Builder stepBuilder;
 
-        public Builder() {
+        private Builder() {
                 this.request = new KoutRequest();
-                this.stepBuilder = new EdgeStep.Builder();
-            }
+                this.stepBuilder = EdgeStep.builder();
+        }
 
         public Builder source(Object source) {
             E.checkNotNull(source, "source");
@@ -84,7 +88,7 @@ public class KoutRequest {
         }
 
         public EdgeStep.Builder step() {
-            EdgeStep.Builder builder = new EdgeStep.Builder();
+            EdgeStep.Builder builder = EdgeStep.builder();
             this.stepBuilder = builder;
             return builder;
         }
@@ -137,7 +141,8 @@ public class KoutRequest {
             if (this.request.countOnly) {
                 E.checkArgument(!this.request.withVertex &&
                                 !this.request.withPath,
-                                "Can't return vertex or path when count only");
+                                "Can't return vertex or path " +
+                                "when count only is true");
             }
             return this.request;
         }

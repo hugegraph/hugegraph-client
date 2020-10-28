@@ -99,7 +99,7 @@ public class PathsApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object lopId = getVertexId("software", "name", "lop");
 
-        PathsRequest.Builder builder = new PathsRequest.Builder();
+        PathsRequest.Builder builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH);
@@ -126,7 +126,7 @@ public class PathsApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object lopId = getVertexId("software", "name", "lop");
 
-        PathsRequest.Builder builder = new PathsRequest.Builder();
+        PathsRequest.Builder builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH);
@@ -162,7 +162,7 @@ public class PathsApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object lopId = getVertexId("software", "name", "lop");
 
-        PathsRequest.Builder builder = new PathsRequest.Builder();
+        PathsRequest.Builder builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH);
@@ -181,7 +181,7 @@ public class PathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new PathsRequest.Builder();
+        builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH).labels("created");
@@ -222,7 +222,7 @@ public class PathsApiTest extends TraverserApiTest {
         graph().addEdge(jimId, "created", javaId,
                         "date", "2017-01-10", "city", "Hongkong");
 
-        PathsRequest.Builder builder = new PathsRequest.Builder();
+        PathsRequest.Builder builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(jimId);
         builder.step().direction(Direction.BOTH);
@@ -243,7 +243,7 @@ public class PathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new PathsRequest.Builder();
+        builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(jimId);
         builder.step().direction(Direction.BOTH);
@@ -269,7 +269,7 @@ public class PathsApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object lopId = getVertexId("software", "name", "lop");
 
-        PathsRequest.Builder builder = new PathsRequest.Builder();
+        PathsRequest.Builder builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH);
@@ -288,7 +288,7 @@ public class PathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new PathsRequest.Builder();
+        builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH)
@@ -313,7 +313,7 @@ public class PathsApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object lopId = getVertexId("software", "name", "lop");
 
-        PathsRequest.Builder builder = new PathsRequest.Builder();
+        PathsRequest.Builder builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH);
@@ -332,7 +332,7 @@ public class PathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new PathsRequest.Builder();
+        builder = PathsRequest.builder();
         builder.sources().ids(markoId);
         builder.targets().ids(rippleId);
         builder.step().direction(Direction.BOTH);

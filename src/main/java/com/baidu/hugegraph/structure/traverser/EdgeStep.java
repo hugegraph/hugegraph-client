@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class EdgeStep {
 
     @JsonProperty("direction")
-    protected String direction;
+    protected Direction direction;
     @JsonProperty("labels")
     protected List<String> labels;
     @JsonProperty("properties")
@@ -44,11 +44,15 @@ public class EdgeStep {
     protected long skipDegree;
 
     protected EdgeStep() {
-        this.direction = "BOTH";
+        this.direction = Direction.BOTH;
         this.labels = new ArrayList<>();
         this.properties = new HashMap<>();
         this.degree = Traverser.DEFAULT_DEGREE;
         this.skipDegree = Traverser.DEFAULT_SKIP_DEGREE;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -63,12 +67,12 @@ public class EdgeStep {
 
         protected EdgeStep step;
 
-        public Builder() {
+        private Builder() {
             this.step = new EdgeStep();
         }
 
         public EdgeStep.Builder direction(Direction direction) {
-            this.step.direction = direction.toString();
+            this.step.direction = direction;
             return this;
         }
 

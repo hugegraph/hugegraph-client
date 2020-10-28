@@ -45,6 +45,10 @@ public class CountRequest {
         this.dedupSize = Traverser.DEFAULT_DEDUP_SIZE;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("CountRequest{source=%s,steps=%s," +
@@ -58,7 +62,7 @@ public class CountRequest {
         private CountRequest request;
         private List<EdgeStep.Builder> stepBuilders;
 
-        public Builder() {
+        private Builder() {
             this.request = new CountRequest();
             this.stepBuilders = new ArrayList<>();
         }
@@ -70,7 +74,7 @@ public class CountRequest {
         }
 
         public EdgeStep.Builder steps() {
-            EdgeStep.Builder builder = new EdgeStep.Builder();
+            EdgeStep.Builder builder = EdgeStep.builder();
             this.stepBuilders.add(builder);
             return builder;
         }

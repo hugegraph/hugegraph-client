@@ -54,6 +54,10 @@ public class TemplatePathsRequest {
         this.withVertex = false;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("TemplatePathsRequest{sources=%s,targets=%s," +
@@ -70,10 +74,10 @@ public class TemplatePathsRequest {
         private VerticesArgs.Builder targetsBuilder;
         private List<RepeatEdgeStep.Builder> stepBuilders;
 
-        public Builder() {
+        private Builder() {
             this.request = new TemplatePathsRequest();
-            this.sourcesBuilder = new VerticesArgs.Builder();
-            this.targetsBuilder = new VerticesArgs.Builder();
+            this.sourcesBuilder = VerticesArgs.builder();
+            this.targetsBuilder = VerticesArgs.builder();
             this.stepBuilders = new ArrayList<>();
         }
 
@@ -86,7 +90,7 @@ public class TemplatePathsRequest {
         }
 
         public RepeatEdgeStep.Builder steps() {
-            RepeatEdgeStep.Builder builder = new RepeatEdgeStep.Builder();
+            RepeatEdgeStep.Builder builder = RepeatEdgeStep.repeatStepBuilder();
             this.stepBuilders.add(builder);
             return builder;
         }

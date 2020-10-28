@@ -28,7 +28,9 @@ import org.junit.Test;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
-import com.baidu.hugegraph.structure.traverser.JaccardSimilarityRequest;
+import com.baidu.hugegraph.structure.traverser.SingleSourceJaccardSimilarityRequest;
+
+
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableSet;
 
@@ -135,11 +137,11 @@ public class JaccardSimilarityApiTest extends TraverserApiTest {
 
     @Test
     public void testJaccardSimilar() {
-        JaccardSimilarityRequest.Builder builder =
-                                         new JaccardSimilarityRequest.Builder();
+        SingleSourceJaccardSimilarityRequest.Builder builder =
+                SingleSourceJaccardSimilarityRequest.builder();
         builder.vertex(4);
         builder.step().direction(Direction.BOTH);
-        JaccardSimilarityRequest request = builder.build();
+        SingleSourceJaccardSimilarityRequest request = builder.build();
         Map<Object, Double> results = jaccardSimilarityAPI.post(request);
 
         Assert.assertEquals(9, results.size());
@@ -160,12 +162,12 @@ public class JaccardSimilarityApiTest extends TraverserApiTest {
 
     @Test
     public void testJaccardSimilarWithTop() {
-        JaccardSimilarityRequest.Builder builder =
-                new JaccardSimilarityRequest.Builder();
+        SingleSourceJaccardSimilarityRequest.Builder builder =
+                SingleSourceJaccardSimilarityRequest.builder();
         builder.vertex(4);
         builder.step().direction(Direction.BOTH);
         builder.top(5);
-        JaccardSimilarityRequest request = builder.build();
+        SingleSourceJaccardSimilarityRequest request = builder.build();
         Map<Object, Double> results = jaccardSimilarityAPI.post(request);
 
         Assert.assertEquals(5, results.size());
@@ -181,11 +183,11 @@ public class JaccardSimilarityApiTest extends TraverserApiTest {
 
     @Test
     public void testJaccardSimilarWithLabel() {
-        JaccardSimilarityRequest.Builder builder =
-                new JaccardSimilarityRequest.Builder();
+        SingleSourceJaccardSimilarityRequest.Builder builder =
+                SingleSourceJaccardSimilarityRequest.builder();
         builder.vertex(4);
         builder.step().direction(Direction.BOTH).labels("link");
-        JaccardSimilarityRequest request = builder.build();
+        SingleSourceJaccardSimilarityRequest request = builder.build();
         Map<Object, Double> results = jaccardSimilarityAPI.post(request);
 
         Assert.assertEquals(7, results.size());
@@ -204,11 +206,11 @@ public class JaccardSimilarityApiTest extends TraverserApiTest {
 
     @Test
     public void testJaccardSimilarWithDirection() {
-        JaccardSimilarityRequest.Builder builder =
-                new JaccardSimilarityRequest.Builder();
+        SingleSourceJaccardSimilarityRequest.Builder builder =
+                SingleSourceJaccardSimilarityRequest.builder();
         builder.vertex(4);
         builder.step().direction(Direction.OUT);
-        JaccardSimilarityRequest request = builder.build();
+        SingleSourceJaccardSimilarityRequest request = builder.build();
         Map<Object, Double> results = jaccardSimilarityAPI.post(request);
 
         Assert.assertEquals(6, results.size());

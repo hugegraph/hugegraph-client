@@ -54,6 +54,10 @@ public class CrosspointsRequest {
         this.withVertex = false;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("CrosspointsRequest{sourceVertex=%s," +
@@ -69,9 +73,9 @@ public class CrosspointsRequest {
         private VerticesArgs.Builder sourcesBuilder;
         private List<PathPattern.Builder> pathPatternBuilders;
 
-        public Builder() {
+        private Builder() {
             this.request = new CrosspointsRequest();
-            this.sourcesBuilder = new VerticesArgs.Builder();
+            this.sourcesBuilder = VerticesArgs.builder();
             this.pathPatternBuilders = new ArrayList<>();
         }
 

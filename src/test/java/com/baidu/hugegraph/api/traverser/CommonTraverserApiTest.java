@@ -98,7 +98,7 @@ public class CommonTraverserApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object rippleId = getVertexId("software", "name", "ripple");
 
-        CrosspointsRequest.Builder builder = new CrosspointsRequest.Builder();
+        CrosspointsRequest.Builder builder = CrosspointsRequest.builder();
         builder.sources().ids(lopId, rippleId);
         builder.pathPatterns().steps().direction(Direction.IN)
                                       .labels("created").degree(-1);

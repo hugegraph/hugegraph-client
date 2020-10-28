@@ -73,6 +73,10 @@ public class FusiformSimilarityRequest {
         this.withVertex = false;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("FusiformSimilarityRequest{sourceVertex=%s," +
@@ -93,9 +97,9 @@ public class FusiformSimilarityRequest {
         private FusiformSimilarityRequest request;
         private VerticesArgs.Builder sourcesBuilder;
 
-        public Builder() {
+        private Builder() {
             this.request = new FusiformSimilarityRequest();
-            this.sourcesBuilder = new VerticesArgs.Builder();
+            this.sourcesBuilder = VerticesArgs.builder();
         }
 
         public VerticesArgs.Builder sources() {

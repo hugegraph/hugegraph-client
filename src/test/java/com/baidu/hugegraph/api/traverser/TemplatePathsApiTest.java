@@ -104,8 +104,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
 
     @Test
     public void testTemplatePaths() {
-        TemplatePathsRequest.Builder builder =
-                                     new TemplatePathsRequest.Builder();
+        TemplatePathsRequest.Builder builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).maxTimes(3);
@@ -127,8 +126,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
 
     @Test
     public void testTemplatePathsWithVertex() {
-        TemplatePathsRequest.Builder builder =
-                                     new TemplatePathsRequest.Builder();
+        TemplatePathsRequest.Builder builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("relateTo").maxTimes(3);
@@ -153,8 +151,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
 
     @Test
     public void testTemplatePathsWithLabel() {
-        TemplatePathsRequest.Builder builder =
-                                     new TemplatePathsRequest.Builder();
+        TemplatePathsRequest.Builder builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("link").maxTimes(3);
@@ -173,7 +170,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new TemplatePathsRequest.Builder();
+        builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("relateTo").maxTimes(3);
@@ -193,8 +190,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
 
     @Test
     public void testTemplatePathsWithRing() {
-        TemplatePathsRequest.Builder builder =
-                                     new TemplatePathsRequest.Builder();
+        TemplatePathsRequest.Builder builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("relateTo").maxTimes(3);
@@ -211,7 +207,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new TemplatePathsRequest.Builder();
+        builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("relateTo").maxTimes(3);
@@ -235,8 +231,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
 
     @Test
     public void testTemplatePathsWithProperties() {
-        TemplatePathsRequest.Builder builder =
-                new TemplatePathsRequest.Builder();
+        TemplatePathsRequest.Builder builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("relateTo").maxTimes(3);
@@ -257,7 +252,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new TemplatePathsRequest.Builder();
+        builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("relateTo")
@@ -281,8 +276,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
 
     @Test
     public void testTemplatePathsWithLimit() {
-        TemplatePathsRequest.Builder builder =
-                new TemplatePathsRequest.Builder();
+        TemplatePathsRequest.Builder builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("link").maxTimes(3);
@@ -301,7 +295,7 @@ public class TemplatePathsApiTest extends TraverserApiTest {
             Assert.assertTrue(expected.contains(path.objects()));
         }
 
-        builder = new TemplatePathsRequest.Builder();
+        builder = TemplatePathsRequest.builder();
         builder.sources().ids(1);
         builder.targets().ids(10);
         builder.steps().direction(Direction.OUT).labels("link").maxTimes(3);

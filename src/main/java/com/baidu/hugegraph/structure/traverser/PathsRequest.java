@@ -43,6 +43,10 @@ public class PathsRequest {
     @JsonProperty("with_vertex")
     public boolean withVertex = false;
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
         return String.format("PathRequest{sources=%s,targets=%s,step=%s," +
@@ -60,11 +64,11 @@ public class PathsRequest {
         private VerticesArgs.Builder sourcesBuilder;
         private VerticesArgs.Builder targetsBuilder;
 
-        public Builder() {
+        private Builder() {
             this.request = new PathsRequest();
-            this.stepBuilder = new EdgeStep.Builder();
-            this.sourcesBuilder = new VerticesArgs.Builder();
-            this.targetsBuilder = new VerticesArgs.Builder();
+            this.stepBuilder = EdgeStep.builder();
+            this.sourcesBuilder = VerticesArgs.builder();
+            this.targetsBuilder = VerticesArgs.builder();
         }
 
         public VerticesArgs.Builder sources() {
@@ -76,7 +80,7 @@ public class PathsRequest {
         }
 
         public EdgeStep.Builder step() {
-            EdgeStep.Builder builder = new EdgeStep.Builder();
+            EdgeStep.Builder builder = EdgeStep.builder();
             this.stepBuilder = builder;
             return builder;
         }

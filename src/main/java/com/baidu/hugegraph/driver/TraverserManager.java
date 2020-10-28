@@ -59,7 +59,7 @@ import com.baidu.hugegraph.structure.traverser.CustomizedCrosspoints;
 import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 import com.baidu.hugegraph.structure.traverser.FusiformSimilarity;
 import com.baidu.hugegraph.structure.traverser.FusiformSimilarityRequest;
-import com.baidu.hugegraph.structure.traverser.JaccardSimilarityRequest;
+import com.baidu.hugegraph.structure.traverser.SingleSourceJaccardSimilarityRequest;
 import com.baidu.hugegraph.structure.traverser.Kneighbor;
 import com.baidu.hugegraph.structure.traverser.KneighborRequest;
 import com.baidu.hugegraph.structure.traverser.Kout;
@@ -150,7 +150,7 @@ public class TraverserManager {
     }
 
     public Map<Object, Double> jaccardSimilarity(
-                               JaccardSimilarityRequest request) {
+                               SingleSourceJaccardSimilarityRequest request) {
         return this.jaccardSimilarityAPI.post(request);
     }
 

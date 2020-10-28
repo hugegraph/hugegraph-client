@@ -24,7 +24,7 @@ import com.baidu.hugegraph.structure.constant.Traverser;
 import com.baidu.hugegraph.util.E;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class JaccardSimilarityRequest {
+public class SingleSourceJaccardSimilarityRequest {
 
     @JsonProperty("vertex")
     private Object vertex;
@@ -35,28 +35,32 @@ public class JaccardSimilarityRequest {
     @JsonProperty("capacity")
     public long capacity = Traverser.DEFAULT_CAPACITY;
 
-    private JaccardSimilarityRequest() {
+    private SingleSourceJaccardSimilarityRequest() {
         this.vertex = null;
         this.step = null;
         this.top = 10;
         this.capacity = Traverser.DEFAULT_CAPACITY;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public String toString() {
-        return String.format("JaccardSimilarityRequest{vertex=%s,step=%s," +
-                             "top=%s,capacity=%s}",
+        return String.format("SingleSourceJaccardSimilarityRequest{vertex=%s," +
+                             "step=%s,top=%s,capacity=%s}",
                              this.vertex, this.step, this.top, this.capacity);
     }
 
     public static class Builder {
 
-        private JaccardSimilarityRequest request;
+        private SingleSourceJaccardSimilarityRequest request;
         private EdgeStep.Builder stepBuilder;
 
-        public Builder() {
-            this.request = new JaccardSimilarityRequest();
-            this.stepBuilder = new EdgeStep.Builder();
+        private Builder() {
+            this.request = new SingleSourceJaccardSimilarityRequest();
+            this.stepBuilder = EdgeStep.builder();
         }
 
         public Builder vertex(Object vertex) {
@@ -66,7 +70,7 @@ public class JaccardSimilarityRequest {
         }
 
         public EdgeStep.Builder step() {
-            EdgeStep.Builder builder = new EdgeStep.Builder();
+            EdgeStep.Builder builder = EdgeStep.builder();
             this.stepBuilder = builder;
             return builder;
         }
@@ -83,7 +87,7 @@ public class JaccardSimilarityRequest {
             return this;
         }
 
-        public JaccardSimilarityRequest build() {
+        public SingleSourceJaccardSimilarityRequest build() {
             E.checkArgument(this.request.vertex != null,
                             "The vertex can't be null");
             this.request.step = this.stepBuilder.build();

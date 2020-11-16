@@ -126,7 +126,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
             HugeClient.builder(BASE_URL, GRAPH)
                       .configUrl(null)
                       .configGraph(null)
-                      .configSSL("","")
+                      .configSSL("", "")
                       .build();
         }, e -> {
             Assert.assertContains("The url parameter can't be null",

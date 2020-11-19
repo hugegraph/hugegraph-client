@@ -62,7 +62,7 @@ echo "restserver.protocol=https" >> $REST_SERVER_CONFIG
 
 echo "ssl.keystore_password=123456" >> $REST_SERVER_CONFIG
 
-echo "ssl.keystore_file=conf/server.keystore" >> $REST_SERVER_CONFIG
+echo "ssl.keystore_file=conf/hugegraph-server.keystore" >> $REST_SERVER_CONFIG
 
 echo "gremlinserver.url=http://127.0.0.1:8282" >> $REST_SERVER_CONFIG
 

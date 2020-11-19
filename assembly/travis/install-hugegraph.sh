@@ -58,9 +58,7 @@ sed -i "s?http://127.0.0.1:8080?https://127.0.0.1:8443?g" "$REST_SERVER_CONFIG"
 
 sed -i "s/#port: 8182/port: 8282/g" "$GREMLIN_SERVER_CONFIG"
 
-echo "restserver.protocol=https" >> $REST_SERVER_CONFIG
-
-echo "ssl.keystore_password=123456" >> $REST_SERVER_CONFIG
+echo "ssl.keystore_password=hugegraph" >> $REST_SERVER_CONFIG
 
 echo "ssl.keystore_file=conf/hugegraph-server.keystore" >> $REST_SERVER_CONFIG
 

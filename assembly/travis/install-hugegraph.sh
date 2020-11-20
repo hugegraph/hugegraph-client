@@ -48,8 +48,6 @@ cd ../
 
 cd $HTTPS_SERVER_DIR
 
-cp ../$TRAVIS_DIR/conf/server.keystore conf
-
 REST_SERVER_CONFIG="conf/rest-server.properties"
 
 GREMLIN_SERVER_CONFIG="conf/gremlin-server.yaml"

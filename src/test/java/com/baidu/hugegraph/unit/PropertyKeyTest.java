@@ -40,7 +40,8 @@ public class PropertyKeyTest {
                                          .build();
 
         String pkString = "{name=name, cardinality=SINGLE, dataType=INT, " +
-                          "aggregateType=NONE, properties=[], olap=false}";
+                          "aggregateType=NONE, properties=[], " +
+                          "readFrequency=OLTP}";
         Assert.assertEquals(pkString, propertyKey.toString());
         Assert.assertEquals(HugeType.PROPERTY_KEY.string(), propertyKey.type());
         Assert.assertEquals(0, propertyKey.aggregateType().code());

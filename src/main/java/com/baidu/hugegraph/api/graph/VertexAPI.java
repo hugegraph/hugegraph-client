@@ -77,7 +77,7 @@ public class VertexAPI extends GraphAPI {
     }
 
     public int update(BatchOlapPropertyRequest request) {
-        this.client.checkApiVersion("0.57", "olap property batch update");
+        this.client.checkApiVersion("0.59", "olap property batch update");
         MultivaluedHashMap<String, Object> headers = new MultivaluedHashMap<>();
         headers.putSingle("Content-Encoding", BATCH_ENCODING);
         String path = String.join("/", this.path(), "olap/batch");

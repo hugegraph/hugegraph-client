@@ -126,7 +126,6 @@
                 <configuration>
                     <excludes>
                         <exclude>com/baidu/hugegraph/example/*.class</exclude>
-                        <exclude>com/baidu/hugegraph/util/SplicingIdGenerator.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

@@ -25,7 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -706,15 +705,9 @@ public class EdgeTest extends BaseFuncTest {
 
         Map<String, Object> properties = ImmutableMap.of("date",
                                                          "P.gt(\"2012-1-1\")");
-        Assert.assertThrows(ServerException.class, () -> {
-            Iterator<Edge> iter = graph().iterateEdges(markoId, Direction.OUT,
-                                                       "knows", properties,
-                                                       1);
-            Iterators.size(iter);
-        }, e -> {
-            Assert.assertEquals("Can't query by paging and filtering",
-                                e.getMessage());
-        });
+        Iterator<Edge> iter = graph().iterateEdges(markoId, Direction.OUT,
+                                                   "knows", properties, 1);
+        Assert.assertEquals(2, Iterators.size(iter));
     }
 
     private static void assertContains(List<Edge> edges, Object source,

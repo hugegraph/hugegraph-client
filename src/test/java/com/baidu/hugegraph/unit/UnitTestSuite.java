@@ -30,7 +30,8 @@ import org.junit.runners.Suite;
     BatchElementRequestTest.class,
     PropertyKeyTest.class,
     IndexLabelTest.class,
-    CommonUtilTest.class
+    CommonUtilTest.class,
+    SplicingIdGeneratorTest.class
 })
 public class UnitTestSuite {
 }

@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -292,6 +293,26 @@ public class EdgeTest extends BaseFuncTest {
         Assert.assertThrows(InvalidOperationException.class, () -> {
             created.removeProperty("not-exist");
         });
+    }
+
+    @Test
+    public void testName() {
+        BaseClientTest.initEdge();
+
+        Object markoId = getVertexId("person", "name", "marko");
+        List<Edge> edges = graph().getEdges(markoId, Direction.OUT, "knows");
+        Assert.assertEquals(2, edges.size());
+        Edge edge1 = edges.get(0);
+        Edge edge2 = edges.get(1);
+        Date date1 = DateUtil.parse((String) edge1.property("date"));
+        Date date2 = DateUtil.parse((String) edge2.property("date"));
+        String name1 = edge1.name();
+        String name2 = edge2.name();
+        if (date1.before(date2)) {
+            Assert.assertTrue(name1.compareTo(name2) < 0);
+        } else {
+            Assert.assertTrue(name1.compareTo(name2) >= 0);
+        }
     }
 
     @Test

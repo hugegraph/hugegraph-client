@@ -113,7 +113,7 @@
                         <manifestEntries>
                             <!-- Must be on one line, otherwise the automatic
                                  upgrade script cannot replace the version number -->
-                            <Implementation-Version>1.9.3.0</Implementation-Version>
+                            <Implementation-Version>1.9.4.0</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -126,6 +126,8 @@
                 <configuration>
                     <excludes>
                         <exclude>com/baidu/hugegraph/example/*.class</exclude>
+                        <exclude>com/baidu/hugegraph/util/IdUtil.class</exclude>
+                        <exclude>com/baidu/hugegraph/util/SplicingIdGenerator.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

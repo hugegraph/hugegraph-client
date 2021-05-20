@@ -31,6 +31,7 @@ import org.junit.runners.Suite;
     PropertyKeyTest.class,
     IndexLabelTest.class,
     CommonUtilTest.class,
+    IdUtilTest.class,
     SplicingIdGeneratorTest.class
 })
 public class UnitTestSuite {

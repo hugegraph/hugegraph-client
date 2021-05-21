@@ -423,7 +423,6 @@ public class KoutApiTest extends TraverserApiTest {
         Object peterId = getVertexId("person", "name", "peter");
         Object rippleId = getVertexId("software", "name", "ripple");
 
-        // 1 depth with multi labels
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)
@@ -436,8 +435,7 @@ public class KoutApiTest extends TraverserApiTest {
         Assert.assertEquals(3, koutResult.size());
         Set<Object> expected = ImmutableSet.of(vadasId, joshId, lopId);
         Assert.assertEquals(expected, koutResult.ids());
-
-        // 2 depth with multi labels
+        
         builder = KoutRequest.builder();
         builder.source(markoId);
         builder.step().direction(Direction.BOTH)

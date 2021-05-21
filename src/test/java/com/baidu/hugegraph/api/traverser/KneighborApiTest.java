@@ -265,9 +265,7 @@ public class KneighborApiTest extends TraverserApiTest {
                 ImmutableList.of(markoId, lopId, peterId),
                 ImmutableList.of(markoId, joshId, rippleId)
         );
-        int i = 1;
         for (Path path : kneighborResult.paths()) {
-            System.out.println(path.toString() + i++);
             Assert.assertTrue(expectedPaths.contains(path.objects()));
         }
         Assert.assertEquals(6, kneighborResult.vertices().size());

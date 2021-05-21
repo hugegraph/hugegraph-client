@@ -51,7 +51,7 @@ public class PersonalRankAPI extends TraversersAPI {
         @JsonProperty("alpha")
         private double alpha = Traverser.DEFAULT_ALPHA;
         @JsonProperty("max_degree")
-        public long maxDegree = Traverser.DEFAULT_MAX_DEGREE;
+        public long degree = Traverser.DEFAULT_MAX_DEGREE;
         @JsonProperty("limit")
         private long limit = Traverser.DEFAULT_LIMIT;
         @JsonProperty("max_depth")
@@ -68,10 +68,10 @@ public class PersonalRankAPI extends TraversersAPI {
         @Override
         public String toString() {
             return String.format("Request{source=%s,label=%s,alpha=%s," +
-                                 "maxDegree=%s,limit=%s,maxDepth=%s," +
+                                 "degree=%s,limit=%s,maxDepth=%s," +
                                  "withLabel=%s,sorted=%s}",
                                  this.source, this.label, this.alpha,
-                                 this.maxDegree, this.limit, this.maxDepth,
+                                 this.degree, this.limit, this.maxDepth,
                                  this.withLabel, this.sorted);
         }
 
@@ -111,7 +111,7 @@ public class PersonalRankAPI extends TraversersAPI {
 
             public Builder degree(long degree) {
                 TraversersAPI.checkDegree(degree);
-                this.request.maxDegree = degree;
+                this.request.degree = degree;
                 return this;
             }
 
@@ -148,7 +148,7 @@ public class PersonalRankAPI extends TraversersAPI {
                                 "The label of rank request " +
                                 "for personal rank can't be null");
                 TraversersAPI.checkAlpha(this.request.alpha);
-                TraversersAPI.checkDegree(this.request.maxDegree);
+                TraversersAPI.checkDegree(this.request.degree);
                 TraversersAPI.checkLimit(this.request.limit);
                 E.checkArgument(this.request.maxDepth > 0 &&
                                 this.request.maxDepth <=

@@ -93,9 +93,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(6, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, vadasId, lopId,
-                                   joshId, peterId, rippleId);
+        Assert.assertEquals(5, kneighborResult.size());
+        expected = ImmutableSet.of(vadasId, lopId, joshId, peterId, rippleId);
         Assert.assertEquals(expected, kneighborResult.ids());
     }
 
@@ -122,7 +121,6 @@ public class KneighborApiTest extends TraverserApiTest {
         Assert.assertEquals(expected, kneighborResult.ids());
         Assert.assertEquals(3, kneighborResult.paths().size());
         List<Object> expectedPaths = ImmutableList.of(
-                ImmutableList.of(markoId),
                 ImmutableList.of(markoId, vadasId),
                 ImmutableList.of(markoId, lopId),
                 ImmutableList.of(markoId, joshId)
@@ -140,18 +138,14 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(6, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, vadasId, peterId,
-                                   joshId, lopId, rippleId);
+        Assert.assertEquals(5, kneighborResult.size());
+        expected = ImmutableSet.of(vadasId, peterId, joshId, lopId, rippleId);
         Assert.assertEquals(expected, kneighborResult.ids());
-        Assert.assertEquals(6, kneighborResult.paths().size());
+        Assert.assertEquals(5, kneighborResult.paths().size());
         expectedPaths = ImmutableList.of(
                 ImmutableList.of(markoId, vadasId),
                 ImmutableList.of(markoId, lopId),
                 ImmutableList.of(markoId, joshId),
-                ImmutableList.of(markoId, vadasId, markoId),
-                ImmutableList.of(markoId, lopId, markoId),
-                ImmutableList.of(markoId, joshId, markoId),
                 ImmutableList.of(markoId, lopId, peterId),
                 ImmutableList.of(markoId, joshId, rippleId)
         );
@@ -183,8 +177,7 @@ public class KneighborApiTest extends TraverserApiTest {
         Set<Object> expected = ImmutableSet.of(vadasId, lopId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
         Assert.assertEquals(3, kneighborResult.vertices().size());
-        Set<Object> expectedVids = ImmutableSet.of(markoId, vadasId,
-                                                   lopId, joshId);
+        Set<Object> expectedVids = ImmutableSet.of(vadasId, lopId, joshId);
         for (Vertex vertex : kneighborResult.vertices()) {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
@@ -199,13 +192,12 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(6, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, vadasId, lopId,
-                                   joshId, peterId, rippleId);
+        Assert.assertEquals(5, kneighborResult.size());
+        expected = ImmutableSet.of(vadasId, lopId, joshId, peterId, rippleId);
         Assert.assertEquals(expected, kneighborResult.ids());
-        Assert.assertEquals(6, kneighborResult.vertices().size());
-        expectedVids = ImmutableSet.of(markoId, vadasId, lopId,
-                                       joshId, peterId, rippleId);
+        Assert.assertEquals(5, kneighborResult.vertices().size());
+        expectedVids = ImmutableSet.of(vadasId, lopId, joshId,
+                                       peterId, rippleId);
         for (Vertex vertex : kneighborResult.vertices()) {
             Assert.assertTrue(expectedVids.contains(vertex.id()));
         }
@@ -225,7 +217,6 @@ public class KneighborApiTest extends TraverserApiTest {
         Assert.assertEquals(expected, kneighborResult.ids());
         Assert.assertEquals(3, kneighborResult.paths().size());
         Set<List<Object>> expectedPaths = ImmutableSet.of(
-                ImmutableList.of(markoId),
                 ImmutableList.of(markoId, vadasId),
                 ImmutableList.of(markoId, lopId),
                 ImmutableList.of(markoId, joshId)
@@ -249,19 +240,14 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(6, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, peterId, lopId,
-                                   joshId, rippleId, vadasId);
+        Assert.assertEquals(5, kneighborResult.size());
+        expected = ImmutableSet.of(peterId, lopId, joshId, rippleId, vadasId);
         Assert.assertEquals(expected, kneighborResult.ids());
-        Assert.assertEquals(6, kneighborResult.paths().size());
+        Assert.assertEquals(5, kneighborResult.paths().size());
         expectedPaths = ImmutableSet.of(
-                ImmutableList.of(markoId),
                 ImmutableList.of(markoId, vadasId),
                 ImmutableList.of(markoId, lopId),
                 ImmutableList.of(markoId, joshId),
-                ImmutableList.of(markoId, vadasId, markoId),
-                ImmutableList.of(markoId, lopId, markoId),
-                ImmutableList.of(markoId, joshId, markoId),
                 ImmutableList.of(markoId, lopId, peterId),
                 ImmutableList.of(markoId, joshId, rippleId)
         );
@@ -304,8 +290,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(4, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, lopId, peterId, joshId);
+        Assert.assertEquals(3, kneighborResult.size());
+        expected = ImmutableSet.of(lopId, peterId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
         builder = KneighborRequest.builder();
@@ -328,8 +314,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(3, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, vadasId, joshId);
+        Assert.assertEquals(2, kneighborResult.size());
+        expected = ImmutableSet.of(vadasId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
     }
 
@@ -396,8 +382,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(4, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, lopId, peterId, joshId);
+        Assert.assertEquals(3, kneighborResult.size());
+        expected = ImmutableSet.of(lopId, peterId, joshId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
         builder = KneighborRequest.builder();
@@ -409,8 +395,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(5, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, lopId, peterId, joshId, rippleId);
+        Assert.assertEquals(4, kneighborResult.size());
+        expected = ImmutableSet.of(lopId, peterId, joshId, rippleId);
         Assert.assertEquals(expected, kneighborResult.ids());
     }
 
@@ -460,10 +446,9 @@ public class KneighborApiTest extends TraverserApiTest {
         request = builder.build();
 
         kneighborResult = kneighborAPI.post(request);
-        
+
         Assert.assertEquals(5, kneighborResult.size());
-        expected = ImmutableSet.of(markoId, vadasId, lopId,
-                                   joshId, peterId, rippleId);
+        expected = ImmutableSet.of(vadasId, lopId, joshId, peterId, rippleId);
         Assert.assertTrue(expected.containsAll(kneighborResult.ids()));
     }
 
@@ -494,7 +479,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(6, kneighborResult.size());
+        Assert.assertEquals(5, kneighborResult.size());
         Assert.assertTrue(kneighborResult.ids().isEmpty());
         Assert.assertTrue(kneighborResult.paths().isEmpty());
         Assert.assertTrue(kneighborResult.vertices().isEmpty());

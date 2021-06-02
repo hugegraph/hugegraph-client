@@ -5,7 +5,7 @@
 
     <groupId>com.baidu.hugegraph</groupId>
     <artifactId>hugegraph-client</artifactId>
-    <version>1.9.3</version>
+    <version>1.9.4</version>
     <packaging>jar</packaging>
 
     <name>hugegraph-client</name>
@@ -37,7 +37,7 @@
     <developers>
         <developer>
             <name>lizhangmei</name>
-            <email>lizhangmei@baidu.com</email>
+            <email>javaloveme@gmail.com</email>
         </developer>
         <developer>
             <name>zhoney</name>

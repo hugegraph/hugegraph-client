@@ -20,6 +20,7 @@
 package com.baidu.hugegraph.driver;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
@@ -223,5 +224,9 @@ public class AuthManager {
 
     public void logout() {
         this.loginAPI.logout();
+    }
+
+    public Map<String, Object> verifyToken() {
+        return this.loginAPI.verifyToken();
     }
 }

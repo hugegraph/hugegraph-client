@@ -19,6 +19,8 @@
 
 package com.baidu.hugegraph.api.auth;
 
+import java.util.Map;
+
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.auth.Login;
@@ -44,5 +46,10 @@ public class LoginAPI extends AuthAPI {
 
     public void logout() {
         this.client.delete(this.path(), Maps.newHashMap());
+    }
+
+    public Map<String, Object> verifyToken() {
+        RestResult result = this.client.get(this.path());
+        return result.readObject(Map.class);
     }
 }

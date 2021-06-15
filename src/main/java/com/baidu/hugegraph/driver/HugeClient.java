@@ -141,4 +141,16 @@ public class HugeClient implements Closeable {
     public MetricsManager metrics() {
         return this.metrics;
     }
+
+    public void setAuthContext(String auth) {
+        this.client.setAuthContext(auth);
+    }
+
+    public String getAuthContext() {
+        return this.client.getAuthContext();
+    }
+
+    public void resetAuthContext() {
+        this.client.resetAuthContext();
+    }
 }

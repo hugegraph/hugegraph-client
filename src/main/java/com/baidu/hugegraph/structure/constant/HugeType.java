@@ -33,6 +33,7 @@ public enum HugeType {
     USER(52, "users"),
     ACCESS(53, "accesses"),
     BELONG(54, "belongs"),
+    LOGIN(55, "login"),
 
     // Data
     VERTEX(101, "vertices"),

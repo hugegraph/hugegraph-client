@@ -45,11 +45,13 @@ public class LoginAPI extends AuthAPI {
     }
 
     public void logout() {
-        this.client.delete(this.path(), Maps.newHashMap());
+        String path = String.join("/", this.path(), "logout");
+        this.client.delete(path, Maps.newHashMap());
     }
 
     public Map<String, Object> verifyToken() {
-        RestResult result = this.client.get(this.path());
+        String path = String.join("/", this.path(), "verify");
+        RestResult result = this.client.get(path);
         return result.readObject(Map.class);
     }
 }

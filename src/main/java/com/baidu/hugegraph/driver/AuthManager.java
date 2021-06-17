@@ -26,7 +26,9 @@ import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
 import com.baidu.hugegraph.api.auth.GroupAPI;
 import com.baidu.hugegraph.api.auth.LoginAPI;
+import com.baidu.hugegraph.api.auth.LogoutAPI;
 import com.baidu.hugegraph.api.auth.TargetAPI;
+import com.baidu.hugegraph.api.auth.TokenVerifyAPI;
 import com.baidu.hugegraph.api.auth.UserAPI;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.auth.Access;
@@ -46,6 +48,8 @@ public class AuthManager {
     private final AccessAPI accessAPI;
     private final BelongAPI belongAPI;
     private final LoginAPI loginAPI;
+    private final LogoutAPI logoutAPI;
+    private final TokenVerifyAPI tokenVerifyAPI;
 
     public AuthManager(RestClient client, String graph) {
         this.targetAPI = new TargetAPI(client, graph);
@@ -54,6 +58,8 @@ public class AuthManager {
         this.accessAPI = new AccessAPI(client, graph);
         this.belongAPI = new BelongAPI(client, graph);
         this.loginAPI = new LoginAPI(client, graph);
+        this.logoutAPI = new LogoutAPI(client, graph);
+        this.tokenVerifyAPI = new TokenVerifyAPI(client, graph);
     }
 
     public List<Target> listTargets() {
@@ -223,10 +229,10 @@ public class AuthManager {
     }
 
     public void logout() {
-        this.loginAPI.logout();
+        this.logoutAPI.logout();
     }
 
     public Map<String, Object> verifyToken() {
-        return this.loginAPI.verifyToken();
+        return this.tokenVerifyAPI.verifyToken();
     }
 }

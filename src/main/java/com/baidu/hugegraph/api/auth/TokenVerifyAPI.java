@@ -19,25 +19,25 @@
 
 package com.baidu.hugegraph.api.auth;
 
+import java.util.Map;
+
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
-import com.baidu.hugegraph.structure.auth.Login;
-import com.baidu.hugegraph.structure.auth.LoginResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
 
-public class LoginAPI extends AuthAPI {
+public class TokenVerifyAPI extends AuthAPI {
 
-    public LoginAPI(RestClient client, String graph) {
+    public TokenVerifyAPI(RestClient client, String graph) {
         super(client, graph);
     }
 
     @Override
     protected String type() {
-        return HugeType.LOGIN.string();
+        return HugeType.TOKEN_VERIFY.string();
     }
 
-    public LoginResult login(Login login) {
-        RestResult result = this.client.post(this.path(), login);
-        return result.readObject(LoginResult.class);
+    public Map<String, Object> verifyToken() {
+        RestResult result = this.client.get(this.path());
+        return result.readObject(Map.class);
     }
 }

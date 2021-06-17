@@ -20,24 +20,21 @@
 package com.baidu.hugegraph.api.auth;
 
 import com.baidu.hugegraph.client.RestClient;
-import com.baidu.hugegraph.rest.RestResult;
-import com.baidu.hugegraph.structure.auth.Login;
-import com.baidu.hugegraph.structure.auth.LoginResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
+import com.google.common.collect.ImmutableMap;
 
-public class LoginAPI extends AuthAPI {
+public class LogoutAPI extends AuthAPI {
 
-    public LoginAPI(RestClient client, String graph) {
+    public LogoutAPI(RestClient client, String graph) {
         super(client, graph);
     }
 
     @Override
     protected String type() {
-        return HugeType.LOGIN.string();
+        return HugeType.LOGOUT.string();
     }
 
-    public LoginResult login(Login login) {
-        RestResult result = this.client.post(this.path(), login);
-        return result.readObject(LoginResult.class);
+    public void logout() {
+        this.client.delete(this.path(), ImmutableMap.of());
     }
 }

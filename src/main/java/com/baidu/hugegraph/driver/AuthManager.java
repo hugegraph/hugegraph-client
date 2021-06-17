@@ -20,7 +20,6 @@
 package com.baidu.hugegraph.driver;
 
 import java.util.List;
-import java.util.Map;
 
 import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
@@ -28,7 +27,7 @@ import com.baidu.hugegraph.api.auth.GroupAPI;
 import com.baidu.hugegraph.api.auth.LoginAPI;
 import com.baidu.hugegraph.api.auth.LogoutAPI;
 import com.baidu.hugegraph.api.auth.TargetAPI;
-import com.baidu.hugegraph.api.auth.TokenVerifyAPI;
+import com.baidu.hugegraph.api.auth.TokenAPI;
 import com.baidu.hugegraph.api.auth.UserAPI;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.auth.Access;
@@ -37,6 +36,7 @@ import com.baidu.hugegraph.structure.auth.Group;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
 import com.baidu.hugegraph.structure.auth.Target;
+import com.baidu.hugegraph.structure.auth.TokenPayload;
 import com.baidu.hugegraph.structure.auth.User;
 import com.baidu.hugegraph.structure.auth.User.UserRole;
 
@@ -49,7 +49,7 @@ public class AuthManager {
     private final BelongAPI belongAPI;
     private final LoginAPI loginAPI;
     private final LogoutAPI logoutAPI;
-    private final TokenVerifyAPI tokenVerifyAPI;
+    private final TokenAPI tokenAPI;
 
     public AuthManager(RestClient client, String graph) {
         this.targetAPI = new TargetAPI(client, graph);
@@ -59,7 +59,7 @@ public class AuthManager {
         this.belongAPI = new BelongAPI(client, graph);
         this.loginAPI = new LoginAPI(client, graph);
         this.logoutAPI = new LogoutAPI(client, graph);
-        this.tokenVerifyAPI = new TokenVerifyAPI(client, graph);
+        this.tokenAPI = new TokenAPI(client, graph);
     }
 
     public List<Target> listTargets() {
@@ -232,7 +232,7 @@ public class AuthManager {
         this.logoutAPI.logout();
     }
 
-    public Map<String, Object> verifyToken() {
-        return this.tokenVerifyAPI.verifyToken();
+    public TokenPayload verifyToken() {
+        return this.tokenAPI.verifyToken();
     }
 }

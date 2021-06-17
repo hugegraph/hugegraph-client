@@ -23,11 +23,12 @@ import java.util.Map;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.auth.TokenPayload;
 import com.baidu.hugegraph.structure.constant.HugeType;
 
-public class TokenVerifyAPI extends AuthAPI {
+public class TokenAPI extends AuthAPI {
 
-    public TokenVerifyAPI(RestClient client, String graph) {
+    public TokenAPI(RestClient client, String graph) {
         super(client, graph);
     }
 
@@ -36,8 +37,8 @@ public class TokenVerifyAPI extends AuthAPI {
         return HugeType.TOKEN_VERIFY.string();
     }
 
-    public Map<String, Object> verifyToken() {
+    public TokenPayload verifyToken() {
         RestResult result = this.client.get(this.path());
-        return result.readObject(Map.class);
+        return TokenPayload.fromMap(result.readObject(Map.class));
     }
 }

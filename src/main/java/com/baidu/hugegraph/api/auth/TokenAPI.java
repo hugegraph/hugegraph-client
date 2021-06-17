@@ -19,8 +19,6 @@
 
 package com.baidu.hugegraph.api.auth;
 
-import java.util.Map;
-
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.auth.TokenPayload;
@@ -39,6 +37,6 @@ public class TokenAPI extends AuthAPI {
 
     public TokenPayload verifyToken() {
         RestResult result = this.client.get(this.path());
-        return TokenPayload.fromMap(result.readObject(Map.class));
+        return result.readObject(TokenPayload.class);
     }
 }

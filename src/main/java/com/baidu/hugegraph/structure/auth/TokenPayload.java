@@ -19,8 +19,6 @@
 
 package com.baidu.hugegraph.structure.auth;
 
-import java.util.Map;
-
 public class TokenPayload {
 
     private String userId;
@@ -33,14 +31,15 @@ public class TokenPayload {
         return this.userId;
     }
 
+    public void userId(String userId) {
+        this.userId = userId;
+    }
+
     public String username() {
         return this.username;
     }
 
-    public static TokenPayload fromMap(Map<String, Object> map) {
-        TokenPayload payload = new TokenPayload();
-        payload.username = (String) map.get("user_name");
-        payload.userId = (String) map.get("user_id");
-        return payload;
+    public void username(String username) {
+        this.username = username;
     }
 }

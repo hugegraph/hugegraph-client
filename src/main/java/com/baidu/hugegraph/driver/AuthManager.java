@@ -24,6 +24,7 @@ import java.util.List;
 import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
 import com.baidu.hugegraph.api.auth.GroupAPI;
+import com.baidu.hugegraph.api.auth.ProjectAPI;
 import com.baidu.hugegraph.api.auth.LoginAPI;
 import com.baidu.hugegraph.api.auth.LogoutAPI;
 import com.baidu.hugegraph.api.auth.TargetAPI;
@@ -33,6 +34,7 @@ import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.auth.Access;
 import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.auth.Group;
+import com.baidu.hugegraph.structure.auth.Project;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
 import com.baidu.hugegraph.structure.auth.Target;
@@ -50,6 +52,7 @@ public class AuthManager {
     private final LoginAPI loginAPI;
     private final LogoutAPI logoutAPI;
     private final TokenAPI tokenAPI;
+    private final ProjectAPI projectAPI;
 
     public AuthManager(RestClient client, String graph) {
         this.targetAPI = new TargetAPI(client, graph);
@@ -60,6 +63,35 @@ public class AuthManager {
         this.loginAPI = new LoginAPI(client, graph);
         this.logoutAPI = new LogoutAPI(client, graph);
         this.tokenAPI = new TokenAPI(client, graph);
+        this.projectAPI = new ProjectAPI(client, graph);
+    }
+
+    public Project createProject(Project project) {
+        return this.projectAPI.create(project);
+    }
+
+    public Project getProject(Object id) {
+        return this.projectAPI.get(id);
+    }
+
+    public List<Project> listProjects() {
+        return this.projectAPI.list(-1);
+    }
+
+    public List<Project> listProject(int limit) {
+        return this.projectAPI.list(limit);
+    }
+
+    public Project updateProject(Project project) {
+        return this.projectAPI.update(project);
+    }
+
+    public Project updateProjectAddGraph(String projectId, String graph) {
+        return this.projectAPI.updateProjectAddGraph(projectId, graph);
+    }
+
+    public Project updateProjectDeleteGraph(String projectId, String graph) {
+        return this.projectAPI.updateProjectDeleteGraph(projectId, graph);
     }
 
     public List<Target> listTargets() {

@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Project extends AuthElement {
+
     @JsonProperty("project_description")
     private String description;
     @JsonProperty("project_target")
@@ -148,9 +149,8 @@ public class Project extends AuthElement {
 
     @Override
     public int hashCode() {
-        return Objects
-                .hash(super.hashCode(), description, target, adminGroup,
-                      opGroup,
-                      name, graphs, graph, create, creator, update);
+        return Objects.hash(super.hashCode(), description, target, adminGroup,
+                            opGroup, name, graphs, graph, create, creator,
+                            update);
     }
 }

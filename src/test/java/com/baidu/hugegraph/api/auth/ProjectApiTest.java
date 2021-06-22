@@ -57,6 +57,12 @@ public class ProjectApiTest extends AuthApiTest {
         }
     }
 
+    @Override
+    @After
+    public void teardown() {
+        clear();
+    }
+
     @Test
     public void testGet() {
         Project createdProject = createProject("project_test");
@@ -94,8 +100,9 @@ public class ProjectApiTest extends AuthApiTest {
         Assert.assertNotNull(project);
         Assert.assertEquals(project, api.get(project));
         api.delete(project);
-        Assert.assertThrows(ServerException.class, () -> api.get(project),
-                            e -> {
+        Assert.assertThrows(ServerException.class, () -> {
+            api.get(project);
+        }, e -> {
             Assert.assertTrue(e.getMessage().contains("Invalid project id"));
         });
     }
@@ -151,11 +158,5 @@ public class ProjectApiTest extends AuthApiTest {
 
     private static Project getProject(Object id) {
         return api.get(id);
-    }
-
-    @Override
-    @After
-    public void teardown() {
-        clear();
     }
 }

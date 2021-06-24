@@ -21,7 +21,6 @@ package com.baidu.hugegraph.structure.auth;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -127,30 +126,5 @@ public class Project extends AuthElement {
     @Override
     public String creator() {
         return this.creator;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Project project = (Project) o;
-        return Objects.equals(description, project.description) &&
-               Objects.equals(target, project.target) &&
-               Objects.equals(adminGroup, project.adminGroup) &&
-               Objects.equals(opGroup, project.opGroup) &&
-               Objects.equals(name, project.name) &&
-               Objects.equals(graphs, project.graphs) &&
-               Objects.equals(graph, project.graph) &&
-               Objects.equals(create, project.create) &&
-               Objects.equals(creator, project.creator) &&
-               Objects.equals(update, project.update);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), description, target, adminGroup,
-                            opGroup, name, graphs, graph, create, creator,
-                            update);
     }
 }

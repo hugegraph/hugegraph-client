@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableMap;
 public class ProjectAPI extends AuthAPI {
 
     private static final String ACTION_ADD_GRAPH = "add_graph";
-    private static final String ACTION_DELETE_GRAPH = "delete_graph";
+    private static final String ACTION_REMOVE_GRAPH = "remove_graph";
 
     public ProjectAPI(RestClient client,
                       String graph) {
@@ -70,7 +70,7 @@ public class ProjectAPI extends AuthAPI {
         this.client.delete(this.path(), formatEntityId(id));
     }
 
-    public Project updateProjectAddGraph(Object projectId, String graph) {
+    public Project addGraph(Object projectId, String graph) {
         Project project = new Project();
         project.graph(graph);
         RestResult result = this.client.put(this.path(),
@@ -81,14 +81,14 @@ public class ProjectAPI extends AuthAPI {
         return result.readObject(Project.class);
     }
 
-    public Project updateProjectDeleteGraph(Object projectId, String graph) {
+    public Project removeGraph(Object projectId, String graph) {
         Project project = new Project();
         project.graph(graph);
         RestResult result = this.client.put(this.path(),
                                             formatEntityId(projectId),
                                             project,
                                             ImmutableMap.of("action",
-                                                            ACTION_DELETE_GRAPH));
+                                                            ACTION_REMOVE_GRAPH));
         return result.readObject(Project.class);
     }
 }

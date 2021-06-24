@@ -24,9 +24,9 @@ import java.util.List;
 import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
 import com.baidu.hugegraph.api.auth.GroupAPI;
-import com.baidu.hugegraph.api.auth.ProjectAPI;
 import com.baidu.hugegraph.api.auth.LoginAPI;
 import com.baidu.hugegraph.api.auth.LogoutAPI;
+import com.baidu.hugegraph.api.auth.ProjectAPI;
 import com.baidu.hugegraph.api.auth.TargetAPI;
 import com.baidu.hugegraph.api.auth.TokenAPI;
 import com.baidu.hugegraph.api.auth.UserAPI;
@@ -34,9 +34,9 @@ import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.auth.Access;
 import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.auth.Group;
-import com.baidu.hugegraph.structure.auth.Project;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
+import com.baidu.hugegraph.structure.auth.Project;
 import com.baidu.hugegraph.structure.auth.Target;
 import com.baidu.hugegraph.structure.auth.TokenPayload;
 import com.baidu.hugegraph.structure.auth.User;
@@ -87,11 +87,11 @@ public class AuthManager {
     }
 
     public Project updateProjectAddGraph(String projectId, String graph) {
-        return this.projectAPI.updateProjectAddGraph(projectId, graph);
+        return this.projectAPI.addGraph(projectId, graph);
     }
 
     public Project updateProjectDeleteGraph(String projectId, String graph) {
-        return this.projectAPI.updateProjectDeleteGraph(projectId, graph);
+        return this.projectAPI.removeGraph(projectId, graph);
     }
 
     public List<Target> listTargets() {

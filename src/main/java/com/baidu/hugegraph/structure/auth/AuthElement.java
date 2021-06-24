@@ -20,6 +20,7 @@
 package com.baidu.hugegraph.structure.auth;
 
 import java.util.Date;
+import java.util.Objects;
 
 import com.baidu.hugegraph.structure.Element;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -36,6 +37,26 @@ public abstract class AuthElement extends Element {
     @Override
     public Object id() {
         return this.id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || this.getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        AuthElement authElement = (AuthElement) o;
+        return Objects.equals(this.id(), authElement.id());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.id());
     }
 
     public abstract Date createTime();

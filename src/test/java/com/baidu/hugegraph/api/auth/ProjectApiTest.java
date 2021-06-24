@@ -40,7 +40,7 @@ public class ProjectApiTest extends AuthApiTest {
     @BeforeClass
     public static void init() {
         api = new ProjectAPI(initClient(), GRAPH);
-        clear();
+        ProjectApiTest.clear();
     }
 
     @AfterClass
@@ -50,7 +50,7 @@ public class ProjectApiTest extends AuthApiTest {
             List<String> graphs = project.graphs();
             if (graphs != null && !graphs.isEmpty()) {
                 for (String graph : graphs) {
-                    api.updateProjectDeleteGraph(project, graph);
+                    api.removeGraph(project, graph);
                 }
             }
             api.delete(project.id());
@@ -59,8 +59,9 @@ public class ProjectApiTest extends AuthApiTest {
 
     @Override
     @After
-    public void teardown() {
-        clear();
+    public void teardown() throws Exception {
+        super.teardown();
+        this.clear();
     }
 
     @Test
@@ -108,33 +109,33 @@ public class ProjectApiTest extends AuthApiTest {
     }
 
     @Test
-    public void testUpdateAddGraph() {
+    public void testAddGraph() {
         Project project = createProject("project_test");
-        api.updateProjectAddGraph(project, "test_graph");
+        api.addGraph(project, "test_graph");
         project = getProject(project);
         Assert.assertEquals(1, project.graphs().size());
         Assert.assertTrue(project.graphs().contains("test_graph"));
-        api.updateProjectAddGraph(project, "test_graph1");
+        api.addGraph(project, "test_graph1");
         project = getProject(project);
         Assert.assertEquals(2, project.graphs().size());
         Assert.assertTrue(project.graphs().contains("test_graph1"));
     }
 
     @Test
-    public void testUpdateRemoveGraph() {
+    public void testRemoveGraph() {
         List<String> graphs = ImmutableList.of("test_graph1",
                                                "test_graph2",
                                                "test_graph3");
         Project project = createProject("project_test", graphs);
         graphs = new ArrayList<>(graphs);
         Assert.assertTrue(graphs.containsAll(project.graphs()));
-        project = api.updateProjectDeleteGraph(project, "test_graph1");
+        project = api.removeGraph(project, "test_graph1");
         graphs.remove("test_graph1");
         Assert.assertTrue(graphs.containsAll(project.graphs()));
-        project = api.updateProjectDeleteGraph(project, "test_graph2");
+        project = api.removeGraph(project, "test_graph2");
         graphs.remove("test_graph2");
         Assert.assertTrue(graphs.containsAll(project.graphs()));
-        project = api.updateProjectDeleteGraph(project, "test_graph3");
+        project = api.removeGraph(project, "test_graph3");
         graphs.remove("test_graph3");
         Assert.assertEquals(0, graphs.size());
         Assert.assertNull(project.graphs());
@@ -151,7 +152,7 @@ public class ProjectApiTest extends AuthApiTest {
         project.name(name);
         project = api.create(project);
         for (String graph : graphs) {
-            project = api.updateProjectAddGraph(project, graph);
+            project = api.addGraph(project, graph);
         }
         return project;
     }

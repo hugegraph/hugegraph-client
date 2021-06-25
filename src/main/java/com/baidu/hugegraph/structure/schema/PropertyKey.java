@@ -314,6 +314,32 @@ public class PropertyKey extends SchemaElement {
         }
     }
 
+    public static class PropertyKeyWithTask {
+
+        @JsonProperty("property_key")
+        private PropertyKey propertyKey;
+
+        @JsonProperty("task_id")
+        private long taskId;
+
+        @JsonCreator
+        public PropertyKeyWithTask(@JsonProperty("property_key")
+                                   PropertyKey propertyKey,
+                                   @JsonProperty("task_id")
+                                   long taskId) {
+            this.propertyKey = propertyKey;
+            this.taskId = taskId;
+        }
+
+        public PropertyKey propertyKey() {
+            return this.propertyKey;
+        }
+
+        public long taskId() {
+            return this.taskId;
+        }
+    }
+
     public static class PropertyKeyV46 extends SchemaElement {
 
         @JsonProperty("data_type")

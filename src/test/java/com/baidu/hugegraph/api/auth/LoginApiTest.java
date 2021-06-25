@@ -26,7 +26,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.baidu.hugegraph.exception.ServerException;
-import com.baidu.hugegraph.rest.ClientException;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
 import com.baidu.hugegraph.structure.auth.User;

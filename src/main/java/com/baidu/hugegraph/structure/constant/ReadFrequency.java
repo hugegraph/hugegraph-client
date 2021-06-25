@@ -23,7 +23,11 @@ public enum ReadFrequency {
 
     OLTP(1, "oltp"),
 
-    OLAP(2, "olap");
+    OLAP_NONE(2, "olap_none"),
+
+    OLAP_SECONDARY(3, "olap_secondary"),
+
+    OLAP_RANGE(4, "olap_range");
 
     private byte code = 0;
     private String name = null;
@@ -40,5 +44,15 @@ public enum ReadFrequency {
 
     public String string() {
         return this.name;
+    }
+
+    public boolean oltp() {
+        return this == OLTP;
+    }
+
+    public boolean olap() {
+        return this == OLAP_NONE ||
+                this == OLAP_RANGE ||
+                this == OLAP_SECONDARY;
     }
 }

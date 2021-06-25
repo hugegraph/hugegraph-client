@@ -19,9 +19,14 @@
 
 package com.baidu.hugegraph.structure.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TokenPayload {
 
+    @JsonProperty("user_id")
     private String userId;
+
+    @JsonProperty("user_name")
     private String username;
 
     private TokenPayload() {

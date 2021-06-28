@@ -80,18 +80,18 @@ public class SchemaManager {
     }
 
     public PropertyKey addPropertyKey(PropertyKey propertyKey, long seconds) {
-        PropertyKey.PropertyKeyWithTask pkwt = this.propertyKeyAPI
+        PropertyKey.PropertyKeyWithTask task = this.propertyKeyAPI
                                                    .create(propertyKey);
-        if (pkwt.taskId() != 0L) {
-            this.taskAPI.waitUntilTaskSuccess(pkwt.taskId(), seconds);
+        if (task.taskId() != 0L) {
+            this.taskAPI.waitUntilTaskSuccess(task.taskId(), seconds);
         }
-        return pkwt.propertyKey();
+        return task.propertyKey();
     }
 
     public long addPropertyKeyAsync(PropertyKey propertyKey) {
-        PropertyKey.PropertyKeyWithTask pkwt = this.propertyKeyAPI
+        PropertyKey.PropertyKeyWithTask task = this.propertyKeyAPI
                                                    .create(propertyKey);
-        return pkwt.taskId();
+        return task.taskId();
     }
 
     public PropertyKey appendPropertyKey(PropertyKey propertyKey) {
@@ -107,18 +107,18 @@ public class SchemaManager {
     }
 
     public PropertyKey clearPropertyKey(PropertyKey propertyKey, long seconds) {
-        PropertyKey.PropertyKeyWithTask pkwt = this.propertyKeyAPI
+        PropertyKey.PropertyKeyWithTask task = this.propertyKeyAPI
                                                    .clear(propertyKey);
-        if (pkwt.taskId() != 0L) {
-            this.taskAPI.waitUntilTaskSuccess(pkwt.taskId(), seconds);
+        if (task.taskId() != 0L) {
+            this.taskAPI.waitUntilTaskSuccess(task.taskId(), seconds);
         }
-        return pkwt.propertyKey();
+        return task.propertyKey();
     }
 
     public long clearPropertyKeyAsync(PropertyKey propertyKey) {
-        PropertyKey.PropertyKeyWithTask pkwt = this.propertyKeyAPI
+        PropertyKey.PropertyKeyWithTask task = this.propertyKeyAPI
                                                    .clear(propertyKey);
-        return pkwt.taskId();
+        return task.taskId();
     }
 
     public void removePropertyKey(String name) {

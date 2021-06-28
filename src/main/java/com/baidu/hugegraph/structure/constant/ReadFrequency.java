@@ -21,12 +21,16 @@ package com.baidu.hugegraph.structure.constant;
 
 public enum ReadFrequency {
 
+    // OLTP property key
     OLTP(1, "oltp"),
 
-    OLAP_NONE(2, "olap_none"),
+    // OLAP property key without index
+    OLAP_COMMON(2, "olap_common"),
 
+    // OLAP property key with secondary index
     OLAP_SECONDARY(3, "olap_secondary"),
 
+    // OLAP property key with range index
     OLAP_RANGE(4, "olap_range");
 
     private byte code = 0;
@@ -51,8 +55,8 @@ public enum ReadFrequency {
     }
 
     public boolean olap() {
-        return this == OLAP_NONE ||
-                this == OLAP_RANGE ||
-                this == OLAP_SECONDARY;
+        return this == OLAP_COMMON ||
+               this == OLAP_RANGE ||
+               this == OLAP_SECONDARY;
     }
 }

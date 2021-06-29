@@ -33,7 +33,7 @@ import com.baidu.hugegraph.api.gremlin.GremlinRequest;
 import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.constant.GraphReadMode;
-import com.baidu.hugegraph.structure.constant.ReadFrequency;
+import com.baidu.hugegraph.structure.constant.WriteType;
 import com.baidu.hugegraph.structure.constant.T;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.gremlin.ResultSet;
@@ -342,7 +342,7 @@ public class VertexApiTest extends BaseApiTest {
         // Create olap property key
         PropertyKey pagerank = schema().propertyKey("pagerank")
                                        .asDouble()
-                                       .readFrequency(ReadFrequency.OLAP_RANGE)
+                                       .writeType(WriteType.OLAP_RANGE)
                                        .build();
 
         PropertyKey.PropertyKeyWithTask propertyKeyWithTask;
@@ -353,7 +353,7 @@ public class VertexApiTest extends BaseApiTest {
 
         PropertyKey wcc = schema().propertyKey("wcc")
                                   .asText()
-                                  .readFrequency(ReadFrequency.OLAP_SECONDARY)
+                                  .writeType(WriteType.OLAP_SECONDARY)
                                   .build();
 
         propertyKeyWithTask = propertyKeyAPI.create(wcc);
@@ -363,7 +363,7 @@ public class VertexApiTest extends BaseApiTest {
 
         PropertyKey none = schema().propertyKey("none")
                                    .asText()
-                                   .readFrequency(ReadFrequency.OLAP_NONE)
+                                   .writeType(WriteType.OLAP_COMMON)
                                    .build();
 
         propertyKeyWithTask = propertyKeyAPI.create(none);

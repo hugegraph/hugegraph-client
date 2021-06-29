@@ -19,7 +19,7 @@
 
 package com.baidu.hugegraph.structure.constant;
 
-public enum ReadFrequency {
+public enum WriteType {
 
     // OLTP property key
     OLTP(1, "oltp"),
@@ -36,7 +36,7 @@ public enum ReadFrequency {
     private byte code = 0;
     private String name = null;
 
-    ReadFrequency(int code, String name) {
+    WriteType(int code, String name) {
         assert code < 256;
         this.code = (byte) code;
         this.name = name;

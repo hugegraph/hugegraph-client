@@ -95,11 +95,11 @@ public class SchemaManager {
     }
 
     public PropertyKey appendPropertyKey(PropertyKey propertyKey) {
-        return this.propertyKeyAPI.append(propertyKey);
+        return this.propertyKeyAPI.append(propertyKey).propertyKey();
     }
 
     public PropertyKey eliminatePropertyKey(PropertyKey propertyKey) {
-        return this.propertyKeyAPI.eliminate(propertyKey);
+        return this.propertyKeyAPI.eliminate(propertyKey).propertyKey();
     }
 
     public PropertyKey clearPropertyKey(PropertyKey propertyKey) {

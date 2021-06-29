@@ -28,7 +28,7 @@ import com.baidu.hugegraph.exception.NotSupportException;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.SchemaElement;
 import com.baidu.hugegraph.structure.constant.HugeType;
-import com.baidu.hugegraph.structure.constant.ReadFrequency;
+import com.baidu.hugegraph.structure.constant.WriteType;
 import com.baidu.hugegraph.structure.schema.PropertyKey;
 import com.baidu.hugegraph.util.E;
 import com.google.common.collect.ImmutableMap;
@@ -54,20 +54,20 @@ public class PropertyKeyAPI extends SchemaAPI {
         return result.readObject(PropertyKey.PropertyKeyWithTask.class);
     }
 
-    public PropertyKey append(PropertyKey propertyKey) {
+    public PropertyKey.PropertyKeyWithTask append(PropertyKey propertyKey) {
         String id = propertyKey.name();
         Map<String, Object> params = ImmutableMap.of("action", "append");
         Object pkey = this.checkCreateOrUpdate(propertyKey);
         RestResult result = this.client.put(this.path(), id, pkey, params);
-        return result.readObject(PropertyKey.class);
+        return result.readObject(PropertyKey.PropertyKeyWithTask.class);
     }
 
-    public PropertyKey eliminate(PropertyKey propertyKey) {
+    public PropertyKey.PropertyKeyWithTask eliminate(PropertyKey propertyKey) {
         String id = propertyKey.name();
         Map<String, Object> params = ImmutableMap.of("action", "eliminate");
         Object pkey = this.checkCreateOrUpdate(propertyKey);
         RestResult result = this.client.put(this.path(), id, pkey, params);
-        return result.readObject(PropertyKey.class);
+        return result.readObject(PropertyKey.PropertyKeyWithTask.class);
     }
 
     public PropertyKey.PropertyKeyWithTask clear(PropertyKey propertyKey) {
@@ -121,7 +121,7 @@ public class PropertyKeyAPI extends SchemaAPI {
                             "api version 0.47");
             pkey = propertyKey.switchV46();
         } else if (this.client.apiVersionLt("0.59")) {
-            E.checkArgument(propertyKey.readFrequency() == ReadFrequency.OLTP,
+            E.checkArgument(propertyKey.writeType() == WriteType.OLTP,
                             "Not support olap property key until " +
                             "api version 0.59");
             pkey = propertyKey.switchV58();

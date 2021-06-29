@@ -28,7 +28,7 @@ import org.junit.Test;
 import com.baidu.hugegraph.structure.constant.AggregateType;
 import com.baidu.hugegraph.structure.constant.Cardinality;
 import com.baidu.hugegraph.structure.constant.DataType;
-import com.baidu.hugegraph.structure.constant.ReadFrequency;
+import com.baidu.hugegraph.structure.constant.WriteType;
 import com.baidu.hugegraph.structure.schema.PropertyKey;
 import com.baidu.hugegraph.testutil.Assert;
 import com.baidu.hugegraph.testutil.Utils;
@@ -391,7 +391,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
     public void testAddOlapPropertyKey() {
         PropertyKey pagerank = schema().propertyKey("pagerank")
                                        .asDouble()
-                                       .readFrequency(ReadFrequency.OLAP_RANGE)
+                                       .writeType(WriteType.OLAP_RANGE)
                                        .build();
 
         PropertyKey.PropertyKeyWithTask propertyKeyWithTask;
@@ -402,12 +402,12 @@ public class PropertyKeyApiTest extends BaseApiTest {
         pagerank = propertyKeyWithTask.propertyKey();
 
         Assert.assertEquals("pagerank", pagerank.name());
-        Assert.assertEquals(ReadFrequency.OLAP_RANGE, pagerank.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_RANGE, pagerank.writeType());
         Assert.assertEquals(DataType.DOUBLE, pagerank.dataType());
 
         PropertyKey wcc = schema().propertyKey("wcc")
                                   .asText()
-                                  .readFrequency(ReadFrequency.OLAP_SECONDARY)
+                                  .writeType(WriteType.OLAP_SECONDARY)
                                   .build();
 
         propertyKeyWithTask = propertyKeyAPI.create(wcc);
@@ -417,12 +417,12 @@ public class PropertyKeyApiTest extends BaseApiTest {
         wcc = propertyKeyWithTask.propertyKey();
 
         Assert.assertEquals("wcc", wcc.name());
-        Assert.assertEquals(ReadFrequency.OLAP_SECONDARY, wcc.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_SECONDARY, wcc.writeType());
         Assert.assertEquals(DataType.TEXT, wcc.dataType());
 
         PropertyKey none = schema().propertyKey("none")
                                    .asText()
-                                   .readFrequency(ReadFrequency.OLAP_NONE)
+                                   .writeType(WriteType.OLAP_COMMON)
                                    .build();
 
         propertyKeyWithTask = propertyKeyAPI.create(none);
@@ -432,7 +432,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
         none = propertyKeyWithTask.propertyKey();
 
         Assert.assertEquals("none", none.name());
-        Assert.assertEquals(ReadFrequency.OLAP_NONE, none.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_COMMON, none.writeType());
         Assert.assertEquals(DataType.TEXT, none.dataType());
     }
 
@@ -440,7 +440,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
     public void testClearOlapPropertyKey() {
         PropertyKey pagerank = schema().propertyKey("pagerank")
                                        .asDouble()
-                                       .readFrequency(ReadFrequency.OLAP_RANGE)
+                                       .writeType(WriteType.OLAP_RANGE)
                                        .build();
 
         PropertyKey.PropertyKeyWithTask propertyKeyWithTask;
@@ -451,7 +451,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
         pagerank = propertyKeyWithTask.propertyKey();
 
         Assert.assertEquals("pagerank", pagerank.name());
-        Assert.assertEquals(ReadFrequency.OLAP_RANGE, pagerank.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_RANGE, pagerank.writeType());
         Assert.assertEquals(DataType.DOUBLE, pagerank.dataType());
 
         propertyKeyWithTask = propertyKeyAPI.clear(pagerank);
@@ -461,13 +461,13 @@ public class PropertyKeyApiTest extends BaseApiTest {
         pagerank = propertyKeyWithTask.propertyKey();
 
         Assert.assertEquals("pagerank", pagerank.name());
-        Assert.assertEquals(ReadFrequency.OLAP_RANGE, pagerank.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_RANGE, pagerank.writeType());
         Assert.assertEquals(DataType.DOUBLE, pagerank.dataType());
 
         pagerank = propertyKeyAPI.get("pagerank");
 
         Assert.assertEquals("pagerank", pagerank.name());
-        Assert.assertEquals(ReadFrequency.OLAP_RANGE, pagerank.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_RANGE, pagerank.writeType());
         Assert.assertEquals(DataType.DOUBLE, pagerank.dataType());
     }
 
@@ -475,7 +475,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
     public void testDeleteOlapPropertyKey() {
         PropertyKey pagerank = schema().propertyKey("pagerank")
                                        .asDouble()
-                                       .readFrequency(ReadFrequency.OLAP_RANGE)
+                                       .writeType(WriteType.OLAP_RANGE)
                                        .build();
 
         PropertyKey.PropertyKeyWithTask propertyKeyWithTask;
@@ -486,7 +486,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
         pagerank = propertyKeyWithTask.propertyKey();
 
         Assert.assertEquals("pagerank", pagerank.name());
-        Assert.assertEquals(ReadFrequency.OLAP_RANGE, pagerank.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_RANGE, pagerank.writeType());
         Assert.assertEquals(DataType.DOUBLE, pagerank.dataType());
 
         taskId = propertyKeyAPI.delete(pagerank.name());
@@ -495,7 +495,7 @@ public class PropertyKeyApiTest extends BaseApiTest {
         pagerank = propertyKeyWithTask.propertyKey();
 
         Assert.assertEquals("pagerank", pagerank.name());
-        Assert.assertEquals(ReadFrequency.OLAP_RANGE, pagerank.readFrequency());
+        Assert.assertEquals(WriteType.OLAP_RANGE, pagerank.writeType());
         Assert.assertEquals(DataType.DOUBLE, pagerank.dataType());
 
         Utils.assertResponseError(404, () -> {

@@ -28,44 +28,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Project extends AuthElement {
 
-    @JsonProperty("project_description")
-    private String description;
-    @JsonProperty("project_target")
-    private String target;
+    @JsonProperty("project_name")
+    private String name;
     @JsonProperty("project_admin_group")
     private String adminGroup;
     @JsonProperty("project_op_group")
     private String opGroup;
-    @JsonProperty("project_name")
-    private String name;
     @JsonProperty("project_graphs")
     private List<String> graphs;
     @JsonProperty("project_graph")
     private String graph;
+    @JsonProperty("project_target")
+    private String target;
+    @JsonProperty("project_description")
+    private String description;
 
     @JsonProperty("project_create")
     @JsonFormat(pattern = DATE_FORMAT)
     private Date create;
-    @JsonProperty("project_creator")
-    private String creator;
     @JsonProperty("project_update")
     @JsonFormat(pattern = DATE_FORMAT)
     private Date update;
+    @JsonProperty("project_creator")
+    private String creator;
 
-    public String description() {
-        return description;
+    public String name() {
+        return name;
     }
 
-    public void description(String description) {
-        this.description = description;
-    }
-
-    public String target() {
-        return target;
-    }
-
-    public void target(String target) {
-        this.target = target;
+    public void name(String name) {
+        this.name = name;
     }
 
     public String adminGroup() {
@@ -84,14 +76,6 @@ public class Project extends AuthElement {
         this.opGroup = opGroup;
     }
 
-    public String name() {
-        return name;
-    }
-
-    public void name(String name) {
-        this.name = name;
-    }
-
     public List<String> graphs() {
         return graphs;
     }
@@ -106,6 +90,22 @@ public class Project extends AuthElement {
 
     public void graph(String graph) {
         this.graph = graph;
+    }
+
+    public String target() {
+        return target;
+    }
+
+    public void target(String target) {
+        this.target = target;
+    }
+
+    public String description() {
+        return description;
+    }
+
+    public void description(String description) {
+        this.description = description;
     }
 
     @Override

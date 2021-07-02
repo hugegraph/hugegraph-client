@@ -91,10 +91,10 @@ import com.baidu.hugegraph.api.traverser.WeightedShortestPathApiTest;
     UserApiTest.class,
     AccessApiTest.class,
     BelongApiTest.class,
+    ProjectApiTest.class,
     LoginApiTest.class,
     LogoutApiTest.class,
-    TokenApiTest.class,
-    ProjectApiTest.class
+    TokenApiTest.class
 })
 public class ApiTestSuite {
 }

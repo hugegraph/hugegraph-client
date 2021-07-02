@@ -39,26 +39,6 @@ public abstract class AuthElement extends Element {
         return this.id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
-        AuthElement authElement = (AuthElement) o;
-        return Objects.equals(this.id(), authElement.id());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(this.id());
-    }
-
     public abstract Date createTime();
 
     public abstract Date updateTime();

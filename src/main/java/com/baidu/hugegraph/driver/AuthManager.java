@@ -60,38 +60,10 @@ public class AuthManager {
         this.userAPI = new UserAPI(client, graph);
         this.accessAPI = new AccessAPI(client, graph);
         this.belongAPI = new BelongAPI(client, graph);
+        this.projectAPI = new ProjectAPI(client, graph);
         this.loginAPI = new LoginAPI(client, graph);
         this.logoutAPI = new LogoutAPI(client, graph);
         this.tokenAPI = new TokenAPI(client, graph);
-        this.projectAPI = new ProjectAPI(client, graph);
-    }
-
-    public Project createProject(Project project) {
-        return this.projectAPI.create(project);
-    }
-
-    public Project getProject(Object id) {
-        return this.projectAPI.get(id);
-    }
-
-    public List<Project> listProjects() {
-        return this.projectAPI.list(-1);
-    }
-
-    public List<Project> listProject(int limit) {
-        return this.projectAPI.list(limit);
-    }
-
-    public Project updateProject(Project project) {
-        return this.projectAPI.update(project);
-    }
-
-    public Project updateProjectAddGraph(String projectId, String graph) {
-        return this.projectAPI.addGraph(projectId, graph);
-    }
-
-    public Project updateProjectDeleteGraph(String projectId, String graph) {
-        return this.projectAPI.removeGraph(projectId, graph);
     }
 
     public List<Target> listTargets() {
@@ -254,6 +226,34 @@ public class AuthManager {
         for (Target target : this.listTargets()) {
             this.deleteTarget(target.id());
         }
+    }
+
+    public Project createProject(Project project) {
+        return this.projectAPI.create(project);
+    }
+
+    public Project getProject(Object id) {
+        return this.projectAPI.get(id);
+    }
+
+    public List<Project> listProjects() {
+        return this.projectAPI.list(-1);
+    }
+
+    public List<Project> listProject(int limit) {
+        return this.projectAPI.list(limit);
+    }
+
+    public Project updateProject(Project project) {
+        return this.projectAPI.update(project);
+    }
+
+    public Project projectAddGraph(String projectId, String graph) {
+        return this.projectAPI.addGraph(projectId, graph);
+    }
+
+    public Project projectRemoveGraph(String projectId, String graph) {
+        return this.projectAPI.removeGraph(projectId, graph);
     }
 
     public LoginResult login(Login login) {

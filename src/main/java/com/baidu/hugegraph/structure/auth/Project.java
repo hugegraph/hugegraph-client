@@ -36,8 +36,6 @@ public class Project extends AuthElement {
     private String opGroup;
     @JsonProperty("project_graphs")
     private List<String> graphs;
-    @JsonProperty("project_graph")
-    private String graph;
     @JsonProperty("project_target")
     private String target;
     @JsonProperty("project_description")
@@ -82,14 +80,6 @@ public class Project extends AuthElement {
 
     public void graphs(List<String> graphs) {
         this.graphs = graphs;
-    }
-
-    public String graph() {
-        return graph;
-    }
-
-    public void graph(String graph) {
-        this.graph = graph;
     }
 
     public String target() {

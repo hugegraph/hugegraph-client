@@ -70,9 +70,9 @@ public class ProjectAPI extends AuthAPI {
         this.client.delete(this.path(), formatEntityId(id));
     }
 
-    public Project addGraph(Object projectId, String graph) {
+    public Project addGraphs(Object projectId, List<String> graphs) {
         Project project = new Project();
-        project.graph(graph);
+        project.graphs(graphs);
         RestResult result = this.client.put(this.path(),
                                             formatEntityId(projectId),
                                             project,
@@ -81,9 +81,9 @@ public class ProjectAPI extends AuthAPI {
         return result.readObject(Project.class);
     }
 
-    public Project removeGraph(Object projectId, String graph) {
+    public Project removeGraphs(Object projectId, List<String> graphs) {
         Project project = new Project();
-        project.graph(graph);
+        project.graphs(graphs);
         RestResult result = this.client.put(this.path(),
                                             formatEntityId(projectId),
                                             project,

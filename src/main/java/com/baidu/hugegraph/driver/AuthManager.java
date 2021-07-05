@@ -248,12 +248,12 @@ public class AuthManager {
         return this.projectAPI.update(project);
     }
 
-    public Project projectAddGraph(String projectId, String graph) {
-        return this.projectAPI.addGraph(projectId, graph);
+    public Project projectAddGraphs(String projectId, List<String> graphs) {
+        return this.projectAPI.addGraphs(projectId, graphs);
     }
 
-    public Project projectRemoveGraph(String projectId, String graph) {
-        return this.projectAPI.removeGraph(projectId, graph);
+    public Project projectRemoveGraphs(String projectId, List<String> graphs) {
+        return this.projectAPI.removeGraphs(projectId, graphs);
     }
 
     public LoginResult login(Login login) {

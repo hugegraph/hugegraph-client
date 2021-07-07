@@ -20,7 +20,7 @@
 package com.baidu.hugegraph.structure.auth;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -35,7 +35,7 @@ public class Project extends AuthElement {
     @JsonProperty("project_op_group")
     private String opGroup;
     @JsonProperty("project_graphs")
-    private List<String> graphs;
+    private Set<String> graphs;
     @JsonProperty("project_target")
     private String target;
     @JsonProperty("project_description")
@@ -49,6 +49,22 @@ public class Project extends AuthElement {
     private Date update;
     @JsonProperty("project_creator")
     private String creator;
+
+    public Project() {
+    }
+
+    public Project(Object id) {
+        this.id = id;
+    }
+
+    public Project(String name) {
+        this.name = name;
+    }
+
+    public Project(String name, String description) {
+        this(name);
+        this.description = description;
+    }
 
     public String name() {
         return name;
@@ -74,11 +90,11 @@ public class Project extends AuthElement {
         this.opGroup = opGroup;
     }
 
-    public List<String> graphs() {
+    public Set<String> graphs() {
         return graphs;
     }
 
-    public void graphs(List<String> graphs) {
+    public void graphs(Set<String> graphs) {
         this.graphs = graphs;
     }
 

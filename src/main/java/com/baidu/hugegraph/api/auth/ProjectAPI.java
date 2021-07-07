@@ -21,6 +21,7 @@ package com.baidu.hugegraph.api.auth;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
@@ -70,7 +71,7 @@ public class ProjectAPI extends AuthAPI {
         this.client.delete(this.path(), formatEntityId(id));
     }
 
-    public Project addGraphs(Object projectId, List<String> graphs) {
+    public Project addGraphs(Object projectId, Set<String> graphs) {
         Project project = new Project();
         project.graphs(graphs);
         RestResult result = this.client.put(this.path(),
@@ -81,7 +82,7 @@ public class ProjectAPI extends AuthAPI {
         return result.readObject(Project.class);
     }
 
-    public Project removeGraphs(Object projectId, List<String> graphs) {
+    public Project removeGraphs(Object projectId, Set<String> graphs) {
         Project project = new Project();
         project.graphs(graphs);
         RestResult result = this.client.put(this.path(),

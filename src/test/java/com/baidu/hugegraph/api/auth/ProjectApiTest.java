@@ -19,9 +19,11 @@
 
 package com.baidu.hugegraph.api.auth;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -31,7 +33,7 @@ import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.auth.Project;
 import com.baidu.hugegraph.testutil.Assert;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public class ProjectApiTest extends AuthApiTest {
 
@@ -40,15 +42,14 @@ public class ProjectApiTest extends AuthApiTest {
     @BeforeClass
     public static void init() {
         api = new ProjectAPI(initClient(), GRAPH);
-        ProjectApiTest.clear();
     }
 
     @AfterClass
     public static void clear() {
         List<Project> projects = api.list(-1);
         for (Project project : projects) {
-            List<String> graphs = project.graphs();
-            if (graphs != null && !graphs.isEmpty()) {
+            Set<String> graphs = project.graphs();
+            if (!CollectionUtils.isEmpty(graphs)) {
                 api.removeGraphs(project, graphs);
             }
             api.delete(project.id());
@@ -109,11 +110,11 @@ public class ProjectApiTest extends AuthApiTest {
     @Test
     public void testAddGraph() {
         Project project = createProject("project_test");
-        api.addGraphs(project, ImmutableList.of("test_graph"));
+        api.addGraphs(project, ImmutableSet.of("test_graph"));
         project = getProject(project);
         Assert.assertEquals(1, project.graphs().size());
         Assert.assertTrue(project.graphs().contains("test_graph"));
-        api.addGraphs(project, ImmutableList.of("test_graph1"));
+        api.addGraphs(project, ImmutableSet.of("test_graph1"));
         project = getProject(project);
         Assert.assertEquals(2, project.graphs().size());
         Assert.assertTrue(project.graphs().contains("test_graph1"));
@@ -121,19 +122,19 @@ public class ProjectApiTest extends AuthApiTest {
 
     @Test
     public void testRemoveGraph() {
-        List<String> graphs = ImmutableList.of("test_graph1",
-                                               "test_graph2",
-                                               "test_graph3");
+        Set<String> graphs = ImmutableSet.of("test_graph1",
+                                             "test_graph2",
+                                             "test_graph3");
         Project project = createProject("project_test", graphs);
-        graphs = new ArrayList<>(graphs);
+        graphs = new HashSet<>(graphs);
         Assert.assertTrue(graphs.containsAll(project.graphs()));
-        project = api.removeGraphs(project, ImmutableList.of("test_graph1"));
+        project = api.removeGraphs(project, ImmutableSet.of("test_graph1"));
         graphs.remove("test_graph1");
         Assert.assertTrue(graphs.containsAll(project.graphs()));
-        project = api.removeGraphs(project, ImmutableList.of("test_graph2"));
+        project = api.removeGraphs(project, ImmutableSet.of("test_graph2"));
         graphs.remove("test_graph2");
         Assert.assertTrue(graphs.containsAll(project.graphs()));
-        project = api.removeGraphs(project, ImmutableList.of("test_graph3"));
+        project = api.removeGraphs(project, ImmutableSet.of("test_graph3"));
         graphs.remove("test_graph3");
         Assert.assertEquals(0, graphs.size());
         Assert.assertNull(project.graphs());
@@ -145,7 +146,7 @@ public class ProjectApiTest extends AuthApiTest {
         return api.create(project);
     }
 
-    private static Project createProject(String name, List<String> graphs) {
+    private static Project createProject(String name, Set<String> graphs) {
         Project project = new Project();
         project.name(name);
         project = api.create(project);

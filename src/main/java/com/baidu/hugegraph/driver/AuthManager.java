@@ -20,6 +20,9 @@
 package com.baidu.hugegraph.driver;
 
 import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
@@ -49,10 +52,10 @@ public class AuthManager {
     private final UserAPI userAPI;
     private final AccessAPI accessAPI;
     private final BelongAPI belongAPI;
+    private final ProjectAPI projectAPI;
     private final LoginAPI loginAPI;
     private final LogoutAPI logoutAPI;
     private final TokenAPI tokenAPI;
-    private final ProjectAPI projectAPI;
 
     public AuthManager(RestClient client, String graph) {
         this.targetAPI = new TargetAPI(client, graph);
@@ -226,6 +229,13 @@ public class AuthManager {
         for (Target target : this.listTargets()) {
             this.deleteTarget(target.id());
         }
+        for (Project project : this.listProjects()) {
+            Set<String> graphs = project.graphs();
+            if (!CollectionUtils.isEmpty(graphs)) {
+                this.projectRemoveGraphs(project.id(), graphs);
+            }
+            this.deleteProject(project.id());
+        }
     }
 
     public Project createProject(Project project) {
@@ -237,7 +247,7 @@ public class AuthManager {
     }
 
     public List<Project> listProjects() {
-        return this.projectAPI.list(-1);
+        return this.listProject(-1);
     }
 
     public List<Project> listProject(int limit) {
@@ -248,12 +258,16 @@ public class AuthManager {
         return this.projectAPI.update(project);
     }
 
-    public Project projectAddGraphs(String projectId, List<String> graphs) {
+    public Project projectAddGraphs(Object projectId, Set<String> graphs) {
         return this.projectAPI.addGraphs(projectId, graphs);
     }
 
-    public Project projectRemoveGraphs(String projectId, List<String> graphs) {
+    public Project projectRemoveGraphs(Object projectId, Set<String> graphs) {
         return this.projectAPI.removeGraphs(projectId, graphs);
+    }
+
+    public void deleteProject(Object id) {
+        this.projectAPI.delete(id);
     }
 
     public LoginResult login(Login login) {

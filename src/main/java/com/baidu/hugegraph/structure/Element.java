@@ -37,8 +37,7 @@ public abstract class Element {
         if (this == other) {
             return true;
         }
-
-        if (!(other instanceof Element)) {
+        if (other == null || this.getClass() != other.getClass()) {
             return false;
         }
         return Objects.equals(this.id(), ((Element) other).id());

@@ -47,7 +47,7 @@ public class PropertyKeyAPI extends SchemaAPI {
     public PropertyKey.PropertyKeyWithTask create(PropertyKey propertyKey) {
         Object pkey = this.checkCreateOrUpdate(propertyKey);
         RestResult result = this.client.post(this.path(), pkey);
-        if (this.client.apiVersionLt("0.64")) {
+        if (this.client.apiVersionLt("0.65")) {
             return new PropertyKey.PropertyKeyWithTask(
                        result.readObject(PropertyKey.class), 0L);
         }
@@ -71,7 +71,7 @@ public class PropertyKeyAPI extends SchemaAPI {
     }
 
     public PropertyKey.PropertyKeyWithTask clear(PropertyKey propertyKey) {
-        if (this.client.apiVersionLt("0.64")) {
+        if (this.client.apiVersionLt("0.65")) {
             throw new NotSupportException("action clear on property key");
         }
         String id = propertyKey.name();
@@ -101,7 +101,7 @@ public class PropertyKeyAPI extends SchemaAPI {
     }
 
     public long delete(String name) {
-        if (this.client.apiVersionLt("0.64")) {
+        if (this.client.apiVersionLt("0.65")) {
             this.client.delete(this.path(), name);
             return 0L;
         }

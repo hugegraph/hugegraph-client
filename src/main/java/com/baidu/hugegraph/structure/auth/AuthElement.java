@@ -20,7 +20,6 @@
 package com.baidu.hugegraph.structure.auth;
 
 import java.util.Date;
-import java.util.Objects;
 
 import com.baidu.hugegraph.structure.Element;
 import com.fasterxml.jackson.annotation.JsonInclude;

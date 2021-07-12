@@ -67,7 +67,7 @@ public class Project extends AuthElement {
     }
 
     public String name() {
-        return name;
+        return this.name;
     }
 
     public void name(String name) {
@@ -75,7 +75,7 @@ public class Project extends AuthElement {
     }
 
     public String adminGroup() {
-        return adminGroup;
+        return this.adminGroup;
     }
 
     public void adminGroup(String adminGroup) {
@@ -83,7 +83,7 @@ public class Project extends AuthElement {
     }
 
     public String opGroup() {
-        return opGroup;
+        return this.opGroup;
     }
 
     public void opGroup(String opGroup) {
@@ -91,7 +91,7 @@ public class Project extends AuthElement {
     }
 
     public Set<String> graphs() {
-        return graphs;
+        return this.graphs;
     }
 
     public void graphs(Set<String> graphs) {
@@ -99,7 +99,7 @@ public class Project extends AuthElement {
     }
 
     public String target() {
-        return target;
+        return this.target;
     }
 
     public void target(String target) {
@@ -107,7 +107,7 @@ public class Project extends AuthElement {
     }
 
     public String description() {
-        return description;
+        return this.description;
     }
 
     public void description(String description) {

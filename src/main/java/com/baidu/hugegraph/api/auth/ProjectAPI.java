@@ -34,8 +34,7 @@ public class ProjectAPI extends AuthAPI {
     private static final String ACTION_ADD_GRAPH = "add_graph";
     private static final String ACTION_REMOVE_GRAPH = "remove_graph";
 
-    public ProjectAPI(RestClient client,
-                      String graph) {
+    public ProjectAPI(RestClient client, String graph) {
         super(client, graph);
     }
 

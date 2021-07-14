@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -72,9 +73,8 @@ public class ProjectApiTest extends AuthApiTest {
 
     @Test
     public void testCreate() {
-        Project paramsProject = new Project();
-        paramsProject.name("project_test");
-        paramsProject.description("project_description");
+        Project paramsProject = new Project("project_test",
+                                            "project_description");
         Project createdProject = api.create(paramsProject);
         Assert.assertEquals(paramsProject.name(), createdProject.name());
         Assert.assertEquals(paramsProject.description(),
@@ -92,6 +92,13 @@ public class ProjectApiTest extends AuthApiTest {
         Assert.assertTrue(allProject.contains(project3));
         List<Project> projects = api.list(1);
         Assert.assertEquals(1, projects.size());
+        Project project = projects.get(0);
+        Assert.assertTrue(!StringUtils.isEmpty(project.adminGroup()));
+        Assert.assertTrue(!StringUtils.isEmpty(project.opGroup()));
+        Assert.assertTrue(!StringUtils.isEmpty(project.target()));
+        Assert.assertTrue(!StringUtils.isEmpty(project.creator()));
+        Assert.assertNotNull(project.createTime());
+        Assert.assertNotNull(project.updateTime());
     }
 
     @Test

@@ -78,16 +78,8 @@ public class Project extends AuthElement {
         return this.adminGroup;
     }
 
-    public void adminGroup(String adminGroup) {
-        this.adminGroup = adminGroup;
-    }
-
     public String opGroup() {
         return this.opGroup;
-    }
-
-    public void opGroup(String opGroup) {
-        this.opGroup = opGroup;
     }
 
     public Set<String> graphs() {
@@ -100,10 +92,6 @@ public class Project extends AuthElement {
 
     public String target() {
         return this.target;
-    }
-
-    public void target(String target) {
-        this.target = target;
     }
 
     public String description() {

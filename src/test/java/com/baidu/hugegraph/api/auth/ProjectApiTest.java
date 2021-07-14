@@ -93,10 +93,10 @@ public class ProjectApiTest extends AuthApiTest {
         List<Project> projects = api.list(1);
         Assert.assertEquals(1, projects.size());
         Project project = projects.get(0);
-        Assert.assertTrue(!StringUtils.isEmpty(project.adminGroup()));
-        Assert.assertTrue(!StringUtils.isEmpty(project.opGroup()));
-        Assert.assertTrue(!StringUtils.isEmpty(project.target()));
-        Assert.assertTrue(!StringUtils.isEmpty(project.creator()));
+        Assert.assertTrue(StringUtils.isNotEmpty(project.adminGroup()));
+        Assert.assertTrue(StringUtils.isNotEmpty(project.opGroup()));
+        Assert.assertTrue(StringUtils.isNotEmpty(project.target()));
+        Assert.assertTrue(StringUtils.isNotEmpty(project.creator()));
         Assert.assertNotNull(project.createTime());
         Assert.assertNotNull(project.updateTime());
     }

@@ -231,7 +231,7 @@ public class AuthManager {
         }
         for (Project project : this.listProjects()) {
             Set<String> graphs = project.graphs();
-            if (!CollectionUtils.isEmpty(graphs)) {
+            if (CollectionUtils.isNotEmpty(graphs)) {
                 this.projectRemoveGraphs(project.id(), graphs);
             }
             this.deleteProject(project.id());

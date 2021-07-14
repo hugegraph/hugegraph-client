@@ -58,11 +58,11 @@ public class Project extends AuthElement {
     }
 
     public Project(String name) {
-        this.name = name;
+        this(name, null);
     }
 
     public Project(String name, String description) {
-        this(name);
+        this.name = name;
         this.description = description;
     }
 

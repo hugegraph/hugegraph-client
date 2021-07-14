@@ -50,7 +50,7 @@ public class ProjectApiTest extends AuthApiTest {
         List<Project> projects = api.list(-1);
         for (Project project : projects) {
             Set<String> graphs = project.graphs();
-            if (!CollectionUtils.isEmpty(graphs)) {
+            if (CollectionUtils.isNotEmpty(graphs)) {
                 api.removeGraphs(project, graphs);
             }
             api.delete(project.id());
@@ -148,14 +148,12 @@ public class ProjectApiTest extends AuthApiTest {
     }
 
     private static Project createProject(String name) {
-        Project project = new Project();
-        project.name(name);
+        Project project = new Project(name);
         return api.create(project);
     }
 
     private static Project createProject(String name, Set<String> graphs) {
-        Project project = new Project();
-        project.name(name);
+        Project project = new Project(name);
         project = api.create(project);
         project = api.addGraphs(project.id(), graphs);
         return project;

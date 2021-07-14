@@ -60,9 +60,9 @@ public class ProjectAPI extends AuthAPI {
         return result.readList(this.type(), Project.class);
     }
 
-    public Project update(Project target) {
-        String id = formatEntityId(target.id());
-        RestResult result = this.client.put(this.path(), id, target);
+    public Project update(Project project) {
+        String id = formatEntityId(project.id());
+        RestResult result = this.client.put(this.path(), id, project);
         return result.readObject(Project.class);
     }
 

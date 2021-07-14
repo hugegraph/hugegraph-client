@@ -118,15 +118,13 @@ public class AuthManagerTest extends BaseFuncTest {
         Set<String> graphs = ImmutableSet.of("graph1", "graph2");
         newProject1 = auth().projectAddGraphs(project1, graphs);
         Assert.assertNotNull(newProject1);
-        Assert.assertTrue(CollectionUtils.isEqualCollection(
-                                          graphs, newProject1.graphs()));
+        Assert.assertEquals(graphs, newProject1.graphs());
 
         graphs = ImmutableSet.of("graph2");
         newProject1 = auth().projectRemoveGraphs(project1,
                                                  ImmutableSet.of("graph1"));
         Assert.assertNotNull(newProject1);
-        Assert.assertTrue(CollectionUtils.isEqualCollection(
-                                          graphs, newProject1.graphs()));
+        Assert.assertEquals(graphs, newProject1.graphs());
 
         Object project1Id = project1.id();
         project1 = new Project(project1Id);

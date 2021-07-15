@@ -20,6 +20,7 @@
 package com.baidu.hugegraph.structure.auth;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
@@ -54,7 +55,7 @@ public class Project extends AuthElement {
     }
 
     public Project(Object id) {
-        this.id = id;
+        this(id, null, null);
     }
 
     public Project(String name) {
@@ -62,6 +63,11 @@ public class Project extends AuthElement {
     }
 
     public Project(String name, String description) {
+        this(null, name, description);
+    }
+
+    public Project(Object id, String name, String description) {
+        this.id = id;
         this.name = name;
         this.description = description;
     }
@@ -87,7 +93,11 @@ public class Project extends AuthElement {
     }
 
     public void graphs(Set<String> graphs) {
-        this.graphs = graphs;
+        if (graphs != null) {
+            this.graphs = new HashSet<>(graphs);
+        } else {
+            this.graphs = null;
+        }
     }
 
     public String target() {

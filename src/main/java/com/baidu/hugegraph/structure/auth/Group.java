@@ -31,6 +31,8 @@ public class Group extends AuthElement {
     private String name;
     @JsonProperty("group_description")
     private String description;
+    @JsonProperty("group_tag")
+    private HugeGroupTag tag;
 
     @JsonProperty("group_create")
     @JsonFormat(pattern = DATE_FORMAT)
@@ -40,6 +42,10 @@ public class Group extends AuthElement {
     protected Date update;
     @JsonProperty("group_creator")
     protected String creator;
+
+    public static String label() {
+        return "~group";
+    }
 
     @Override
     public String type() {
@@ -75,5 +81,13 @@ public class Group extends AuthElement {
 
     public void description(String description) {
         this.description = description;
+    }
+
+    public HugeGroupTag tag() {
+        return this.tag;
+    }
+
+    public void tag(HugeGroupTag tag) {
+        this.tag = tag;
     }
 }

@@ -101,6 +101,10 @@ public class AuthManager {
         return this.groupAPI.list(limit);
     }
 
+    public List<Group> listGroups(List<Object> ids) {
+        return this.groupAPI.list(ids);
+    }
+
     public Group getGroup(Object id) {
         return this.groupAPI.get(id);
     }

@@ -45,6 +45,10 @@ public class Access extends AuthElement {
     @JsonProperty("access_creator")
     protected String creator;
 
+    public static String label() {
+        return "~access";
+    }
+
     @Override
     public String type() {
         return HugeType.ACCESS.string();

@@ -53,6 +53,10 @@ public class User extends AuthElement {
     @JsonProperty("user_creator")
     protected String creator;
 
+    public static String label() {
+        return "~user";
+    }
+
     @Override
     public String type() {
         return HugeType.USER.string();

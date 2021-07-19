@@ -56,6 +56,12 @@ public class GroupAPI extends AuthAPI {
         return result.readList(this.type(), Group.class);
     }
 
+    public List<Group> list(List<Object> ids) {
+        String path =  String.join("/", this.path(), "ids");
+        RestResult result = this.client.post(path, ids);
+        return result.readList(this.type(), Group.class);
+    }
+
     public Group update(Group group) {
         String id = formatEntityId(group.id());
         RestResult result = this.client.put(this.path(), id, group);

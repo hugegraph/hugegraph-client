@@ -48,6 +48,10 @@ public class Target extends AuthElement {
     @JsonProperty("target_creator")
     protected String creator;
 
+    public static String label() {
+        return "~target";
+    }
+
     @Override
     public String type() {
         return HugeType.TARGET.string();

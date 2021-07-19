@@ -43,6 +43,10 @@ public class Belong extends AuthElement {
     @JsonProperty("belong_creator")
     protected String creator;
 
+    public static String label() {
+        return "~belong";
+    }
+
     @Override
     public String type() {
         return HugeType.BELONG.string();

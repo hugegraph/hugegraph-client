@@ -19,32 +19,27 @@
 
 package com.baidu.hugegraph.structure.auth;
 
-import java.util.Date;
+public enum HugeGroupTag {
 
-import com.baidu.hugegraph.structure.Element;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+    SUPER_ADMIN(1, "Super administrator"),
+    OP_SUPER_ADMIN(2, "Cluster operation and maintenance administrator"),
+    PROJECT_ADMIN(3, "Project manager"),
+    OP_PROJECT_ADMIN(4, "Project operation and maintenance administrator");
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class AuthElement extends Element {
+    private final byte code;
+    private final String name;
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
-
-    @JsonProperty("id")
-    protected Object id;
-
-    @Override
-    public Object id() {
-        return this.id;
+    HugeGroupTag(int code, String name) {
+        assert code < 256;
+        this.code = (byte) code;
+        this.name = name;
     }
 
-    public void id(Object id) {
-        this.id = id;
+    public byte code() {
+        return this.code;
     }
 
-    public abstract Date createTime();
-
-    public abstract Date updateTime();
-
-    public abstract String creator();
+    public String string() {
+        return this.name;
+    }
 }

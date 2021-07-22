@@ -134,9 +134,11 @@ public class BaseApiTest extends BaseClientTest {
         });
         vlTaskIds.forEach(taskId -> waitUntilTaskCompleted(taskId));
 
+        List<Long> pkTaskIds = new ArrayList<>();
         propertyKeyAPI.list().forEach(propertyKey -> {
-            propertyKeyAPI.delete(propertyKey.name());
+            pkTaskIds.add(propertyKeyAPI.delete(propertyKey.name()));
         });
+        pkTaskIds.forEach(taskId -> waitUntilTaskCompleted(taskId));
 
         // Clear system
         taskAPI.list(null, -1).forEach(task -> {

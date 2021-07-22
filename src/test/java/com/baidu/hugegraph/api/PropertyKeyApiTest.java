@@ -19,6 +19,7 @@
 
 package com.baidu.hugegraph.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,7 +40,11 @@ public class PropertyKeyApiTest extends BaseApiTest {
 
     @After
     public void teardown() throws Exception {
-        propertyKeyAPI.list().forEach(pk -> propertyKeyAPI.delete(pk.name()));
+        List<Long> pkTaskIds = new ArrayList<>();
+        propertyKeyAPI.list().forEach(propertyKey -> {
+            pkTaskIds.add(propertyKeyAPI.delete(propertyKey.name()));
+        });
+        pkTaskIds.forEach(taskId -> waitUntilTaskCompleted(taskId));
     }
 
     @Test

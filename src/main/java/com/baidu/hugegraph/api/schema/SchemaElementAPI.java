@@ -19,35 +19,18 @@
 
 package com.baidu.hugegraph.api.schema;
 
-import java.util.List;
-import java.util.Map;
-
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
-import com.baidu.hugegraph.exception.NotSupportException;
-import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.SchemaElement;
 
-public class SchemaAPI extends API {
+public abstract class SchemaElementAPI extends API {
 
-    private static final String PATH = "graphs/%s/%s";
+    private static final String PATH = "graphs/%s/schema/%s";
 
-    public SchemaAPI(RestClient client, String graph) {
+    public SchemaElementAPI(RestClient client, String graph) {
         super(client);
         this.path(PATH, graph, this.type());
     }
 
-    @SuppressWarnings("unchecked")
-    public Map<String, List<SchemaElement>> get() {
-        if (this.client.apiVersionLt("0.66")) {
-            throw new NotSupportException("schema get api");
-        }
-        RestResult result = this.client.get(this.path());
-        return result.readObject(Map.class);
-    }
-
-    @Override
-    protected String type() {
-        return "schema";
-    }
+    protected abstract Object checkCreateOrUpdate(SchemaElement schemaElement);
 }

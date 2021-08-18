@@ -28,6 +28,7 @@ import org.junit.runners.Suite;
     VertexLabelTest.class,
     EdgeLabelTest.class,
     IndexLabelTest.class,
+    SchemaTest.class,
     VertexTest.class,
     EdgeTest.class,
     BatchInsertTest.class,

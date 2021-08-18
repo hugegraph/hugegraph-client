@@ -38,7 +38,7 @@ public class SchemaAPI extends API {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, List<SchemaElement>> get() {
+    public Map<String, List<SchemaElement>> list() {
         if (this.client.apiVersionLt("0.66")) {
             throw new NotSupportException("schema get api");
         }

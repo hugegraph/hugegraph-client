@@ -30,12 +30,12 @@ import com.baidu.hugegraph.testutil.Assert;
 public class SchemaApiTest extends BaseApiTest {
 
     @Test
-    public void testGet() {
+    public void testlist() {
         BaseApiTest.initPropertyKey();
         BaseApiTest.initVertexLabel();
         BaseApiTest.initEdgeLabel();
 
-        Map<String, List<SchemaElement>> schemas = schemaAPI.get();
+        Map<String, List<SchemaElement>> schemas = schemaAPI.list();
 
         Assert.assertEquals(4, schemas.size());
         Assert.assertTrue(schemas.containsKey("propertykeys"));

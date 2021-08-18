@@ -279,6 +279,6 @@ public class SchemaManager {
     }
 
     public Map<String, List<SchemaElement>> getSchema() {
-        return this.schemaAPI.get();
+        return this.schemaAPI.list();
     }
 }

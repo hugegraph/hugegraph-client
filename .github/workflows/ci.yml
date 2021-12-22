@@ -14,7 +14,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    # which version is stable?
+    runs-on: ubuntu-16.04
     env:
       TRAVIS_DIR: assembly/travis
       COMMIT_ID: 0dc7b271835e53136ee92691b07fa4abe925e16e

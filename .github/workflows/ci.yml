@@ -14,8 +14,7 @@ on:
 
 jobs:
   build:
-    # which version is stable?
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       TRAVIS_DIR: assembly/travis
       COMMIT_ID: 0dc7b271835e53136ee92691b07fa4abe925e16e

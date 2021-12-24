@@ -19,18 +19,11 @@
 
 package com.baidu.hugegraph.driver;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
-
 import com.baidu.hugegraph.api.graphs.GraphsAPI;
 import com.baidu.hugegraph.client.RestClient;
-import com.baidu.hugegraph.rest.ClientException;
 import com.baidu.hugegraph.structure.constant.GraphMode;
 import com.baidu.hugegraph.structure.constant.GraphReadMode;
 
@@ -42,34 +35,17 @@ public class GraphsManager {
         this.graphsAPI = new GraphsAPI(client);
     }
 
-    public Map<String, String> createGraph(String name, String config) {
-        return this.createGraph(name, null, config);
+    public Map<String, String> createGraph(String name, String configText) {
+        return this.graphsAPI.create(name, null, configText);
     }
 
-    public Map<String, String> createGraph(String name, String cloneGraphName,
-                                           String config) {
-        return this.graphsAPI.create(name, cloneGraphName, config);
+    public Map<String, String> cloneGraph(String name, String cloneGraphName) {
+        return this.graphsAPI.create(name, cloneGraphName, null);
     }
 
-    public Map<String, String> createGraph(String name, File file) {
-        String config;
-        try {
-            config = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new ClientException("Failed to read config file: %s", file);
-        }
-        return this.createGraph(name, config);
-    }
-
-    public Map<String, String> createGraph(String name, String cloneGraphName,
-                                           File file) {
-        String config;
-        try {
-            config = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new ClientException("Failed to read config file: %s", file);
-        }
-        return this.createGraph(name, cloneGraphName, config);
+    public Map<String, String> cloneGraph(String name, String cloneGraphName,
+                                          String configText) {
+        return this.graphsAPI.create(name, cloneGraphName, configText);
     }
 
     public Map<String, String> getGraph(String graph) {
@@ -80,12 +56,12 @@ public class GraphsManager {
         return this.graphsAPI.list();
     }
 
-    public void clear(String graph, String message) {
+    public void clearGraph(String graph, String message) {
         this.graphsAPI.clear(graph, message);
     }
 
-    public void remove(String graph, String message) {
-        this.graphsAPI.delete(graph, message);
+    public void dropGraph(String graph, String message) {
+        this.graphsAPI.drop(graph, message);
     }
 
     public void mode(String graph, GraphMode mode) {

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Test;
 
 import com.baidu.hugegraph.driver.HugeClient;
@@ -36,19 +37,33 @@ import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.structure.gremlin.ResultSet;
 import com.baidu.hugegraph.testutil.Assert;
+import com.google.common.collect.ImmutableSet;
 
 public class GraphsApiTest extends BaseApiTest {
 
     private static final String GRAPH2 = "hugegraph2";
     private static final String CONFIG2_PATH =
-            "src/test/resources/hugegraph2.properties";
+                         "src/test/resources/hugegraph-create.properties";
 
     private static final String GRAPH3 = "hugegraph3";
     private static final String CONFIG3_PATH =
-            "src/test/resources/hugegraph3.properties";
+                         "src/test/resources/hugegraph-clone.properties";
+
+    @Override
+    @After
+    public void teardown() {
+        for (String g : ImmutableSet.of(GRAPH2, GRAPH3)) {
+            try {
+                graphsAPI.get(g);
+            } catch (Exception ognored) {
+                continue;
+            }
+            graphsAPI.drop(g, "I'm sure to drop the graph");
+        }
+    }
 
     @Test
-    public void testCreateAndRemoveGraph() {
+    public void testCreateAndDropGraph() {
         int initialGraphNumber = graphsAPI.list().size();
 
         // Create new graph dynamically
@@ -67,7 +82,7 @@ public class GraphsApiTest extends BaseApiTest {
 
         Assert.assertEquals(initialGraphNumber + 1, graphsAPI.list().size());
 
-        HugeClient client = HugeClient.builder(BASE_URL, GRAPH2).build();
+        HugeClient client = new HugeClient(baseClient(), GRAPH2);
         // Insert graph schema and data
         initPropertyKey(client);
         initVertexLabel(client);
@@ -113,16 +128,16 @@ public class GraphsApiTest extends BaseApiTest {
         Assert.assertEquals(initialGraphNumber + 1, graphsAPI.list().size());
 
         // Remove new created graph dynamically
-        graphsAPI.delete(GRAPH2, "I'm sure to drop the graph");
+        graphsAPI.drop(GRAPH2, "I'm sure to drop the graph");
 
         Assert.assertEquals(initialGraphNumber, graphsAPI.list().size());
     }
 
     @Test
-    public void testCreateWithCloneAndRemoveGraph() {
+    public void testCloneAndDropGraph() {
         int initialGraphNumber = graphsAPI.list().size();
 
-        // Create new graph dynamically
+        // Clone a new graph from exist a graph dynamically
         String config;
         try {
             config = FileUtils.readFileToString(new File(CONFIG3_PATH),
@@ -139,7 +154,7 @@ public class GraphsApiTest extends BaseApiTest {
 
         Assert.assertEquals(initialGraphNumber + 1, graphsAPI.list().size());
 
-        HugeClient client = HugeClient.builder(BASE_URL, GRAPH3).build();
+        HugeClient client = new HugeClient(baseClient(), GRAPH3);
         // Insert graph schema and data
         initPropertyKey(client);
         initVertexLabel(client);
@@ -185,7 +200,72 @@ public class GraphsApiTest extends BaseApiTest {
         Assert.assertEquals(initialGraphNumber + 1, graphsAPI.list().size());
 
         // Remove new created graph dynamically
-        graphsAPI.delete(GRAPH3, "I'm sure to drop the graph");
+        graphsAPI.drop(GRAPH3, "I'm sure to drop the graph");
+
+        Assert.assertEquals(initialGraphNumber, graphsAPI.list().size());
+    }
+
+    @Test
+    public void testCloneAndDropGraphWithoutConfig() {
+        int initialGraphNumber = graphsAPI.list().size();
+
+        // Clone a new graph from exist a graph dynamically
+        String config = null;
+        Map<String, String> result = graphsAPI.create(GRAPH3, "hugegraph",
+                                                      config);
+        Assert.assertEquals(2, result.size());
+        Assert.assertEquals(GRAPH3, result.get("name"));
+        Assert.assertEquals("rocksdb", result.get("backend"));
+
+        Assert.assertEquals(initialGraphNumber + 1, graphsAPI.list().size());
+
+        HugeClient client = new HugeClient(baseClient(), GRAPH3);
+        // Insert graph schema and data
+        initPropertyKey(client);
+        initVertexLabel(client);
+        initEdgeLabel(client);
+
+        List<Vertex> vertices = new ArrayList<>(100);
+        for (int i = 0; i < 100; i++) {
+            Vertex vertex = new Vertex("person").property("name", "person" + i)
+                                                .property("city", "Beijing")
+                                                .property("age", 19);
+            vertices.add(vertex);
+        }
+        vertices = client.graph().addVertices(vertices);
+
+        List<Edge> edges = new ArrayList<>(100);
+        for (int i = 0; i < 100; i++) {
+            Edge edge = new Edge("knows").source(vertices.get(i))
+                                         .target(vertices.get((i + 1) % 100))
+                                         .property("date", "2016-01-10");
+            edges.add(edge);
+        }
+        client.graph().addEdges(edges, false);
+
+        // Query vertices and edges count from new created graph
+        ResultSet resultSet = client.gremlin().gremlin("g.V().count()")
+                                    .execute();
+        Assert.assertEquals(100, resultSet.iterator().next().getInt());
+
+        resultSet = client.gremlin().gremlin("g.E().count()").execute();
+        Assert.assertEquals(100, resultSet.iterator().next().getInt());
+
+        // Clear graph schema and data from new created graph
+        graphsAPI.clear(GRAPH3, "I'm sure to delete all data");
+
+        resultSet = client.gremlin().gremlin("g.V().count()").execute();
+        Assert.assertEquals(0, resultSet.iterator().next().getInt());
+
+        resultSet = client.gremlin().gremlin("g.E().count()").execute();
+        Assert.assertEquals(0, resultSet.iterator().next().getInt());
+
+        Assert.assertTrue(client.schema().getPropertyKeys().isEmpty());
+
+        Assert.assertEquals(initialGraphNumber + 1, graphsAPI.list().size());
+
+        // Remove new created graph dynamically
+        graphsAPI.drop(GRAPH3, "I'm sure to drop the graph");
 
         Assert.assertEquals(initialGraphNumber, graphsAPI.list().size());
     }

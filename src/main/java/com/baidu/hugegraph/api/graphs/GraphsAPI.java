@@ -27,6 +27,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.exception.InvalidResponseException;
@@ -38,10 +40,12 @@ import com.google.common.collect.ImmutableMap;
 
 public class GraphsAPI extends API {
 
-    private static final String CONFIRM_MESSAGE = "confirm_message";
     private static final String DELIMITER = "/";
     private static final String MODE = "mode";
     private static final String GRAPH_READ_MODE = "graph_read_mode";
+    private static final String CLEAR = "clear";
+
+    private static final String CONFIRM_MESSAGE = "confirm_message";
 
     public GraphsAPI(RestClient client) {
         super(client);
@@ -60,7 +64,7 @@ public class GraphsAPI extends API {
         MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
         Map<String, Object> params = null;
-        if (cloneGraphName != null && !cloneGraphName.isEmpty()) {
+        if (StringUtils.isNotEmpty(cloneGraphName)) {
             params = ImmutableMap.of("clone_graph_name", cloneGraphName);
         }
         RestResult result = this.client.post(joinPath(this.path(), name),
@@ -80,11 +84,11 @@ public class GraphsAPI extends API {
     }
 
     public void clear(String graph, String message) {
-        this.client.delete(joinPath(this.path(), graph, "clear"),
+        this.client.delete(joinPath(this.path(), graph, CLEAR),
                            ImmutableMap.of(CONFIRM_MESSAGE, message));
     }
 
-    public void delete(String graph, String message) {
+    public void drop(String graph, String message) {
         this.client.checkApiVersion("0.67", "dynamic graph delete");
         this.client.delete(joinPath(this.path(), graph),
                            ImmutableMap.of(CONFIRM_MESSAGE, message));
@@ -93,12 +97,11 @@ public class GraphsAPI extends API {
     public void mode(String graph, GraphMode mode) {
         // NOTE: Must provide id for PUT. If use "graph/mode", "/" will
         // be encoded to "%2F". So use "mode" here although inaccurate.
-        this.client.put(joinPath(this.path(), graph), MODE, mode);
+        this.client.put(joinPath(this.path(), graph, MODE), null, mode);
     }
 
     public GraphMode mode(String graph) {
-        RestResult result =  this.client.get(joinPath(this.path(), graph),
-                                             MODE);
+        RestResult result = this.client.get(joinPath(this.path(), graph), MODE);
         @SuppressWarnings("unchecked")
         Map<String, String> mode = result.readObject(Map.class);
         String value = mode.get(MODE);
@@ -119,14 +122,14 @@ public class GraphsAPI extends API {
         // NOTE: Must provide id for PUT. If use "graph/graph_read_mode", "/"
         // will be encoded to "%2F". So use "graph_read_mode" here although
         // inaccurate.
-        this.client.put(joinPath(this.path(), graph),
-                        GRAPH_READ_MODE, readMode);
+        this.client.put(joinPath(this.path(), graph, GRAPH_READ_MODE),
+                        null, readMode);
     }
 
     public GraphReadMode readMode(String graph) {
         this.client.checkApiVersion("0.59", "graph read mode");
-        RestResult result =  this.client.get(joinPath(this.path(), graph),
-                                             GRAPH_READ_MODE);
+        RestResult result = this.client.get(joinPath(this.path(), graph),
+                                            GRAPH_READ_MODE);
         @SuppressWarnings("unchecked")
         Map<String, String> readMode = result.readObject(Map.class);
         String value = readMode.get(GRAPH_READ_MODE);
@@ -142,11 +145,11 @@ public class GraphsAPI extends API {
         }
     }
 
-    private static String joinPath(String path, String id) {
-        return String.join(DELIMITER, path, id);
+    private static String joinPath(String path, String graph) {
+        return String.join(DELIMITER, path, graph);
     }
 
-    private static String joinPath(String path, String id, String action) {
-        return String.join(DELIMITER, path, id, action);
+    private static String joinPath(String path, String graph, String action) {
+        return String.join(DELIMITER, path, graph, action);
     }
 }

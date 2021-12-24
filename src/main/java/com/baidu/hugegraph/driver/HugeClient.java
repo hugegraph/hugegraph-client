@@ -34,6 +34,8 @@ public class HugeClient implements Closeable {
         ClientVersion.check();
     }
     private final RestClient client;
+    private final boolean borrowedClient;
+
     private VersionManager version;
     private GraphsManager graphs;
     private SchemaManager schema;
@@ -47,6 +49,7 @@ public class HugeClient implements Closeable {
     private MetricsManager metrics;
 
     public HugeClient(HugeClientBuilder builder) {
+        this.borrowedClient = false;
         try {
             this.client = new RestClient(builder.url(),
                                          builder.username(),
@@ -57,7 +60,8 @@ public class HugeClient implements Closeable {
                                          builder.trustStoreFile(),
                                          builder.trustStorePassword());
         } catch (ProcessingException e) {
-            throw new ClientException("Failed to connect url '%s'", builder.url());
+            throw new ClientException("Failed to connect url '%s'",
+                                      builder.url());
         }
         try {
             this.initManagers(this.client, builder.graph());
@@ -67,13 +71,21 @@ public class HugeClient implements Closeable {
         }
     }
 
+    public HugeClient(HugeClient client, String graph) {
+        this.borrowedClient = true;
+        this.client = client.client;
+        this.initManagers(this.client, graph);
+    }
+
     public static HugeClientBuilder builder(String url, String graph) {
         return new HugeClientBuilder(url, graph);
     }
 
     @Override
     public void close() {
-        this.client.close();
+        if (!this.borrowedClient) {
+            this.client.close();
+        }
     }
 
     private void initManagers(RestClient client, String graph) {

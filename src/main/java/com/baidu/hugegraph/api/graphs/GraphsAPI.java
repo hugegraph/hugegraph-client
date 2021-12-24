@@ -34,7 +34,6 @@ import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.GraphMode;
 import com.baidu.hugegraph.structure.constant.GraphReadMode;
 import com.baidu.hugegraph.structure.constant.HugeType;
-import com.baidu.hugegraph.util.E;
 import com.google.common.collect.ImmutableMap;
 
 public class GraphsAPI extends API {
@@ -43,7 +42,6 @@ public class GraphsAPI extends API {
     private static final String DELIMITER = "/";
     private static final String MODE = "mode";
     private static final String GRAPH_READ_MODE = "graph_read_mode";
-    private static final String CLEARED = "cleared";
 
     public GraphsAPI(RestClient client) {
         super(client);
@@ -57,7 +55,7 @@ public class GraphsAPI extends API {
 
     @SuppressWarnings("unchecked")
     public Map<String, String> create(String name, String cloneGraphName,
-                                      String config) {
+                                      String configText) {
         this.client.checkApiVersion("0.67", "dynamic graph add");
         MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
         headers.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
@@ -66,7 +64,7 @@ public class GraphsAPI extends API {
             params = ImmutableMap.of("clone_graph_name", cloneGraphName);
         }
         RestResult result = this.client.post(joinPath(this.path(), name),
-                                             config, headers, params);
+                                             configText, headers, params);
         return result.readObject(Map.class);
     }
 
@@ -82,9 +80,8 @@ public class GraphsAPI extends API {
     }
 
     public void clear(String graph, String message) {
-        String path = String.join("/", this.path(), graph, "clear");
-        this.client.delete(path,
-                           ImmutableMap.of("confirm_message", message));
+        this.client.delete(joinPath(this.path(), graph, "clear"),
+                           ImmutableMap.of(CONFIRM_MESSAGE, message));
     }
 
     public void delete(String graph, String message) {
@@ -147,5 +144,9 @@ public class GraphsAPI extends API {
 
     private static String joinPath(String path, String id) {
         return String.join(DELIMITER, path, id);
+    }
+
+    private static String joinPath(String path, String id, String action) {
+        return String.join(DELIMITER, path, id, action);
     }
 }

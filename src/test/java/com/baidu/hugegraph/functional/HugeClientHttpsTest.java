@@ -49,7 +49,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @After
     public void teardown() throws Exception {
-        Assert.assertNotNull("Not opened client", client);
+        Assert.assertNotNull("Client is not opened", client);
         client.close();
     }
 

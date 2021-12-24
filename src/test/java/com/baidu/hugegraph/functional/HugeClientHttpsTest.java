@@ -32,12 +32,12 @@ import com.baidu.hugegraph.structure.graph.Vertex;
 import com.baidu.hugegraph.testutil.Assert;
 import com.google.common.collect.ImmutableMap;
 
-public class HugeClientHttpsTest extends BaseFuncTest {
+public class HugeClientHttpsTest {
 
     private static final String BASE_URL = "https://127.0.0.1:8443";
     private static final String GRAPH = "hugegraph";
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "pa";
     private static final int TIMEOUT = 10;
     private static final int MAX_CONNS_PER_ROUTE = 10;
     private static final int MAX_CONNS = 10;
@@ -56,6 +56,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
     @Test
     public void testHttpsClientBuilderWithConnection() {
         client = HugeClient.builder(BASE_URL, GRAPH)
+                           .configUser(USERNAME, PASSWORD)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
@@ -65,6 +66,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
     @Test
     public void testHttpsClientWithConnectionPoolNoUserParam() {
         client = HugeClient.builder(BASE_URL, GRAPH)
+                           .configUser(USERNAME, PASSWORD)
                            .configTimeout(TIMEOUT)
                            .configPool(MAX_CONNS, MAX_CONNS_PER_ROUTE)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)

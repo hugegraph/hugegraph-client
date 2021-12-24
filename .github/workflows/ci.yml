@@ -17,13 +17,13 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       TRAVIS_DIR: assembly/travis
-      COMMIT_ID: ece4c5a5870f628be58519f09a0bc51a3713b218
+      COMMIT_ID: d213166eb2185cbb6bd8bd5d201b7167e7b98993
     steps:
       - name: Install JDK 8
         uses: actions/setup-java@v2
         with:
           java-version: '8'
-          distribution: 'adopt'
+          distribution: 'zulu'
 
       - name: Cache Maven packages
         uses: actions/cache@v2

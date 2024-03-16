@@ -18,6 +18,8 @@ Refer https://github.com/apache/incubator-hugegraph-toolchain, Users should use 
   </dependency>
 ```
 
+Related client-doc https://hugegraph.apache.org/docs/quickstart/hugegraph-client/
+
 ---
 
 # hugegraph-client (**Outdated**)

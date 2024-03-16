@@ -1,4 +1,4 @@
-**BREAKING Change:**
+# BREAKING Change:
 
 Refer https://github.com/apache/incubator-hugegraph-toolchain, Users should use the Apache version now, visit apache repository instead, thanks~
 
